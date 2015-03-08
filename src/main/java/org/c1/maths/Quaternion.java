@@ -41,22 +41,19 @@ public class Quaternion {
             z = (rot.get(0, 1) - rot.get(1, 0)) * s;
         } else {
             if (rot.get(0, 0) > rot.get(1, 1) && rot.get(0, 0) > rot.get(2, 2)) {
-                float s = 2.0f * (float) Math.sqrt(1.0f + rot.get(0, 0)
-                        - rot.get(1, 1) - rot.get(2, 2));
+                float s = 2.0f * (float) Math.sqrt(1.0f + rot.get(0, 0) - rot.get(1, 1) - rot.get(2, 2));
                 w = (rot.get(1, 2) - rot.get(2, 1)) / s;
                 x = 0.25f * s;
                 y = (rot.get(1, 0) + rot.get(0, 1)) / s;
                 z = (rot.get(2, 0) + rot.get(0, 2)) / s;
             } else if (rot.get(1, 1) > rot.get(2, 2)) {
-                float s = 2.0f * (float) Math.sqrt(1.0f + rot.get(1, 1)
-                        - rot.get(0, 0) - rot.get(2, 2));
+                float s = 2.0f * (float) Math.sqrt(1.0f + rot.get(1, 1) - rot.get(0, 0) - rot.get(2, 2));
                 w = (rot.get(2, 0) - rot.get(0, 2)) / s;
                 x = (rot.get(1, 0) + rot.get(0, 1)) / s;
                 y = 0.25f * s;
                 z = (rot.get(2, 1) + rot.get(1, 2)) / s;
             } else {
-                float s = 2.0f * (float) Math.sqrt(1.0f + rot.get(2, 2)
-                        - rot.get(0, 0) - rot.get(1, 1));
+                float s = 2.0f * (float) Math.sqrt(1.0f + rot.get(2, 2) - rot.get(0, 0) - rot.get(1, 1));
                 w = (rot.get(0, 1) - rot.get(1, 0)) / s;
                 x = (rot.get(2, 0) + rot.get(0, 2)) / s;
                 y = (rot.get(1, 2) + rot.get(2, 1)) / s;
@@ -72,12 +69,9 @@ public class Quaternion {
     }
 
     public Mat4f toRotationMatrix() {
-        Vec3f forward = new Vec3f(2.0f * (x * z - w * y),
-                2.0f * (y * z + w * x), 1.0f - 2.0f * (x * x + y * y));
-        Vec3f up = new Vec3f(2.0f * (x * y + w * z), 1.0f - 2.0f * (x * x + z
-                * z), 2.0f * (y * z - w * x));
-        Vec3f right = new Vec3f(1.0f - 2.0f * (y * y + z * z),
-                2.0f * (x * y - w * z), 2.0f * (x * z + w * y));
+        Vec3f forward = new Vec3f(2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 1.0f - 2.0f * (x * x + y * y));
+        Vec3f up = new Vec3f(2.0f * (x * y + w * z), 1.0f - 2.0f * (x * x + z * z), 2.0f * (y * z - w * x));
+        Vec3f right = new Vec3f(1.0f - 2.0f * (y * y + z * z), 2.0f * (x * y - w * z), 2.0f * (x * z + w * y));
 
         return new Mat4f().rotation(forward, up, right);
     }
@@ -114,8 +108,7 @@ public class Quaternion {
         Quaternion correctedDest = dest;
 
         if (shortest && this.dot(dest) < 0)
-            correctedDest = new Quaternion(-dest.x(), -dest.y(), -dest.z(),
-                    -dest.w());
+            correctedDest = new Quaternion(-dest.x(), -dest.y(), -dest.z(), -dest.w());
 
         return correctedDest.sub(this).mul(lerpFactor).add(this).normalize();
     }
@@ -128,8 +121,7 @@ public class Quaternion {
 
         if (shortest && cos < 0) {
             cos = -cos;
-            correctedDest = new Quaternion(-dest.x(), -dest.y(), -dest.z(),
-                    -dest.w());
+            correctedDest = new Quaternion(-dest.x(), -dest.y(), -dest.z(), -dest.w());
         }
 
         if (Math.abs(cos) >= 1 - EPSILON)
@@ -142,8 +134,7 @@ public class Quaternion {
         float srcFactor = (float) (Math.sin((1.0f - lerpFactor) * angle) * invSin);
         float destFactor = (float) (Math.sin((lerpFactor) * angle) * invSin);
 
-        return this.mul(srcFactor).add(correctedDest.mul(destFactor))
-                .normalize();
+        return this.mul(srcFactor).add(correctedDest.mul(destFactor)).normalize();
     }
 
     public Quaternion sub(Quaternion r) {
@@ -227,8 +218,7 @@ public class Quaternion {
     public boolean equals(Object o) {
         if (o instanceof Quaternion) {
             Quaternion other = (Quaternion) o;
-            return other.x() == x() && other.y() == y() && other.z() == z()
-                    && other.w() == w();
+            return other.x() == x() && other.y() == y() && other.z() == z() && other.w() == w();
         }
         return false;
     }
@@ -257,8 +247,7 @@ public class Quaternion {
     }
 
     public Quaternion div(Quaternion other) {
-        return new Quaternion(x / other.x, y / other.y, z / other.z, w
-                / other.w);
+        return new Quaternion(x / other.x, y / other.y, z / other.z, w / other.w);
     }
 
     public Quaternion div(float factor) {

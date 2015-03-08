@@ -169,7 +169,6 @@ public class Vec2f {
     }
 
     public Vec2f lerp(Vec2f o, float factor) {
-        return new Vec2f(o.x() * factor + x * (1f - factor), o.y() * factor + y
-                * (1f - factor));
+        return new Vec2f(o.x() * factor + x * (1f - factor), o.y() * factor + y * (1f - factor));
     }
 }

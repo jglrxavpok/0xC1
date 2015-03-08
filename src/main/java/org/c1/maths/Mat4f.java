@@ -91,8 +91,7 @@ public class Mat4f {
         return this;
     }
 
-    public Mat4f orthographic(float left, float right, float bottom, float top,
-            float near, float far) {
+    public Mat4f orthographic(float left, float right, float bottom, float top, float near, float far) {
         all(0);
 
         float width = right - left;
@@ -113,12 +112,9 @@ public class Mat4f {
     }
 
     public Vec3f transform(Vec3f r) {
-        float x = get(0, 0) * r.x() + get(0, 1) * r.y() + get(0, 2) * r.z()
-                + get(0, 3);
-        float y = get(1, 0) * r.x() + get(1, 1) * r.y() + get(1, 2) * r.z()
-                + get(1, 3);
-        float z = get(2, 0) * r.x() + get(2, 1) * r.y() + get(2, 2) * r.z()
-                + get(2, 3);
+        float x = get(0, 0) * r.x() + get(0, 1) * r.y() + get(0, 2) * r.z() + get(0, 3);
+        float y = get(1, 0) * r.x() + get(1, 1) * r.y() + get(1, 2) * r.z() + get(1, 3);
+        float z = get(2, 0) * r.x() + get(2, 1) * r.y() + get(2, 2) * r.z() + get(2, 3);
         r.x(x);
         r.y(y);
         r.z(z);

@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.io.*;
 
+import org.c1.client.render.*;
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 import org.slf4j.*;
@@ -14,6 +15,7 @@ public class C1Game {
     private boolean running;
     private Logger logger;
     private File gameFolder;
+    private Texture texture;
 
     public void start() {
         try {
@@ -28,6 +30,9 @@ public class C1Game {
         }
 
         logger = LoggerFactory.getLogger("0xC1");
+
+        initGame();
+
         long lastTime = System.nanoTime();
         double delta = 0.0;
         double ns = 1_000_000_000.0 / 60.0;
@@ -72,6 +77,14 @@ public class C1Game {
         Display.destroy();
     }
 
+    private void initGame() {
+        try {
+            texture = new Texture("textures/logo.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void pollEvents() {
         // TODO Implement
 
@@ -89,8 +102,23 @@ public class C1Game {
 
         glClear(GL_DEPTH_BUFFER_BIT);
 
-        glColor4f(1, 1, 0, 1);
-        glRectf(0f, 0f, 1f, 1f);
+        glColor4f(1, 1, 1, 1);
+        texture.bind();
+        glBegin(GL_QUADS);
+
+        glTexCoord2d(0, 0);
+        glVertex2d(0, 0);
+
+        glTexCoord2d(0, 1);
+        glVertex2d(0, 1);
+
+        glTexCoord2d(1, 1);
+        glVertex2d(1, 1);
+
+        glTexCoord2d(1, 0);
+        glVertex2d(1, 0);
+
+        glEnd();
     }
 
     public File getGameFolder() {

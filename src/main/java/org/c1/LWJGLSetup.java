@@ -21,8 +21,7 @@ public class LWJGLSetup {
             if (folder.isDirectory()) {
                 OperatingSystem os = SystemUtils.getOS();
                 if (os == OperatingSystem.WINDOWS) {
-                    if (!new File(folder.getPath() + "/jinput-dx8_64.dll")
-                            .exists()) {
+                    if (!new File(folder.getPath() + "/jinput-dx8_64.dll").exists()) {
                         extractFromClasspath("jinput-dx8_64.dll", folder);
                         extractFromClasspath("jinput-dx8.dll", folder);
                         extractFromClasspath("jinput-raw_64.dll", folder);
@@ -65,10 +64,8 @@ public class LWJGLSetup {
                 } else {
                     logger.error("Operating System couldn't be iditified");
                 }
-                System.setProperty("net.java.games.input.librarypath",
-                        folder.getAbsolutePath());
-                System.setProperty("org.lwjgl.librarypath",
-                        folder.getAbsolutePath());
+                System.setProperty("net.java.games.input.librarypath", folder.getAbsolutePath());
+                System.setProperty("org.lwjgl.librarypath", folder.getAbsolutePath());
             }
             loaded = true;
         }
@@ -77,8 +74,7 @@ public class LWJGLSetup {
     /**
      * Extract given file from classpath into given folder
      */
-    private static void extractFromClasspath(String fileName, File folder)
-            throws IOException {
+    private static void extractFromClasspath(String fileName, File folder) throws IOException {
         FileOutputStream out = new FileOutputStream(new File(folder, fileName));
         IOUtils.copy(LWJGLSetup.class.getResourceAsStream("/" + fileName), out);
         out.flush();

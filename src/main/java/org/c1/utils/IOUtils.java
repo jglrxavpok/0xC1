@@ -4,8 +4,7 @@ import java.io.*;
 
 public class IOUtils {
 
-    public static void copy(InputStream in, OutputStream out)
-            throws IOException {
+    public static void copy(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[4096];
         int i;
 
