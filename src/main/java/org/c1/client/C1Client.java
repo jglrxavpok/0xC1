@@ -75,6 +75,7 @@ public class C1Client implements Runnable, C1Instance
     private EntityPlayer             player;
     private PlayerController         playerController;
     private Level                    clientWorld;
+    private OpenGLBuffer             planeBuffer;
 
     public C1Client()
     {
@@ -571,7 +572,7 @@ public class C1Client implements Runnable, C1Instance
     private void render(double delta, boolean drawGui)
     {
         glViewport(0, 0, displayWidth, displayHeight);
-        glClearColor(0, 0.6666667f, 1, 1);
+        glClearColor(0, 0, 0, 1);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         if(clientWorld != null)
         {
@@ -637,7 +638,27 @@ public class C1Client implements Runnable, C1Instance
     private void renderWorld(double delta, boolean drawGui)
     {
         // TODO Implement, DO NOT FORGET THAT WE'LL NEED LIGHTING
+        if(planeBuffer == null)
+        {
+            planeBuffer = new OpenGLBuffer();
+            planeBuffer.addIndex(0);
+            planeBuffer.addIndex(1);
+            planeBuffer.addIndex(2);
 
+            planeBuffer.addIndex(2);
+            planeBuffer.addIndex(0);
+            planeBuffer.addIndex(3);
+
+            planeBuffer.addVertex(Vertex.get(Vector3.get(0, 0, 0), Vector2.get(0, 0)));
+            planeBuffer.addVertex(Vertex.get(Vector3.get(100, 0, 0), Vector2.get(1, 0)));
+            planeBuffer.addVertex(Vertex.get(Vector3.get(100, 100, 0), Vector2.get(1, 1)));
+            planeBuffer.addVertex(Vertex.get(Vector3.get(0, 100, 0), Vector2.get(0, 1)));
+
+            planeBuffer.upload();
+            planeBuffer.clearAndDisposeVertices();
+        }
+        Matrix4 modelview = new Matrix4().initIdentity();
+        renderEngine.renderBuffer(planeBuffer);
     }
 
     /**
@@ -900,5 +921,10 @@ public class C1Client implements Runnable, C1Instance
     public DirectSoundProducer getSoundProducer()
     {
         return sndProducer;
+    }
+
+    public void setLevel(Level level)
+    {
+        clientWorld = level;
     }
 }

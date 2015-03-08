@@ -3,6 +3,7 @@ package org.c1.client.gui;
 import org.c1.client.*;
 import org.c1.client.gui.widgets.*;
 import org.c1.client.render.*;
+import org.c1.level.*;
 import org.c1.resources.*;
 
 public class GuiMainMenu extends Gui
@@ -48,7 +49,8 @@ public class GuiMainMenu extends Gui
     {
         if(widget.getID() == 0)
         {
-            ;
+            oc.setLevel(new Level());
+            oc.openMenu(new GuiIngame(oc));
         }
         else if(widget.getID() == 1)
         {

@@ -16,9 +16,9 @@ public class Vector3 extends AbstractReference implements IDisposable, IBufferWr
 
     public static final Vector3 zAxis = new Vector3(0, 0, 1);
 
-    private float               x;
-    private float               y;
-    private float               z;
+    public float                x;
+    public float                y;
+    public float                z;
 
     private Vector3(float x, float y, float z)
     {

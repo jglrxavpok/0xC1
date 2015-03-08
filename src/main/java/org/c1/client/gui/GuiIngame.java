@@ -31,13 +31,16 @@ public class GuiIngame extends Gui
 
         CollisionInfos infos = oc.getObjectInFront();
 
-        org.c1.inventory.Stack stack = player.getHeldItem();
-        if(stack != null)
+        if(player != null)
         {
-            String s = I18n.format(stack.getStackable().getUnlocalizedID());
-            getFontRenderer().setScale(scale);
-            getFontRenderer().drawShadowedString(s, 0xFFFFFFFF, (int) (oc.getDisplayWidth() / 2 - (int) getFontRenderer().getTextWidth(s) / 2), (int) oc.getDisplayHeight() - 40, renderEngine);
-            getFontRenderer().setScale(1);
+            org.c1.inventory.Stack stack = player.getHeldItem();
+            if(stack != null)
+            {
+                String s = I18n.format(stack.getStackable().getUnlocalizedID());
+                getFontRenderer().setScale(scale);
+                getFontRenderer().drawShadowedString(s, 0xFFFFFFFF, (int) (oc.getDisplayWidth() / 2 - (int) getFontRenderer().getTextWidth(s) / 2), (int) oc.getDisplayHeight() - 40, renderEngine);
+                getFontRenderer().setScale(1);
+            }
         }
 
     }
