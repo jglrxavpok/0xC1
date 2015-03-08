@@ -66,7 +66,7 @@ public class C1Game {
             }
 
             if (Display.isCloseRequested())
-                running = true;
+                running = false;
         }
 
         Display.destroy();
