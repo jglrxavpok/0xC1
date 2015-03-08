@@ -65,4 +65,8 @@ public class Framebuffer {
     public void bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
     }
+
+    public Texture getColorBuffer() {
+        return colorBuffer;
+    }
 }

@@ -1,6 +1,10 @@
 package org.c1.maths;
 
-public class Vec2f {
+import java.nio.*;
+
+import org.c1.utils.*;
+
+public class Vec2f implements IBufferWritable {
     public static final Vec2f NULL = new Vec2f(0, 0);
     public static final Vec2f X = new Vec2f(1, 0);
     public static final Vec2f Y = new Vec2f(0, 1);
@@ -171,4 +175,16 @@ public class Vec2f {
     public Vec2f lerp(Vec2f o, float factor) {
         return new Vec2f(o.x() * factor + x * (1f - factor), o.y() * factor + y * (1f - factor));
     }
+
+    @Override
+    public void write(FloatBuffer buffer) {
+        buffer.put(x);
+        buffer.put(y);
+    }
+
+    @Override
+    public int getSize() {
+        return 2;
+    }
+
 }

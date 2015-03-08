@@ -1,6 +1,10 @@
 package org.c1.maths;
 
-public class Vec3f {
+import java.nio.*;
+
+import org.c1.utils.*;
+
+public class Vec3f implements IBufferWritable {
 
     public static final Vec3f NULL = new Vec3f(0, 0, 0);
     public static final Vec3f X = new Vec3f(1, 0, 0);
@@ -224,5 +228,17 @@ public class Vec3f {
         y = w.y();
         z = w.z();
         return this;
+    }
+
+    @Override
+    public void write(FloatBuffer buffer) {
+        buffer.put(x);
+        buffer.put(y);
+        buffer.put(z);
+    }
+
+    @Override
+    public int getSize() {
+        return 3;
     }
 }

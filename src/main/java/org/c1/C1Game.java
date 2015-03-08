@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.io.*;
 
 import org.c1.client.render.*;
+import org.c1.maths.*;
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 import org.slf4j.*;
@@ -16,6 +17,8 @@ public class C1Game {
     private Logger logger;
     private File gameFolder;
     private Texture texture;
+    private Shader shader;
+    private VertexArray vertexArray;
 
     public void start() {
         try {
@@ -80,6 +83,24 @@ public class C1Game {
     private void initGame() {
         try {
             texture = new Texture("textures/logo.png");
+            shader = new Shader("shaders/blit");
+            shader.bind();
+            shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
+            shader.getUniform("projection").setValueMat4(new Mat4f().orthographic(-1, 1, -1, 1, -1, 1f));
+            vertexArray = new VertexArray();
+            vertexArray.addVertex(new Vec3f(0, 0, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(1, 0, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(1, 1, 0), new Vec2f(1, 1), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(0, 1, 0), new Vec2f(0, 1), new Vec3f(0, 0, 1));
+
+            vertexArray.addIndex(0);
+            vertexArray.addIndex(1);
+            vertexArray.addIndex(2);
+
+            vertexArray.addIndex(2);
+            vertexArray.addIndex(0);
+            vertexArray.addIndex(3);
+            vertexArray.upload();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,22 +129,14 @@ public class C1Game {
         glEnable(GL_TEXTURE_2D);
 
         glColor4f(1, 1, 1, 1);
+        shader.bind();
+
         texture.bind();
-        glBegin(GL_QUADS);
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
 
-        glTexCoord2d(0, 0);
-        glVertex2d(-0.5f, -0.5f);
+        vertexArray.bind();
 
-        glTexCoord2d(0, 1);
-        glVertex2d(-0.5f, 0.5f);
-
-        glTexCoord2d(1, 1);
-        glVertex2d(0.5f, 0.5f);
-
-        glTexCoord2d(1, 0);
-        glVertex2d(0.5f, -0.5f);
-
-        glEnd();
+        vertexArray.render();
     }
 
     public File getGameFolder() {

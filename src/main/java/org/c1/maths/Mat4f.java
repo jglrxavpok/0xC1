@@ -1,6 +1,10 @@
 package org.c1.maths;
 
-public class Mat4f {
+import java.nio.*;
+
+import org.c1.utils.*;
+
+public class Mat4f implements IBufferWritable {
 
     private float[] data = new float[4 * 4];
 
@@ -160,5 +164,17 @@ public class Mat4f {
         set(3, 3, 1);
 
         return this;
+    }
+
+    @Override
+    public void write(FloatBuffer buffer) {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                buffer.put(get(i, j));
+    }
+
+    @Override
+    public int getSize() {
+        return 16;
     }
 }
