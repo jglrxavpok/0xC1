@@ -97,26 +97,31 @@ public class C1Game {
 
     private void render(double deltaTime) {
         // TODO Implement
-        glClearColor(0, 0, 0, 1);
+        glClearColor(1, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glClear(GL_DEPTH_BUFFER_BIT);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glEnable(GL_TEXTURE_2D);
 
         glColor4f(1, 1, 1, 1);
         texture.bind();
         glBegin(GL_QUADS);
 
         glTexCoord2d(0, 0);
-        glVertex2d(0, 0);
+        glVertex2d(-0.5f, -0.5f);
 
         glTexCoord2d(0, 1);
-        glVertex2d(0, 1);
+        glVertex2d(-0.5f, 0.5f);
 
         glTexCoord2d(1, 1);
-        glVertex2d(1, 1);
+        glVertex2d(0.5f, 0.5f);
 
         glTexCoord2d(1, 0);
-        glVertex2d(1, 0);
+        glVertex2d(0.5f, -0.5f);
 
         glEnd();
     }

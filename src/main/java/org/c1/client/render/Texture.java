@@ -49,27 +49,32 @@ public class Texture {
     private void init() {
         texID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texID);
-        ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4);
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(pixels.length * 4);
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = 0; x < width; x++) {
                 int color = pixels[x + y * width];
-                float alpha = ((color >> 24) & 0xFF) / 255f;
-                float red = ((color >> 16) & 0xFF) / 255f;
-                float green = ((color >> 8) & 0xFF) / 255f;
-                float blue = ((color >> 0) & 0xFF) / 255f;
+                int alpha = (color >> 24) & 0xFF;
+                int red = (color >> 16) & 0xFF;
+                int green = (color >> 8) & 0xFF;
+                int blue = (color >> 0) & 0xFF;
 
                 // We swap composites to go from ARGB to RGBA
-                buffer.put((byte) (red * 255f));
-                buffer.put((byte) (green * 255f));
-                buffer.put((byte) (blue * 255f));
-                buffer.put((byte) (alpha * 255f));
+                buffer.put((byte) red);
+                buffer.put((byte) green);
+                buffer.put((byte) blue);
+                buffer.put((byte) alpha);
             }
         }
         buffer.flip();
-        glTexImage2D(GL_TEXTURE_2D, 0, GL30.GL_RGBA32F, width, height, 0, GL_RGBA, GL_BYTE, buffer);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+        glTexParameteri(GL_TEXTURE_2D, GL12.GL_TEXTURE_BASE_LEVEL, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, 0);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL30.GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     public void bind() {
