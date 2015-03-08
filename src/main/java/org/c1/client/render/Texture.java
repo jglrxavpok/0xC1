@@ -19,6 +19,7 @@ public class Texture {
     private boolean isRenderTarget;
     private int texID;
     private int filter;
+    private Framebuffer framebuffer;
 
     public Texture(String classpath) throws IOException {
         this(classpath, GL_NEAREST);
@@ -82,11 +83,23 @@ public class Texture {
     }
 
     public void setupRenderTarget() {
-        throw new RuntimeException("Texture.setupRenderTarget is not yet implemented");
+        if (isRenderTarget)
+            return;
+        framebuffer = new Framebuffer(width, height, this);
+    }
+
+    public void bindAsRenderTarget() {
+        if (!isRenderTarget)
+            throw new UnsupportedOperationException("Texture hasn't been set up to be a render target");
+        framebuffer.bind();
     }
 
     public boolean isRenderTarget() {
         return isRenderTarget;
+    }
+
+    public int getTextureID() {
+        return texID;
     }
 
 }
