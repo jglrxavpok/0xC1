@@ -86,12 +86,12 @@ public class C1Game {
             shader = new Shader("shaders/blit");
             shader.bind();
             shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
-            shader.getUniform("projection").setValueMat4(new Mat4f().orthographic(-1, 1, -1, 1, -1, 1f));
+            shader.getUniform("projection").setValueMat4(new Mat4f().orthographic(0, 940f, 0, 400f, -1, 1f));
             vertexArray = new VertexArray();
             vertexArray.addVertex(new Vec3f(0, 0, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
-            vertexArray.addVertex(new Vec3f(1, 0, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
-            vertexArray.addVertex(new Vec3f(1, 1, 0), new Vec2f(1, 1), new Vec3f(0, 0, 1));
-            vertexArray.addVertex(new Vec3f(0, 1, 0), new Vec2f(0, 1), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(940, 0, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(940, 400, 0), new Vec2f(1, 1), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(0, 400, 0), new Vec2f(0, 1), new Vec3f(0, 0, 1));
 
             vertexArray.addIndex(0);
             vertexArray.addIndex(1);

@@ -101,13 +101,13 @@ public class Mat4f implements IBufferWritable {
         float width = right - left;
         float height = top - bottom;
         float depth = far - near;
-        set(0, 0, 2 / width);
+        set(0, 0, 2f / width);
         set(0, 3, -(right + left) / width);
-        set(1, 1, 2 / height);
+        set(1, 1, 2f / height);
         set(1, 3, -(top + bottom) / height);
-        set(2, 2, -2 / depth);
+        set(2, 2, -2f / depth);
         set(2, 3, -(far + near) / depth);
-        set(3, 3, 1);
+        set(3, 3, 1f);
         return this;
     }
 
@@ -132,12 +132,12 @@ public class Mat4f implements IBufferWritable {
     }
 
     public Mat4f set(int x, int y, float val) {
-        data[x + y * 4] = val;
+        data[y + x * 4] = val;
         return this;
     }
 
     public float get(int x, int y) {
-        return data[x + y * 4];
+        return data[y + x * 4];
     }
 
     public Mat4f all(float val) {
@@ -168,8 +168,8 @@ public class Mat4f implements IBufferWritable {
 
     @Override
     public void write(FloatBuffer buffer) {
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
+        for (int j = 0; j < 4; j++)
+            for (int i = 0; i < 4; i++)
                 buffer.put(get(i, j));
     }
 

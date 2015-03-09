@@ -15,6 +15,8 @@ public class IOUtils {
 
     public static String read(String classpathLoc, String charset) throws IOException {
         InputStream input = IOUtils.class.getResourceAsStream("/" + classpathLoc);
+        if (input == null)
+            throw new FileNotFoundException("No file found in classpath: /" + classpathLoc);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         copy(input, out);
         input.close();

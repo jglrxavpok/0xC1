@@ -67,8 +67,9 @@ public class Shader {
         uniformLocs = Maps.newHashMap();
         String vertexContent = IOUtils.read(vertexLoc, "UTF-8");
         String fragContent = IOUtils.read(fragLoc, "UTF-8");
-        extractUniforms(vertexContent);
-        extractUniforms(fragContent);
+
+        vertexContent = preprocess(vertexContent);
+        fragContent = preprocess(fragContent);
 
         int vertID = compile(vertexContent, "vertex");
         int fragID = compile(fragContent, "fragment");
@@ -90,6 +91,34 @@ public class Shader {
         glDeleteShader(fragID);
     }
 
+    private String preprocess(String content) throws IOException {
+        String[] lines = content.split("\n");
+        StringBuffer buffer = new StringBuffer();
+        for (String line : lines) {
+            if (line.startsWith("uniform ")) {
+                String declaration = line.replace("uniform ", "");
+                int end = declaration.indexOf(";");
+                declaration = declaration.substring(0, end);
+                String[] parts = declaration.split(" ");
+                String type = parts[0];
+                String name = parts[parts.length - 1];
+                Uniform uniform = new Uniform(type, name);
+                uniforms.add(uniform);
+
+                buffer.append(line + "\n");
+            } else if (line.startsWith("#include ")) {
+                String path = line.replace("#include ", "").replace(" ", "").replace("\n", "").replace("\r", "");
+                String includedContent = IOUtils.read("shaders/" + path, "UTF-8");
+                buffer.append(includedContent);
+            } else {
+                buffer.append(line + "\n");
+            }
+
+        }
+
+        return buffer.toString();
+    }
+
     private int compile(String content, String type) {
         int shaderType = GL_VERTEX_SHADER;
         if (type.equals("fragment")) {
@@ -104,22 +133,6 @@ public class Shader {
             throw new RuntimeException("Error while compiling " + type + " shader: " + error);
         }
         return shaderID;
-    }
-
-    private void extractUniforms(String content) {
-        String[] lines = content.split("\n");
-        for (String line : lines) {
-            if (line.startsWith("uniform ")) {
-                String declaration = line.replace("uniform ", "");
-                int end = declaration.indexOf(";");
-                declaration = declaration.substring(0, end);
-                String[] parts = declaration.split(" ");
-                String type = parts[0];
-                String name = parts[parts.length - 1];
-                Uniform uniform = new Uniform(type, name);
-                uniforms.add(uniform);
-            }
-        }
     }
 
     public Uniform getUniform(String name) {
