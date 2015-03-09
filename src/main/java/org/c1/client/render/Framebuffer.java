@@ -21,6 +21,9 @@ public class Framebuffer {
     }
 
     public Framebuffer(int width, int height, Texture texture) {
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Width (" + width + ") or height(" + height + ")" + " is null or negative");
+        }
         this.width = width;
         this.height = height;
         if (texture == null)
@@ -35,23 +38,22 @@ public class Framebuffer {
     }
 
     private void init(Texture colorBuffer) {
+        glBindTexture(GL_TEXTURE_2D, 0);
+        framebufferId = glGenFramebuffers();
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer.getTextureID(), 0);
 
         depthBuffer = glGenRenderbuffers();
         glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-        framebufferId = glGenFramebuffers();
-        glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer.getTextureID(), 0);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+
         glDrawBuffers((IntBuffer) BufferUtils.createIntBuffer(2).put(GL_COLOR_ATTACHMENT0).put(GL_NONE).flip());
 
         int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE) {
-            System.err.println("Framebuffer could not be created, status code: " + status);
+            throw new IllegalStateException("Framebuffer could not be created, status code: " + status);
         }
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     public int getWidth() {
@@ -68,5 +70,9 @@ public class Framebuffer {
 
     public Texture getColorBuffer() {
         return colorBuffer;
+    }
+
+    public void unbind() {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }

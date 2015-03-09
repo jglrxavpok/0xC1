@@ -50,47 +50,53 @@ public class Texture {
     private void init() {
         texID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texID);
-        ByteBuffer buffer = ByteBuffer.allocateDirect(pixels.length * 4);
-        for (int y = height - 1; y >= 0; y--) {
-            for (int x = 0; x < width; x++) {
-                int color = pixels[x + y * width];
-                int alpha = (color >> 24) & 0xFF;
-                int red = (color >> 16) & 0xFF;
-                int green = (color >> 8) & 0xFF;
-                int blue = (color >> 0) & 0xFF;
-
-                // We swap composites to go from ARGB to RGBA
-                buffer.put((byte) red);
-                buffer.put((byte) green);
-                buffer.put((byte) blue);
-                buffer.put((byte) alpha);
-            }
-        }
-        buffer.flip();
-
         glTexParameteri(GL_TEXTURE_2D, GL12.GL_TEXTURE_BASE_LEVEL, 0);
         glTexParameteri(GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, 0);
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL30.GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 
-        glBindTexture(GL_TEXTURE_2D, 0);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4);
+        if (pixels != null) {
+            for (int y = height - 1; y >= 0; y--) {
+                for (int x = 0; x < width; x++) {
+                    int color = pixels[x + y * width];
+                    int alpha = (color >> 24) & 0xFF;
+                    int red = (color >> 16) & 0xFF;
+                    int green = (color >> 8) & 0xFF;
+                    int blue = (color >> 0) & 0xFF;
+
+                    // We swap composites to go from ARGB to RGBA
+                    buffer.put((byte) red);
+                    buffer.put((byte) green);
+                    buffer.put((byte) blue);
+                    buffer.put((byte) alpha);
+                }
+            }
+            buffer.flip();
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, GL30.GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
     }
 
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, texID);
     }
 
-    public void setupRenderTarget() {
+    public void setupRenderTarget(boolean clampColors) {
         if (isRenderTarget)
             return;
+        if (clampColors) {
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+        }
         framebuffer = new Framebuffer(width, height, this);
+        isRenderTarget = true;
     }
 
     public void bindAsRenderTarget() {
         if (!isRenderTarget)
             throw new UnsupportedOperationException("Texture hasn't been set up to be a render target");
+
         framebuffer.bind();
     }
 

@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.io.*;
 
 import org.c1.client.render.*;
+import org.c1.level.*;
 import org.c1.maths.*;
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
@@ -19,13 +20,19 @@ public class C1Game {
     private Texture texture;
     private Shader shader;
     private VertexArray vertexArray;
+    private RenderEngine renderEngine;
+    private int displayWidth;
+    private int displayHeight;
+    private Level level;
+    private Camera camera;
 
     public void start() {
         try {
             float ratio = 16f / 9f;
-            int width = 940;
+            displayWidth = 940;
+            displayHeight = (int) (displayWidth / ratio);
             LWJGLSetup.load(new File(getGameFolder(), "natives"));
-            Display.setDisplayMode(new DisplayMode(width, (int) (width / ratio)));
+            Display.setDisplayMode(new DisplayMode(displayWidth, displayHeight));
             Display.create();
         } catch (LWJGLException | IOException e) {
             e.printStackTrace();
@@ -86,7 +93,9 @@ public class C1Game {
             shader = new Shader("shaders/blit");
             shader.bind();
             shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
-            shader.getUniform("projection").setValueMat4(new Mat4f().orthographic(0, 940f, 0, 400f, -1, 1f));
+            Mat4f projection = new Mat4f().orthographic(0, 940f, 0, 400f, -1, 1f);
+            camera = new Camera(projection);
+            shader.getUniform("projection").setValueMat4(projection);
             vertexArray = new VertexArray();
             vertexArray.addVertex(new Vec3f(0, 0, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
             vertexArray.addVertex(new Vec3f(940, 0, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
@@ -101,9 +110,35 @@ public class C1Game {
             vertexArray.addIndex(0);
             vertexArray.addIndex(3);
             vertexArray.upload();
+
+            renderEngine = new RenderEngine(displayWidth, displayHeight);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        level = new Level();
+
+        GameObject testObject = new GameObject() {
+
+            @Override
+            public void update(double delta) {
+                ;
+            }
+
+            @Override
+            public boolean shouldDie() {
+                return false;
+            }
+
+            @Override
+            public void render(double delta) {
+                vertexArray.bind();
+                vertexArray.render();
+            }
+        };
+        level.addGameObject(testObject);
+        level.update(0);
     }
 
     private void pollEvents() {
@@ -126,17 +161,21 @@ public class C1Game {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        glEnable(GL_DEPTH_TEST);
+
         glEnable(GL_TEXTURE_2D);
 
         glColor4f(1, 1, 1, 1);
-        shader.bind();
 
-        texture.bind();
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        renderEngine.renderLevel(level, deltaTime, camera);
 
-        vertexArray.bind();
-
-        vertexArray.render();
+        /*
+         * glDisable(GL_DEPTH_TEST); texture.bind();
+         * GL13.glActiveTexture(GL13.GL_TEXTURE0);
+         * renderEngine.setCurrentCamera(camera);
+         * renderEngine.setCurrentShader(shader); vertexArray.bind();
+         * vertexArray.render();
+         */
     }
 
     public File getGameFolder() {

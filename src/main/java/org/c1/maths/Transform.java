@@ -47,14 +47,13 @@ public class Transform {
     }
 
     public Mat4f getTransformationMatrix() {
-        Mat4f translationMatrix = new Mat4f().translation(position.x(),
-                position.y(), position.z());
+        Mat4f translationMatrix = new Mat4f().translation(position.x(), position.y(), position.z());
         Mat4f rotationMatrix = rotation.toRotationMatrix();
         return translationMatrix.mul(rotationMatrix);
     }
 
     public Vec3f transformedPos() {
-        return transform(position);
+        return transform(position.copy());
     }
 
     public void translate(float x, float y, float z) {
@@ -65,5 +64,10 @@ public class Transform {
 
     public Vec3f transform(Vec3f v) {
         return getTransformationMatrix().transform(v);
+    }
+
+    public void set(Transform transform) {
+        position = transform.position.copy();
+        rotation = transform.rotation.copy();
     }
 }

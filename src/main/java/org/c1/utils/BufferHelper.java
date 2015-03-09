@@ -27,4 +27,12 @@ public class BufferHelper {
         return buffer;
     }
 
+    public static IntBuffer intBuffer(int[] indices) {
+        IntBuffer buffer = BufferUtils.createIntBuffer(indices.length);
+        for (int i : indices)
+            buffer.put(i);
+        buffer.flip();
+        return buffer;
+    }
+
 }

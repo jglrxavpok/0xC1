@@ -43,6 +43,18 @@ public class Shader {
         public void setValueMat4(Mat4f m) {
             glUniformMatrix4(shader.getUniformLocation(name), false, BufferHelper.floatBuffer(Lists.newArrayList(m)));
         }
+
+        public void setValue2f(Vec2f v) {
+            glUniform2f(shader.getUniformLocation(name), v.x(), v.y());
+        }
+
+        public void setValue3f(Vec3f v) {
+            glUniform3f(shader.getUniformLocation(name), v.x(), v.y(), v.z());
+        }
+
+        public void setValue3f(Quaternion q) {
+            glUniform4f(shader.getUniformLocation(name), q.x(), q.y(), q.z(), q.w());
+        }
     }
 
     public final static int POS_INDEX = 1;
@@ -104,6 +116,7 @@ public class Shader {
                 String name = parts[parts.length - 1];
                 Uniform uniform = new Uniform(type, name);
                 uniforms.add(uniform);
+                System.out.println("New uniform: " + type + " " + name);
 
                 buffer.append(line + "\n");
             } else if (line.startsWith("#include ")) {
@@ -153,5 +166,9 @@ public class Shader {
 
     public void bind() {
         glUseProgram(program);
+    }
+
+    public void update(RenderEngine engine) {
+        ;
     }
 }
