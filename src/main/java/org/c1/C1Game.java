@@ -112,7 +112,7 @@ public class C1Game {
             vertexArray.upload();
 
             renderEngine = new RenderEngine(displayWidth, displayHeight);
-
+            renderEngine.setAmbientColor(new Vec3f(1, 1, 1));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -169,15 +169,6 @@ public class C1Game {
         glColor4f(1, 1, 1, 1);
 
         renderEngine.renderLevel(level, deltaTime, camera);
-
-        //        glDisable(GL_DEPTH_TEST);
-        //        shader.bind();
-        //        texture.bind();
-        //        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        //        // renderEngine.setCurrentCamera(camera);
-        //        // renderEngine.setCurrentShader(shader);
-        //        vertexArray.bind();
-        //        vertexArray.render();
     }
 
     public File getGameFolder() {
