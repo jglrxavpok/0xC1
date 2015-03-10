@@ -93,9 +93,9 @@ public class C1Game {
             shader = new Shader("shaders/blit");
             shader.bind();
             shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
-            Mat4f projection = new Mat4f().orthographic(0, 940f, 0, 400f, -1, 1f);
-            camera = new Camera(projection);
+            Mat4f projection = new Mat4f().orthographic(0, 940f, 0, 400f, -1f, 1f);
             shader.getUniform("projection").setValueMat4(projection);
+            camera = new Camera(projection);
             vertexArray = new VertexArray();
             vertexArray.addVertex(new Vec3f(0, 0, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
             vertexArray.addVertex(new Vec3f(940, 0, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
@@ -133,6 +133,7 @@ public class C1Game {
 
             @Override
             public void render(double delta) {
+                texture.bind();
                 vertexArray.bind();
                 vertexArray.render();
             }
@@ -169,13 +170,14 @@ public class C1Game {
 
         renderEngine.renderLevel(level, deltaTime, camera);
 
-        /*
-         * glDisable(GL_DEPTH_TEST); texture.bind();
-         * GL13.glActiveTexture(GL13.GL_TEXTURE0);
-         * renderEngine.setCurrentCamera(camera);
-         * renderEngine.setCurrentShader(shader); vertexArray.bind();
-         * vertexArray.render();
-         */
+        //        glDisable(GL_DEPTH_TEST);
+        //        shader.bind();
+        //        texture.bind();
+        //        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        //        // renderEngine.setCurrentCamera(camera);
+        //        // renderEngine.setCurrentShader(shader);
+        //        vertexArray.bind();
+        //        vertexArray.render();
     }
 
     public File getGameFolder() {

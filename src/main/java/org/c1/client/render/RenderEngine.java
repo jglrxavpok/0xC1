@@ -9,6 +9,7 @@ import java.util.*;
 import org.c1.level.*;
 import org.c1.level.lights.*;
 import org.c1.maths.*;
+import org.lwjgl.opengl.*;
 
 public class RenderEngine {
 
@@ -53,7 +54,7 @@ public class RenderEngine {
 
         lightMatrix = new Mat4f().scale(0, 0, 0);
         initMatrix = new Mat4f().identity();
-        altCamera = new Camera((float) Math.toRadians(90), 16f / 9f, 0.001f, 10000f);
+        altCamera = new Camera((float) Math.toRadians(90), 16f / 9f, -1f, 10000f);
         ambientColor = new Vec3f(0.5f, 0.5f, 0.5f);
         loadShaders();
         initShadowMaps();
@@ -80,7 +81,7 @@ public class RenderEngine {
         try {
             ambientShader = new Shader("shaders/blit.vsh", "shaders/lights/ambient.fsh");
             shadowMapShader = new Shader("shaders/blit.vsh", "shaders/lights/shadowMap.fsh");
-            renderToTextShader = new Shader("shaders/blit.vsh", "shaders/renderToText.fsh"); // TODO: update light number
+            renderToTextShader = new Shader("shaders/blit.vsh", "shaders/renderToText.fsh");
             nullFilterShader = new Shader("shaders/blit");
 
             planeObject = new VertexArray();
@@ -92,10 +93,14 @@ public class RenderEngine {
             planeObject.addIndex(0);
             planeObject.addIndex(3);
 
-            planeObject.addVertex(new Vec3f(0, 0, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
-            planeObject.addVertex(new Vec3f(1, 0, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
-            planeObject.addVertex(new Vec3f(1, 1, 0), new Vec2f(1, 1), new Vec3f(0, 0, 1));
-            planeObject.addVertex(new Vec3f(0, 1, 0), new Vec2f(0, 1), new Vec3f(0, 0, 1));
+            float left = -1f;
+            float right = 1f;
+            float top = 1f;
+            float bottom = -1f;
+            planeObject.addVertex(new Vec3f(left, bottom, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
+            planeObject.addVertex(new Vec3f(right, bottom, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
+            planeObject.addVertex(new Vec3f(right, top, 0), new Vec2f(1, 1), new Vec3f(0, 0, 1));
+            planeObject.addVertex(new Vec3f(left, top, 0), new Vec2f(0, 1), new Vec3f(0, 0, 1));
             planeObject.upload();
         } catch (IOException e) {
             e.printStackTrace();
@@ -111,13 +116,17 @@ public class RenderEngine {
     }
 
     public void renderLevel(Level level, double delta, Camera renderCamera) {
-        setCurrentCamera(renderCamera);
-        setCurrentShader(ambientShader);
+        int lightCount = Math.max(1, level.getLights().size() + 1);
+        renderToTextShader.bind();
+        renderToTextShader.getUniform("lightNumber").setValuei(lightCount);
+
+        ambientShader.bind();
         ambientShader.getUniform("ambientColor").setValue3f(ambientColor);
-        renderObjects(ambientShader, level, delta, renderCamera);
 
         renderTarget.bindAsRenderTarget();
-        int lightCount = level.getLights().size() + 1;
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         renderObjects(ambientShader, level, delta, renderCamera);
         List<Light> lights = level.getLights();
         for (Light l : lights) {
@@ -170,8 +179,6 @@ public class RenderEngine {
             glDisable(GL_BLEND);
         }
 
-        renderToTextShader.getUniform("lightNumber").setValuei(lightCount);
-
         applyFilter(renderToTextShader, renderTarget, renderTargetTmp);
         applyFilter(nullFilterShader, renderTargetTmp, renderTarget);
 
@@ -184,7 +191,6 @@ public class RenderEngine {
         else
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        filterTexture = source;
         altCamera.getTransform().pos(Vec3f.NULL.copy());
         altCamera.getTransform().rot(Quaternion.NULL.copy());
         altCamera.setProjection(initMatrix);
@@ -192,10 +198,14 @@ public class RenderEngine {
 
         setCurrentCamera(altCamera);
         setCurrentShader(filter);
-        source.bind();
+        setTexture(source);
         planeObject.bind();
         planeObject.render();
-        filterTexture = null;
+    }
+
+    private void setTexture(Texture text) {
+        text.bind();
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
     }
 
     private void setLightMatrix(Mat4f mat) {
@@ -204,9 +214,10 @@ public class RenderEngine {
 
     public void setCurrentShader(Shader shader) {
         currentShader = shader;
+        shader.bind();
         if (currentCamera != null) {
-            currentShader.getUniform("modelview").setValueMat4(new Mat4f().identity());
-            currentShader.getUniform("projection").setValueMat4(currentCamera.getProjection());
+            shader.getUniform("modelview").setValueMat4(initMatrix);
+            shader.getUniform("projection").setValueMat4(currentCamera.getViewProjection());
         }
         shader.update(this);
     }

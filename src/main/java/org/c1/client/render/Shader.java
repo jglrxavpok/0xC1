@@ -160,6 +160,8 @@ public class Shader {
         if (uniformLocs.containsKey(name))
             return uniformLocs.get(name);
         int loc = glGetUniformLocation(program, name);
+        if (loc < 0)
+            System.err.println("Uniform not found: " + name);
         uniformLocs.put(name, loc);
         return loc;
     }

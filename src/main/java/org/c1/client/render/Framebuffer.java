@@ -54,6 +54,8 @@ public class Framebuffer {
         if (status != GL_FRAMEBUFFER_COMPLETE) {
             throw new IllegalStateException("Framebuffer could not be created, status code: " + status);
         }
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     public int getWidth() {

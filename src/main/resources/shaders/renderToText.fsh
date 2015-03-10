@@ -1,7 +1,7 @@
 #version 330
 
-in vec2 texCoord0;
 out vec4 finalColor;
+in vec2 texCoord0;
 uniform sampler2D texture;
 uniform int lightNumber;
 
