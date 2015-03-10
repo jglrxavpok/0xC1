@@ -6,6 +6,7 @@ import java.io.*;
 
 import org.c1.client.render.*;
 import org.c1.level.*;
+import org.c1.level.lights.*;
 import org.c1.maths.*;
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
@@ -112,7 +113,7 @@ public class C1Game {
             vertexArray.upload();
 
             renderEngine = new RenderEngine(displayWidth, displayHeight);
-            renderEngine.setAmbientColor(new Vec3f(1, 1, 1));
+            renderEngine.setAmbientColor(new Vec3f(0.5f, 0.5f, 0.5f));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -140,6 +141,11 @@ public class C1Game {
         };
         level.addGameObject(testObject);
         level.update(0);
+
+        PointLight light = new PointLight(new Vec3f(1, 0, 0), 0.8f, new Vec3f(0, 0, 0.005f));
+
+        light.getTransform().pos(0, 0, 0.1f);
+        level.addLight(light);
     }
 
     private void pollEvents() {

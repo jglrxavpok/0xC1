@@ -60,6 +60,7 @@ public class Shader {
     public final static int POS_INDEX = 1;
     public final static int TEXT_INDEX = 2;
     public final static int NORMAL_INDEX = 3;
+    public final static int TANGENT_INDEX = 4;
     private ArrayList<Uniform> uniforms;
     private Map<String, Integer> uniformLocs;
     private int program;
@@ -121,7 +122,7 @@ public class Shader {
                 buffer.append(line + "\n");
             } else if (line.startsWith("#include ")) {
                 String path = line.replace("#include ", "").replace(" ", "").replace("\n", "").replace("\r", "");
-                String includedContent = IOUtils.read("shaders/" + path, "UTF-8");
+                String includedContent = preprocess(IOUtils.read("shaders/" + path, "UTF-8"));
                 buffer.append(includedContent);
             } else {
                 buffer.append(line + "\n");
@@ -152,6 +153,11 @@ public class Shader {
         for (Uniform u : uniforms) {
             if (u.getName().equals(name))
                 return u;
+        }
+        if (getUniformLocation(name) != -1) {
+            Uniform uniform = new Uniform("<unknown>", name);
+            uniforms.add(uniform);
+            return uniform;
         }
         return null;
     }

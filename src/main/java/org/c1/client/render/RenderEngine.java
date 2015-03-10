@@ -36,8 +36,10 @@ public class RenderEngine {
     private Shader renderToTextShader;
     private Shader nullFilterShader;
     private VertexArray planeObject;
+    private Light activeLight;
 
     private static final Mat4f bias = new Mat4f().scale(0.5f, 0.5f, 0.5f).mul(new Mat4f().translation(1, 1, 1));
+    public static final int SHADOW_MAP_SLOT = 1;
 
     public RenderEngine(int w, int h) {
         renderTarget = new Texture(w, h, null);
@@ -68,9 +70,9 @@ public class RenderEngine {
             ShadowMapSize mapSize = ShadowMapSize.values()[i];
             int size = mapSize.size();
             Texture shadowMap = new Texture(size, size, null, GL_LINEAR);
-            shadowMap.setupRenderTarget(true);
             Texture shadowMapTmp = new Texture(size, size, null, GL_LINEAR);
-            shadowMapTmp.setupRenderTarget(true);
+            shadowMap.setupRenderTarget(false);
+            shadowMapTmp.setupRenderTarget(false);
 
             shadowMaps[i] = shadowMap;
             shadowMapsTmp[i] = shadowMapTmp;
@@ -132,6 +134,7 @@ public class RenderEngine {
         for (Light l : lights) {
             if (!l.isActive())
                 continue;
+            activeLight = l;
 
             int mapIndex = 0;
             ShadowingData shadowingData = l.getShadowingData();
@@ -141,6 +144,8 @@ public class RenderEngine {
 
             currentShadowMap = shadowMaps[mapIndex];
             currentTmpShadowMap = shadowMapsTmp[mapIndex];
+
+            setTexture(currentShadowMap, SHADOW_MAP_SLOT);
             currentShadowMap.bindAsRenderTarget();
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -204,8 +209,12 @@ public class RenderEngine {
     }
 
     private void setTexture(Texture text) {
+        setTexture(text, 0);
+    }
+
+    private void setTexture(Texture text, int slot) {
+        GL13.glActiveTexture(GL13.GL_TEXTURE0 + slot);
         text.bind();
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
     }
 
     private void setLightMatrix(Mat4f mat) {
@@ -240,5 +249,13 @@ public class RenderEngine {
 
     public float getShadowVarianceMin() {
         return shadowVarianceMin;
+    }
+
+    public Light getLight() {
+        return activeLight;
+    }
+
+    public Mat4f getLightMatrix() {
+        return lightMatrix;
     }
 }
