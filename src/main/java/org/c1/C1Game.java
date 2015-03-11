@@ -1,40 +1,18 @@
 package org.c1;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-import org.c1.client.PlayerController;
-import org.c1.client.render.RenderEngine;
-import org.c1.client.render.Shader;
-import org.c1.client.render.Texture;
-import org.c1.client.render.VertexArray;
-import org.c1.level.Camera;
-import org.c1.level.GameObject;
-import org.c1.level.Level;
-import org.c1.level.lights.PointLight;
-import org.c1.maths.Mat4f;
-import org.c1.maths.Vec2f;
-import org.c1.maths.Vec3f;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.c1.client.*;
+import org.c1.client.render.*;
+import org.c1.level.*;
+import org.c1.level.lights.*;
+import org.c1.maths.*;
+import org.lwjgl.*;
+import org.lwjgl.input.*;
+import org.lwjgl.opengl.*;
+import org.slf4j.*;
 
 public class C1Game {
 
@@ -51,6 +29,7 @@ public class C1Game {
     private Level level;
     private Camera camera;
     private PlayerController player;
+    private PointLight light;
 
     public void start() {
         try {
@@ -119,15 +98,19 @@ public class C1Game {
             shader = new Shader("shaders/blit");
             shader.bind();
             shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
-            Mat4f projection = new Mat4f().orthographic(-1f, 1f, -1f, 1f, -1f, 1f);
+            Mat4f projection = new Mat4f().perspective((float) (Math.toRadians(90)), 16f / 9f, 0f, 100000f);
             shader.getUniform("projection").setValueMat4(projection);
             player = new PlayerController(projection);
             camera = player.getCamera();
             vertexArray = new VertexArray();
-            vertexArray.addVertex(new Vec3f(-1f, -1f, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
-            vertexArray.addVertex(new Vec3f(1f, -1f, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
-            vertexArray.addVertex(new Vec3f(1f, 1f, 0), new Vec2f(1, 1), new Vec3f(0, 0, 1));
-            vertexArray.addVertex(new Vec3f(-1f, 1f, 0), new Vec2f(0, 1), new Vec3f(0, 0, 1));
+            float left = -1f;
+            float right = 1f;
+            float top = -1f;
+            float bottom = 1f;
+            vertexArray.addVertex(new Vec3f(left, top, 0), new Vec2f(0, 0), new Vec3f(0, 0, -1));
+            vertexArray.addVertex(new Vec3f(right, top, 0), new Vec2f(1, 0), new Vec3f(0, 0, -1));
+            vertexArray.addVertex(new Vec3f(right, bottom, 0), new Vec2f(1, 1), new Vec3f(0, 0, -1));
+            vertexArray.addVertex(new Vec3f(left, bottom, 0), new Vec2f(0, 1), new Vec3f(0, 0, -1));
 
             vertexArray.addIndex(1);
             vertexArray.addIndex(0);
@@ -165,55 +148,53 @@ public class C1Game {
                 vertexArray.render();
             }
         };
+        testObject.setPos(new Vec3f(0, 0, 10f));
         level.addGameObject(testObject);
         level.update(0);
 
-        PointLight light = new PointLight(new Vec3f(1, 0, 0), 9.8f, new Vec3f(0, 0, 0.005f));
+        light = new PointLight(new Vec3f(1, 1, 0), 0.8f, new Vec3f(1f, 1f, 0.0005f));
 
-        light.getTransform().pos(0, 0, 0.1f);
         level.addLight(light);
         light.setActive(true);
     }
-    
-    
-    float dx        = 0.0f;
-    float dy        = 0.0f;
-    
+
+    float dx = 0.0f;
+    float dy = 0.0f;
+
     private void pollEvents() {
 
-    	dx = Mouse.getDX();
-    	dy = Mouse.getDY();
-    	
-    	player.mouseInput(dy * 0.05f, dx * 0.05f);
-    	
-    	//Keyboard input
-    	while (Keyboard.next()) {
-            if(Keyboard.getEventKeyState()){
-            	if(Keyboard.getEventKey() == Keyboard.KEY_Z){
-            		float moveX = 0, moveZ = 0;
-            		moveX -= 3 * (float)Math.sin(Math.toRadians(player.getTransform().rot().x()));
-            		moveZ += 3 * (float)Math.cos(Math.toRadians(player.getTransform().rot().x()));
-            		player.getTransform().translate(moveX, 0, moveZ);
-            		player.playerCam.getTransform().translate(moveX, 0, moveZ);
-            	}
-            	if(Keyboard.getEventKey() == Keyboard.KEY_S){
-            		float moveX = 0, moveZ = 0;
-            		moveX += 3 * (float)Math.sin(Math.toRadians(player.getTransform().rot().x()));
-            		moveZ -= 3 * (float)Math.cos(Math.toRadians(player.getTransform().rot().x()));
-            		player.getTransform().translate(moveX, 0, moveZ);
-            		player.playerCam.getTransform().translate(moveX, 0, moveZ);
-            	}
-            }
-            
-        }
-        
+        dx = Mouse.getDX();
+        dy = Mouse.getDY();
 
-    	
+        player.mouseInput(dx * 0.005f, -dy * 0.005f);
+
+        Mouse.setGrabbed(true);
+        //Keyboard input
+        while (Keyboard.next()) {
+            if (Keyboard.getEventKeyState()) {
+                int key = Keyboard.getEventKey();
+                Vec3f translation = player.playerCam.getRotation().forward();
+                if (key == Keyboard.KEY_Z) {
+                    player.getTransform().translate(translation);
+                    player.playerCam.getTransform().translate(translation);
+                } else if (key == Keyboard.KEY_S) {
+                    translation.mul(-1);
+                    player.getTransform().translate(translation);
+                    player.playerCam.getTransform().translate(translation);
+                } else if (key == Keyboard.KEY_ESCAPE) {
+                    this.running = false;
+                }
+            }
+
+        }
+
     }
 
     private void update(double deltaTime) {
         // TODO Implement
-    	level.update(deltaTime);
+
+        light.getTransform().pos(player.getPos());
+        level.update(deltaTime);
     }
 
     private void render(double deltaTime) {

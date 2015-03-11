@@ -52,10 +52,6 @@ public class Transform {
         return translationMatrix.mul(rotationMatrix);
     }
 
-    public Vec3f transformedPos() {
-        return transform(position.copy());
-    }
-
     public void translate(float x, float y, float z) {
         position.x(position.x() + x);
         position.y(position.y() + y);
@@ -69,5 +65,9 @@ public class Transform {
     public void set(Transform transform) {
         position = transform.position.copy();
         rotation = transform.rotation.copy();
+    }
+
+    public void translate(Vec3f v) {
+        translate(v.x(), v.y(), v.z());
     }
 }

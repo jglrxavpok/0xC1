@@ -15,16 +15,16 @@ public class LightShader extends Shader {
     }
 
     public void update(RenderEngine engine) {
-        getUniform("lightMatrix").setValueMat4(engine.getLightMatrix());
+        Light light = engine.getLight();
+        getUniform("lightMatrix").setValueMat4(engine.getLightMatrix().mul(light.getTransform().getTransformationMatrix()));
         getUniform("R_shadowMap").setValuei(RenderEngine.SHADOW_MAP_SLOT);
-        getUniform("lightMap").setValuei(RenderEngine.LIGHT_MAP_SLOT);
         getUniform("R_shadowVarianceMin").setValuef(engine.getShadowVarianceMin());
         getUniform("R_shadowLightBleedingReduction").setValuef(engine.getShadowLightBleedingReduction());
 
-        getUniform("Cam_eyePos").setValue3f(engine.getCurrentCamera().getTransform().transformedPos());
+        getUniform("Cam_eyePos").setValue3f(engine.getCurrentCamera().getTransform().pos());
 
-        getUniform("specularPower").setValuef(4.0f);
-        getUniform("specularIntensity").setValuef(8.0f);
+        getUniform("specularPower").setValuef(8.0f);
+        getUniform("specularIntensity").setValuef(1);
 
         Uniform pointLightUniform = getUniform("pointLight");
         if (pointLightUniform != null) {
@@ -35,7 +35,7 @@ public class LightShader extends Shader {
             getUniform("pointLight.atten.linear").setValuef(pointLight.getAttenuation().y());
             getUniform("pointLight.atten.exponent").setValuef(pointLight.getAttenuation().z());
 
-            getUniform("pointLight.position").setValue3f(pointLight.getTransform().transformedPos());
+            getUniform("pointLight.position").setValue3f(pointLight.getTransform().pos());
 
             getUniform("pointLight.range").setValuef(pointLight.getRange());
         }

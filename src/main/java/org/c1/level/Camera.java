@@ -5,7 +5,6 @@ import org.c1.maths.*;
 public class Camera extends GameObject {
 
     private Mat4f projection;
-    private	Vec3f cameraPos;
 
     public Camera(float fov, float aspectRatio, float near, float far) {
         this(new Mat4f().perspective(fov, aspectRatio, near, far));
@@ -23,15 +22,7 @@ public class Camera extends GameObject {
         this.projection = projection;
     }
 
-    public Vec3f getCameraPos() {
-		return cameraPos;
-	}
-
-	public void setCameraPos(Vec3f cameraPos) {
-		this.cameraPos = cameraPos;
-	}
-
-	@Override
+    @Override
     public void update(double delta) {
         ;
     }
@@ -48,7 +39,7 @@ public class Camera extends GameObject {
 
     public Mat4f getViewProjection() {
         Mat4f cameraRotation = getTransform().rot().conjugate().toRotationMatrix();
-        cameraPos = getTransform().transformedPos().mul(-1);
+        Vec3f cameraPos = getTransform().pos().copy().mul(-1);
         Mat4f cameraTranslation = new Mat4f().translation(cameraPos.x(), cameraPos.y(), cameraPos.z());
         return projection.mul(cameraRotation.mul(cameraTranslation));
     }

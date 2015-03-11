@@ -92,6 +92,7 @@ public class Mat4f implements IBufferWritable {
         set(1, 1, 1.0f / tanHlfFov);
         set(2, 2, (-near - far) / zRange);
         set(2, 3, 2 * far * near / zRange);
+        set(3, 2, 1);
         return this;
     }
 

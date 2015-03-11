@@ -1,4 +1,4 @@
-#version 330
+#version 410
 
 layout(location = 1) in vec3 position;
 layout(location = 2) in vec2 texCoords;

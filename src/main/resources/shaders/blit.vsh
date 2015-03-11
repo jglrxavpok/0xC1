@@ -1,7 +1,8 @@
-#version 330
+#version 410
 
 layout(location = 1) in vec3 pos;
 layout(location = 2) in vec2 texCoords;
+
 out vec2 texCoord0;
 out vec4 finalWorldPos;
 

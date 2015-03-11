@@ -37,11 +37,9 @@ public class RenderEngine {
     private Shader nullFilterShader;
     private VertexArray planeObject;
     private Light activeLight;
-    private Texture lightMap;
 
     private static final Mat4f bias = new Mat4f().scale(0.5f, 0.5f, 0.5f).mul(new Mat4f().translation(1, 1, 1));
     public static final int SHADOW_MAP_SLOT = 1;
-    public static final int LIGHT_MAP_SLOT = 2;
 
     public RenderEngine(int w, int h) {
         renderTarget = new Texture(w, h, null);
@@ -70,11 +68,6 @@ public class RenderEngine {
         loadShaders();
         initShadowMaps();
 
-        try {
-            lightMap = new Texture("textures/default_light.png");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void initShadowMaps() {
@@ -114,10 +107,10 @@ public class RenderEngine {
             float right = 1f;
             float top = 1f;
             float bottom = -1f;
-            planeObject.addVertex(new Vec3f(left, bottom, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
-            planeObject.addVertex(new Vec3f(right, bottom, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
-            planeObject.addVertex(new Vec3f(right, top, 0), new Vec2f(1, 1), new Vec3f(0, 0, 1));
-            planeObject.addVertex(new Vec3f(left, top, 0), new Vec2f(0, 1), new Vec3f(0, 0, 1));
+            planeObject.addVertex(new Vec3f(left, bottom, 0), new Vec2f(0, 0), new Vec3f(0, 0, -1));
+            planeObject.addVertex(new Vec3f(right, bottom, 0), new Vec2f(1, 0), new Vec3f(0, 0, -1));
+            planeObject.addVertex(new Vec3f(right, top, 0), new Vec2f(1, 1), new Vec3f(0, 0, -1));
+            planeObject.addVertex(new Vec3f(left, top, 0), new Vec2f(0, 1), new Vec3f(0, 0, -1));
             planeObject.upload();
         } catch (IOException e) {
             e.printStackTrace();
@@ -148,7 +141,6 @@ public class RenderEngine {
         renderObjects(ambientShader, level, delta, renderCamera);
         List<Light> lights = level.getLights();
 
-        bindTexture(lightMap, LIGHT_MAP_SLOT);
         for (Light l : lights) {
             if (!l.isActive())
                 continue;
@@ -243,8 +235,8 @@ public class RenderEngine {
         currentShader = shader;
         shader.bind();
         if (currentCamera != null) {
-            shader.getUniform("modelview").setValueMat4(initMatrix);
             shader.getUniform("projection").setValueMat4(currentCamera.getViewProjection());
+            shader.getUniform("modelview").setValueMat4(initMatrix);
         }
         shader.update(this);
     }
@@ -253,6 +245,7 @@ public class RenderEngine {
         setCurrentCamera(camera);
         setCurrentShader(shader);
         for (GameObject o : level.getGameObjects()) {
+            currentShader.getUniform("modelview").setValueMat4(o.getTransform().getTransformationMatrix());
             o.render(delta);
         }
     }

@@ -20,6 +20,22 @@ public abstract class GameObject {
         ;
     }
 
+    public Vec3f getPos() {
+        return transform.pos();
+    }
+
+    public Quaternion getRotation() {
+        return transform.rot();
+    }
+
+    public void setRotation(Quaternion q) {
+        transform.rot(q);
+    }
+
+    public void setPos(Vec3f pos) {
+        transform.pos(pos);
+    }
+
     public Transform getTransform() {
         return transform;
     }

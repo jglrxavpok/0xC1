@@ -51,9 +51,6 @@ vec4 calcLight(BaseLight base, vec3 direction, vec3 normal, vec3 worldPos)
         vec3 directionToEye = normalize(Cam_eyePos - worldPos);
         vec3 halfDirection = normalize(directionToEye - direction);
         float specularFactor = dot(halfDirection, normal);
-        float lightMapValue = texture2D(lightMap, vec2(specularFactor, 0)).r;
-        specularFactor = lightMapValue;
-
         specularFactor = pow(specularFactor, specularPower);
         
         if(specularFactor > 0)
@@ -77,8 +74,9 @@ vec4 calcPointLight(PointLight pointLight, vec3 normal, vec3 worldPos)
     
     vec4 color = calcLight(pointLight.base, direction, normal, worldPos);
     // ax² + bx + c
-    float attenuation = pointLight.atten.constant + pointLight.atten.linear * distanceToPoint + pointLight.atten.exponent * distanceToPoint * distanceToPoint
-    + 0.000001; // Please not divide by 0
+    float attenuation = pointLight.atten.constant + pointLight.atten.linear * distanceToPoint + pointLight.atten.exponent * distanceToPoint * distanceToPoint; // Please not divide by 0
+    if(attenuation == 0.0f)
+        attenuation = 0.00001f;
     return color / attenuation;
 }
 
