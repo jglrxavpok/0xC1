@@ -7,9 +7,14 @@ public class ShadowingData {
     private Mat4f projection;
     private ShadowMapSize shadowMapSize;
     private boolean flips;
+    private float lightBleedReduc;
+    private float varianceMin;
 
     public ShadowingData(Mat4f projection) {
         this.projection = projection;
+        this.varianceMin = 0.00000002f;
+        this.lightBleedReduc = 0.9f;
+        this.shadowMapSize = ShadowMapSize._1024x1024;
     }
 
     public Mat4f getProjectionMatrix() {
@@ -37,12 +42,18 @@ public class ShadowingData {
     }
 
     public float getLightBleedingReduction() {
-        // TODO Implement ShadowingData.getLightBleedingReduction
-        throw new RuntimeException("ShadowingData.getLightBleedingReduction is not implemented yet");
+        return lightBleedReduc;
     }
 
     public float getVarianceMin() {
-        // TODO Implement ShadowingData.getVarianceMin
-        throw new RuntimeException("ShadowingData.getVarianceMin is not implemented yet");
+        return varianceMin;
+    }
+
+    public void setLightBleedingReduction(float red) {
+        this.lightBleedReduc = red;
+    }
+
+    public void setVarianceMin(float var) {
+        this.varianceMin = var;
     }
 }

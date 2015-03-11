@@ -82,11 +82,11 @@ public class Texture {
         glBindTexture(GL_TEXTURE_2D, texID);
     }
 
-    public void setupRenderTarget(boolean clampColors) {
+    public void setupRenderTarget(boolean clamp) {
         if (isRenderTarget)
             return;
         bind();
-        if (clampColors) {
+        if (clamp) {
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
         }

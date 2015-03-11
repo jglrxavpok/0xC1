@@ -25,19 +25,15 @@ public class Level {
     }
 
     public void addGameObject(GameObject o) {
-        if (o instanceof Light) {
-            addLight((Light) o);
-        } else {
-            spawningList.add(o);
-        }
+        if (o instanceof Light)
+            lights.add((Light) o);
+        spawningList.add(o);
     }
 
     public void removeGameObject(GameObject o) {
-        if (o instanceof Light) {
-            removeLight((Light) o);
-        } else {
-            despawningList.add(o);
-        }
+        if (o instanceof Light)
+            lights.remove((Light) o);
+        despawningList.add(o);
     }
 
     public void update(double delta) {
@@ -57,11 +53,11 @@ public class Level {
     }
 
     public void addLight(Light light) {
-        lights.add(light);
+        addGameObject(light);
     }
 
     public void removeLight(Light light) {
-        lights.remove(light);
+        removeGameObject(light);
     }
 
     public List<Light> getLights() {

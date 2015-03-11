@@ -1,7 +1,5 @@
 package org.c1;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.io.*;
 
 import org.c1.client.*;
@@ -129,33 +127,18 @@ public class C1Game {
 
         level = new Level();
 
-        GameObject testObject = new GameObject() {
-
-            @Override
-            public void update(double delta) {
-                ;
-            }
-
-            @Override
-            public boolean shouldDie() {
-                return false;
-            }
-
-            @Override
-            public void render(double delta) {
-                texture.bind();
-                vertexArray.bind();
-                vertexArray.render();
-            }
-        };
+        GameObject testObject = new TestObject(texture, vertexArray);
         testObject.setPos(new Vec3f(0, 0, 10f));
+
+        GameObject testObject2 = new TestObject(texture, vertexArray);
+        testObject2.setPos(new Vec3f(0.5f, 0, 11f));
         level.addGameObject(testObject);
-        level.update(0);
+        level.addGameObject(testObject2);
 
-        light = new PointLight(new Vec3f(1, 1, 0), 0.8f, new Vec3f(1f, 1f, 0.0005f));
-
+        light = new SpotLight(new Vec3f(10, 0, 0), 0.8f, new Vec3f(1f, 1f, 0.0005f), (float) Math.toRadians(90));
         level.addLight(light);
-        light.setActive(true);
+
+        level.update(0);
     }
 
     float dx = 0.0f;
@@ -192,26 +175,22 @@ public class C1Game {
 
     private void update(double deltaTime) {
         // TODO Implement
-
-        light.getTransform().pos(player.getPos());
+        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+            light.setRotation(player.playerCam.getRotation());
+            light.setPos(player.playerCam.getPos());
+        }
         level.update(deltaTime);
     }
 
     private void render(double deltaTime) {
-        // TODO Implement
-        glClearColor(1, 0, 0, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderEngine.clearColorBuffer(1f, 0f, 0f, 1f);
 
-        glClear(GL_DEPTH_BUFFER_BIT);
+        renderEngine.clearDepth();
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //        renderEngine.enableAlphaBlending();
+        renderEngine.enableDepthTesting();
 
-        glEnable(GL_DEPTH_TEST);
-
-        glEnable(GL_TEXTURE_2D);
-
-        glColor4f(1, 1, 1, 1);
+        renderEngine.enableTextures();
 
         renderEngine.renderLevel(level, deltaTime, camera);
     }

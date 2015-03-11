@@ -47,13 +47,11 @@ public class RenderEngine {
         this.displayWidth = w;
         this.displayHeight = h;
 
-        glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
         glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
-        glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE);
 
         glFrontFace(GL_CW);
         glCullFace(GL_BACK);
-        glEnable(GL_CULL_FACE);
+        //  glEnable(GL_CULL_FACE);
         glEnable(GL32.GL_DEPTH_CLAMP);
 
         glShadeModel(GL_SMOOTH);
@@ -79,8 +77,8 @@ public class RenderEngine {
             int size = mapSize.size();
             Texture shadowMap = new Texture(size, size, null, GL_LINEAR);
             Texture shadowMapTmp = new Texture(size, size, null, GL_LINEAR);
-            shadowMap.setupRenderTarget(false);
-            shadowMapTmp.setupRenderTarget(false);
+            shadowMap.setupRenderTarget(true);
+            shadowMapTmp.setupRenderTarget(true);
 
             shadowMaps[i] = shadowMap;
             shadowMapsTmp[i] = shadowMapTmp;
@@ -155,8 +153,8 @@ public class RenderEngine {
             currentShadowMap = shadowMaps[mapIndex];
             currentTmpShadowMap = shadowMapsTmp[mapIndex];
 
-            bindTexture(currentShadowMap, SHADOW_MAP_SLOT);
             currentShadowMap.bindAsRenderTarget();
+            bindTexture(currentShadowMap, SHADOW_MAP_SLOT);
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -187,8 +185,9 @@ public class RenderEngine {
             glBlendFunc(GL_ONE, GL_ONE);
             glDepthMask(false);
             glDepthFunc(GL_EQUAL);
-            if (l.getShader() != null)
+            if (l.getShader() != null) {
                 renderObjects(l.getShader(), level, delta, renderCamera);
+            }
             glDepthFunc(GL_LESS);
             glDepthMask(true);
             glDisable(GL_BLEND);
@@ -197,7 +196,13 @@ public class RenderEngine {
         applyFilter(renderToTextShader, renderTarget, renderTargetTmp);
         applyFilter(nullFilterShader, renderTargetTmp, renderTarget);
 
+        glEnable(GL_BLEND);
+        GL14.glBlendFuncSeparate(GL_SRC_ALPHA, GL_SRC_ALPHA, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         applyFilter(nullFilterShader, renderTarget, null);
+
+        //        if (currentShadowMap != null) {
+        //            applyFilter(nullFilterShader, currentShadowMap, null);
+        //        }
     }
 
     public void applyFilter(Shader filter, Texture source, Texture dest) {
@@ -272,5 +277,35 @@ public class RenderEngine {
 
     public Camera getCurrentCamera() {
         return currentCamera;
+    }
+
+    public void clearColorBuffer(float red, float green, float blue, float alpha) {
+        glClearColor(red, green, blue, alpha);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    public void clearDepth() {
+        glClear(GL_DEPTH_BUFFER_BIT);
+    }
+
+    public void enableAlphaBlending() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    public void disableBlending() {
+        glDisable(GL_BLEND);
+    }
+
+    public void enableDepthTesting() {
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    public void disableDepthTesting() {
+        glDisable(GL_DEPTH_TEST);
+    }
+
+    public void enableTextures() {
+        glEnable(GL_TEXTURE_2D);
     }
 }

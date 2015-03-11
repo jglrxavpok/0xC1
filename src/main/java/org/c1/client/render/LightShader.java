@@ -29,16 +29,27 @@ public class LightShader extends Shader {
         Uniform pointLightUniform = getUniform("pointLight");
         if (pointLightUniform != null) {
             PointLight pointLight = (PointLight) engine.getLight();
-            setupBaseLight(pointLight, "pointLight.base");
-
-            getUniform("pointLight.atten.constant").setValuef(pointLight.getAttenuation().x());
-            getUniform("pointLight.atten.linear").setValuef(pointLight.getAttenuation().y());
-            getUniform("pointLight.atten.exponent").setValuef(pointLight.getAttenuation().z());
-
-            getUniform("pointLight.position").setValue3f(pointLight.getTransform().pos());
-
-            getUniform("pointLight.range").setValuef(pointLight.getRange());
+            setupPointLight(pointLight, "pointLight");
         }
+
+        Uniform spotLightUniform = getUniform("spotLight");
+        if (spotLightUniform != null) {
+            SpotLight spotLight = (SpotLight) engine.getLight();
+            setupPointLight(spotLight, "spotLight.pointLight");
+            getUniform("spotLight.direction").setValue3f(spotLight.getDirection());
+            getUniform("spotLight.cutoff").setValuef(spotLight.getCutoff());
+        }
+    }
+
+    private void setupPointLight(PointLight pointLight, String uniform) {
+        setupBaseLight(pointLight, uniform + ".base");
+        getUniform(uniform + ".atten.constant").setValuef(pointLight.getAttenuation().x());
+        getUniform(uniform + ".atten.linear").setValuef(pointLight.getAttenuation().y());
+        getUniform(uniform + ".atten.exponent").setValuef(pointLight.getAttenuation().z());
+
+        getUniform(uniform + ".position").setValue3f(pointLight.getTransform().pos());
+
+        getUniform(uniform + ".range").setValuef(pointLight.getRange());
     }
 
     private void setupBaseLight(Light light, String uniform) {

@@ -28,6 +28,10 @@ public class PointLight extends Light {
         }
     }
 
+    public void setRange(float newRange) {
+        this.range = newRange;
+    }
+
     public float getRange() {
         return range;
     }
