@@ -246,6 +246,15 @@ public class Vec3f implements IBufferWritable {
         return Math.max(x(), Math.max(y(), z()));
     }
 
+    /**
+     * Sets the vector data to other vector
+     */
+    public void set(Vec3f other){
+    	this.x = other.x;
+    	this.y = other.y;
+    	this.z = other.z;
+    }
+    
     public String toString() {
         return "vec3(" + x() + "," + y() + "," + z() + ")";
     }

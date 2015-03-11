@@ -1,16 +1,40 @@
 package org.c1;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glEnable;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
-import org.c1.client.render.*;
-import org.c1.level.*;
-import org.c1.level.lights.*;
-import org.c1.maths.*;
-import org.lwjgl.*;
-import org.lwjgl.opengl.*;
-import org.slf4j.*;
+import org.c1.client.PlayerController;
+import org.c1.client.render.RenderEngine;
+import org.c1.client.render.Shader;
+import org.c1.client.render.Texture;
+import org.c1.client.render.VertexArray;
+import org.c1.level.Camera;
+import org.c1.level.GameObject;
+import org.c1.level.Level;
+import org.c1.level.lights.PointLight;
+import org.c1.maths.Mat4f;
+import org.c1.maths.Vec2f;
+import org.c1.maths.Vec3f;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class C1Game {
 
@@ -26,6 +50,7 @@ public class C1Game {
     private int displayHeight;
     private Level level;
     private Camera camera;
+    private PlayerController player;
 
     public void start() {
         try {
@@ -96,7 +121,8 @@ public class C1Game {
             shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
             Mat4f projection = new Mat4f().orthographic(-1f, 1f, -1f, 1f, -1f, 1f);
             shader.getUniform("projection").setValueMat4(projection);
-            camera = new Camera(projection);
+            player = new PlayerController(projection);
+            camera = player.getCamera();
             vertexArray = new VertexArray();
             vertexArray.addVertex(new Vec3f(-1f, -1f, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
             vertexArray.addVertex(new Vec3f(1f, -1f, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
@@ -148,15 +174,46 @@ public class C1Game {
         level.addLight(light);
         light.setActive(true);
     }
-
+    
+    
+    float dx        = 0.0f;
+    float dy        = 0.0f;
+    
     private void pollEvents() {
-        // TODO Implement
 
+    	dx = Mouse.getDX();
+    	dy = Mouse.getDY();
+    	
+    	player.mouseInput(dy * 0.05f, dx * 0.05f);
+    	
+    	//Keyboard input
+    	while (Keyboard.next()) {
+            if(Keyboard.getEventKeyState()){
+            	if(Keyboard.getEventKey() == Keyboard.KEY_Z){
+            		float moveX = 0, moveZ = 0;
+            		moveX -= 3 * (float)Math.sin(Math.toRadians(player.getTransform().rot().x()));
+            		moveZ += 3 * (float)Math.cos(Math.toRadians(player.getTransform().rot().x()));
+            		player.getTransform().translate(moveX, 0, moveZ);
+            		player.playerCam.getTransform().translate(moveX, 0, moveZ);
+            	}
+            	if(Keyboard.getEventKey() == Keyboard.KEY_S){
+            		float moveX = 0, moveZ = 0;
+            		moveX += 3 * (float)Math.sin(Math.toRadians(player.getTransform().rot().x()));
+            		moveZ -= 3 * (float)Math.cos(Math.toRadians(player.getTransform().rot().x()));
+            		player.getTransform().translate(moveX, 0, moveZ);
+            		player.playerCam.getTransform().translate(moveX, 0, moveZ);
+            	}
+            }
+            
+        }
+        
+
+    	
     }
 
     private void update(double deltaTime) {
         // TODO Implement
-
+    	level.update(deltaTime);
     }
 
     private void render(double deltaTime) {
