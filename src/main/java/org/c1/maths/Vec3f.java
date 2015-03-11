@@ -245,4 +245,8 @@ public class Vec3f implements IBufferWritable {
     public float max() {
         return Math.max(x(), Math.max(y(), z()));
     }
+
+    public String toString() {
+        return "vec3(" + x() + "," + y() + "," + z() + ")";
+    }
 }

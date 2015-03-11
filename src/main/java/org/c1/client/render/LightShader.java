@@ -17,12 +17,20 @@ public class LightShader extends Shader {
     public void update(RenderEngine engine) {
         getUniform("lightMatrix").setValueMat4(engine.getLightMatrix());
         getUniform("R_shadowMap").setValuei(RenderEngine.SHADOW_MAP_SLOT);
+        getUniform("lightMap").setValuei(RenderEngine.LIGHT_MAP_SLOT);
         getUniform("R_shadowVarianceMin").setValuef(engine.getShadowVarianceMin());
         getUniform("R_shadowLightBleedingReduction").setValuef(engine.getShadowLightBleedingReduction());
+
+        getUniform("Cam_eyePos").setValue3f(engine.getCurrentCamera().getTransform().transformedPos());
+
+        getUniform("specularPower").setValuef(4.0f);
+        getUniform("specularIntensity").setValuef(8.0f);
 
         Uniform pointLightUniform = getUniform("pointLight");
         if (pointLightUniform != null) {
             PointLight pointLight = (PointLight) engine.getLight();
+            setupBaseLight(pointLight, "pointLight.base");
+
             getUniform("pointLight.atten.constant").setValuef(pointLight.getAttenuation().x());
             getUniform("pointLight.atten.linear").setValuef(pointLight.getAttenuation().y());
             getUniform("pointLight.atten.exponent").setValuef(pointLight.getAttenuation().z());
@@ -30,8 +38,6 @@ public class LightShader extends Shader {
             getUniform("pointLight.position").setValue3f(pointLight.getTransform().transformedPos());
 
             getUniform("pointLight.range").setValuef(pointLight.getRange());
-
-            setupBaseLight(pointLight, "pointLight.base");
         }
     }
 

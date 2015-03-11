@@ -20,7 +20,7 @@ public class PointLight extends Light {
         float c = atten.x() - COLOR_DEPTH * getIntensity() * getColor().max();
         // ax²+bx+c = 0
 
-        this.range = (float) (-b + Math.sqrt(b * b - 4 * a * c) / (2 * a));
+        this.range = 1000000;//(float) (-b + Math.sqrt(b * b - 4 * a * c) / (2 * a));
         try {
             setShader(new LightShader("shaders/lights/base_lighting.vsh", "shaders/lights/pointLight.fsh"));
         } catch (IOException e) {
