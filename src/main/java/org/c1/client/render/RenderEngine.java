@@ -37,9 +37,11 @@ public class RenderEngine {
     private Shader nullFilterShader;
     private VertexArray planeObject;
     private Light activeLight;
+    private Texture lightMap;
 
     private static final Mat4f bias = new Mat4f().scale(0.5f, 0.5f, 0.5f).mul(new Mat4f().translation(1, 1, 1));
     public static final int SHADOW_MAP_SLOT = 1;
+    public static final int LIGHT_MAP_SLOT = 2;
 
     public RenderEngine(int w, int h) {
         renderTarget = new Texture(w, h, null);
@@ -51,6 +53,13 @@ public class RenderEngine {
         glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
         glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE);
 
+        glFrontFace(GL_CW);
+        glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL32.GL_DEPTH_CLAMP);
+
+        glShadeModel(GL_SMOOTH);
+
         renderTarget.setupRenderTarget(false);
         renderTargetTmp.setupRenderTarget(false);
 
@@ -60,6 +69,12 @@ public class RenderEngine {
         ambientColor = new Vec3f(0.5f, 0.5f, 0.5f);
         loadShaders();
         initShadowMaps();
+
+        try {
+            lightMap = new Texture("textures/default_light.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initShadowMaps() {
@@ -87,8 +102,8 @@ public class RenderEngine {
             nullFilterShader = new Shader("shaders/blit");
 
             planeObject = new VertexArray();
-            planeObject.addIndex(0);
             planeObject.addIndex(1);
+            planeObject.addIndex(0);
             planeObject.addIndex(2);
 
             planeObject.addIndex(2);
@@ -127,10 +142,13 @@ public class RenderEngine {
 
         renderTarget.bindAsRenderTarget();
 
+        glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         renderObjects(ambientShader, level, delta, renderCamera);
         List<Light> lights = level.getLights();
+
+        bindTexture(lightMap, LIGHT_MAP_SLOT);
         for (Light l : lights) {
             if (!l.isActive())
                 continue;
@@ -145,7 +163,7 @@ public class RenderEngine {
             currentShadowMap = shadowMaps[mapIndex];
             currentTmpShadowMap = shadowMapsTmp[mapIndex];
 
-            setTexture(currentShadowMap, SHADOW_MAP_SLOT);
+            bindTexture(currentShadowMap, SHADOW_MAP_SLOT);
             currentShadowMap.bindAsRenderTarget();
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -203,16 +221,16 @@ public class RenderEngine {
 
         setCurrentCamera(altCamera);
         setCurrentShader(filter);
-        setTexture(source);
+        bindTexture(source);
         planeObject.bind();
         planeObject.render();
     }
 
-    private void setTexture(Texture text) {
-        setTexture(text, 0);
+    private void bindTexture(Texture text) {
+        bindTexture(text, 0);
     }
 
-    private void setTexture(Texture text, int slot) {
+    private void bindTexture(Texture text, int slot) {
         GL13.glActiveTexture(GL13.GL_TEXTURE0 + slot);
         text.bind();
     }
@@ -257,5 +275,9 @@ public class RenderEngine {
 
     public Mat4f getLightMatrix() {
         return lightMatrix;
+    }
+
+    public Camera getCurrentCamera() {
+        return currentCamera;
     }
 }

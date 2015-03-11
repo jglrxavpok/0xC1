@@ -94,17 +94,17 @@ public class C1Game {
             shader = new Shader("shaders/blit");
             shader.bind();
             shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
-            Mat4f projection = new Mat4f().orthographic(0, 940f, 0, 400f, -1f, 1f);
+            Mat4f projection = new Mat4f().orthographic(-1f, 1f, -1f, 1f, -1f, 1f);
             shader.getUniform("projection").setValueMat4(projection);
             camera = new Camera(projection);
             vertexArray = new VertexArray();
-            vertexArray.addVertex(new Vec3f(0, 0, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
-            vertexArray.addVertex(new Vec3f(940, 0, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
-            vertexArray.addVertex(new Vec3f(940, 400, 0), new Vec2f(1, 1), new Vec3f(0, 0, 1));
-            vertexArray.addVertex(new Vec3f(0, 400, 0), new Vec2f(0, 1), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(-1f, -1f, 0), new Vec2f(0, 0), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(1f, -1f, 0), new Vec2f(1, 0), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(1f, 1f, 0), new Vec2f(1, 1), new Vec3f(0, 0, 1));
+            vertexArray.addVertex(new Vec3f(-1f, 1f, 0), new Vec2f(0, 1), new Vec3f(0, 0, 1));
 
-            vertexArray.addIndex(0);
             vertexArray.addIndex(1);
+            vertexArray.addIndex(0);
             vertexArray.addIndex(2);
 
             vertexArray.addIndex(2);
@@ -142,10 +142,11 @@ public class C1Game {
         level.addGameObject(testObject);
         level.update(0);
 
-        PointLight light = new PointLight(new Vec3f(1, 0, 0), 0.8f, new Vec3f(0, 0, 0.005f));
+        PointLight light = new PointLight(new Vec3f(1, 0, 0), 9.8f, new Vec3f(0, 0, 0.005f));
 
         light.getTransform().pos(0, 0, 0.1f);
         level.addLight(light);
+        light.setActive(true);
     }
 
     private void pollEvents() {
