@@ -19,7 +19,7 @@ public class Camera extends GameObject {
     }
 
     public void setProjection(Mat4f projection) {
-        this.projection = projection;
+        this.projection.set(projection);
     }
 
     @Override

@@ -76,8 +76,8 @@ public class RenderEngine {
         for (int i = 0; i < shadowMaps.length; i++) {
             ShadowMapSize mapSize = ShadowMapSize.values()[i];
             int size = mapSize.size();
-            Texture shadowMap = new Texture(size, size, null, GL_LINEAR);
-            Texture shadowMapTmp = new Texture(size, size, null, GL_LINEAR);
+            Texture shadowMap = new Texture(size, size, null, GL_NEAREST, GL_TEXTURE_2D);
+            Texture shadowMapTmp = new Texture(size, size, null, GL_NEAREST, GL_TEXTURE_2D);
             shadowMap.setupRenderTarget(true);
             shadowMapTmp.setupRenderTarget(true);
 
@@ -125,6 +125,7 @@ public class RenderEngine {
     }
 
     public void renderLevel(Level level, double delta, Camera renderCamera) {
+        enableAlphaBlending();
         int lightCount = Math.max(1, level.getLights().size() + 1);
         renderToTextShader.bind();
         renderToTextShader.getUniform("lightNumber").setValuei(lightCount);
@@ -134,7 +135,7 @@ public class RenderEngine {
 
         renderTarget.bindAsRenderTarget();
 
-        glClearColor(0, 0, 0, 1);
+        glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -165,7 +166,8 @@ public class RenderEngine {
                 shadowVarianceMin = shadowingData.getVarianceMin();
                 shadowTexelSize = new Vec3f(1.0f / (float) ShadowMapSize.values()[mapIndex].size(), 1.0f / (float) ShadowMapSize.values()[mapIndex].size(), 0f);
                 altCamera.setProjection(shadowingData.getProjectionMatrix());
-                altCamera.getTransform().set(l.getTransform());
+                altCamera.getTransform().pos(l.getTransform().pos());
+                altCamera.getTransform().rot(l.getTransform().rot());
 
                 setLightMatrix(bias.mul(altCamera.getViewProjection()));
 
@@ -198,9 +200,9 @@ public class RenderEngine {
 
         applyFilter(nullFilterShader, renderTarget, null);
 
-        if (currentShadowMap != null) {
-            applyFilter(nullFilterShader, currentShadowMap, null);
-        }
+        //        if (currentShadowMap != null) {
+        //            applyFilter(nullFilterShader, currentShadowMap, null);
+        //        }
     }
 
     public void applyFilter(Shader filter, Texture source, Texture dest) {

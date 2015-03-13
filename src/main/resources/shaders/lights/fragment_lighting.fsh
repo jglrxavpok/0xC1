@@ -1,7 +1,6 @@
 uniform vec3 Cam_eyePos;
 uniform float specularIntensity;
 uniform float specularPower;
-uniform sampler2D lightMap;
 
 struct BaseLight
 {

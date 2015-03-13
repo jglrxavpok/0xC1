@@ -9,6 +9,5 @@ void main()
 	float dx = dFdx(depth);
 	float dy = dFdy(depth);
 	float variance = depth*depth + 0.25*(dx*dx+dy*dy);
-	finalColor = vec4(depth, variance,
-		0,1.0);
+	finalColor = vec4(depth, variance, 0, 1.0);
 }

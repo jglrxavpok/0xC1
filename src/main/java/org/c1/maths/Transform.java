@@ -63,8 +63,8 @@ public class Transform {
     }
 
     public void set(Transform transform) {
-        position = transform.position.copy();
-        rotation = transform.rotation.copy();
+        position.set(transform.position);
+        rotation.set(transform.rotation);
     }
 
     public void translate(Vec3f v) {

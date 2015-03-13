@@ -24,10 +24,10 @@ bool inRange(float val)
 
 float calcShadowMapEffect(sampler2D shadowMap, vec4 shadowMapCoords)
 {
-	vec3 shadowMapCoord1 = (shadowMapCoords.xyz/shadowMapCoords.w);
+	vec3 shadowMapCoord1 = shadowMapCoords.xyz/shadowMapCoords.w;
 	if(inRange(shadowMapCoord1.x) && inRange(shadowMapCoord1.y) && inRange(shadowMapCoord1.z))
 		return sampleVarianceShadowMap(shadowMap, shadowMapCoord1.xy, shadowMapCoord1.z, R_shadowVarianceMin, R_shadowLightBleedingReduction);
-	return 1.0f;
+	return 0.5f;
 }
 
 void main()
