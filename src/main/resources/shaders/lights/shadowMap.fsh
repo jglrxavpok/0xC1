@@ -5,10 +5,10 @@ out vec4 finalColor;
 
 void main()
 {
-	float depth = 1;//finalWorldPos.z;
+	float depth = finalWorldPos.z;
 	float dx = dFdx(depth);
 	float dy = dFdy(depth);
 	float variance = depth*depth + 0.25*(dx*dx+dy*dy);
 	finalColor = vec4(depth, variance,
-		depth,1.0);
+		0,1.0);
 }

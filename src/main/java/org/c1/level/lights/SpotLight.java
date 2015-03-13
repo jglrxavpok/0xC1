@@ -20,6 +20,7 @@ public class SpotLight extends PointLight {
         }
         setShadowingData(new ShadowingData(new Mat4f().perspective(fov, 1f, 0.001f, this.getRange())));
         getShadowingData().setFlipCullFace(true);
+        getShadowingData().setShadowMapSize(ShadowMapSize._256x256);
     }
 
     public float getCutoff() {

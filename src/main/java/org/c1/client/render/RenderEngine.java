@@ -42,8 +42,9 @@ public class RenderEngine {
     public static final int SHADOW_MAP_SLOT = 1;
 
     public RenderEngine(int w, int h) {
-        renderTarget = new Texture(w, h, null);
-        renderTargetTmp = new Texture(w, h, null);
+        renderTarget = new Texture(w, h, null, GL_LINEAR);
+        renderTargetTmp = new Texture(w, h, null, GL_LINEAR);
+
         this.displayWidth = w;
         this.displayHeight = h;
 
@@ -61,7 +62,7 @@ public class RenderEngine {
 
         lightMatrix = new Mat4f().scale(0, 0, 0);
         initMatrix = new Mat4f().identity();
-        altCamera = new Camera((float) Math.toRadians(90), 16f / 9f, -1f, 10000f);
+        altCamera = new Camera((float) Math.toRadians(90), 16f / 9f, 0.001f, 10000f);
         ambientColor = new Vec3f(0.5f, 0.5f, 0.5f);
         loadShaders();
         initShadowMaps();
@@ -133,8 +134,9 @@ public class RenderEngine {
 
         renderTarget.bindAsRenderTarget();
 
-        glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT);
 
         renderObjects(ambientShader, level, delta, renderCamera);
         List<Light> lights = level.getLights();
@@ -154,7 +156,6 @@ public class RenderEngine {
             currentTmpShadowMap = shadowMapsTmp[mapIndex];
 
             currentShadowMap.bindAsRenderTarget();
-            bindTexture(currentShadowMap, SHADOW_MAP_SLOT);
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -181,28 +182,25 @@ public class RenderEngine {
             }
             renderTarget.bindAsRenderTarget();
 
+            bindTexture(currentShadowMap, SHADOW_MAP_SLOT);
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE);
-            glDepthMask(false);
             glDepthFunc(GL_EQUAL);
             if (l.getShader() != null) {
                 renderObjects(l.getShader(), level, delta, renderCamera);
             }
             glDepthFunc(GL_LESS);
-            glDepthMask(true);
             glDisable(GL_BLEND);
         }
 
         applyFilter(renderToTextShader, renderTarget, renderTargetTmp);
         applyFilter(nullFilterShader, renderTargetTmp, renderTarget);
 
-        glEnable(GL_BLEND);
-        GL14.glBlendFuncSeparate(GL_SRC_ALPHA, GL_SRC_ALPHA, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         applyFilter(nullFilterShader, renderTarget, null);
 
-        //        if (currentShadowMap != null) {
-        //            applyFilter(nullFilterShader, currentShadowMap, null);
-        //        }
+        if (currentShadowMap != null) {
+            applyFilter(nullFilterShader, currentShadowMap, null);
+        }
     }
 
     public void applyFilter(Shader filter, Texture source, Texture dest) {
@@ -307,5 +305,9 @@ public class RenderEngine {
 
     public void enableTextures() {
         glEnable(GL_TEXTURE_2D);
+    }
+
+    public Vec3f getShadowTexelSize() {
+        return shadowTexelSize;
     }
 }

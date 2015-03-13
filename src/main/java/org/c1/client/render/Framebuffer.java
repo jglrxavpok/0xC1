@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 import java.nio.*;
 
+import org.c1.client.*;
 import org.lwjgl.*;
 
 public class Framebuffer {
@@ -26,10 +27,11 @@ public class Framebuffer {
         }
         this.width = width;
         this.height = height;
-        if (texture == null)
+        if (texture == null) {
             init();
-        else
+        } else {
             init(texture);
+        }
     }
 
     private void init() {
@@ -44,10 +46,12 @@ public class Framebuffer {
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer.getTextureID(), 0);
 
         depthBuffer = glGenRenderbuffers();
+        OpenGLUtils.printIfError("initing");
         glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+        int max = glGetInteger(GL_MAX_RENDERBUFFER_SIZE);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, Math.min(width, max), Math.min(height, max));
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-
+        OpenGLUtils.printIfError("initing2");
         glDrawBuffers((IntBuffer) BufferUtils.createIntBuffer(2).put(GL_COLOR_ATTACHMENT0).put(GL_NONE).flip());
 
         int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);

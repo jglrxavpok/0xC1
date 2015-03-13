@@ -87,7 +87,7 @@ public class Mat4f implements IBufferWritable {
         all(0);
 
         float tanHlfFov = (float) Math.tan(fov / 2);
-        float zRange = far - near;
+        float zRange = near - far;
         set(0, 0, 1.0f / (tanHlfFov * aspectRatio));
         set(1, 1, 1.0f / tanHlfFov);
         set(2, 2, (-near - far) / zRange);

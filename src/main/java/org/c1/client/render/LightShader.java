@@ -16,7 +16,8 @@ public class LightShader extends Shader {
 
     public void update(RenderEngine engine) {
         Light light = engine.getLight();
-        getUniform("lightMatrix").setValueMat4(engine.getLightMatrix().mul(light.getTransform().getTransformationMatrix()));
+
+        getUniform("lightMatrix").setValueMat4(light.getTransform().getTransformationMatrix().mul(engine.getLightMatrix()));
         getUniform("R_shadowMap").setValuei(RenderEngine.SHADOW_MAP_SLOT);
         getUniform("R_shadowVarianceMin").setValuef(engine.getShadowVarianceMin());
         getUniform("R_shadowLightBleedingReduction").setValuef(engine.getShadowLightBleedingReduction());

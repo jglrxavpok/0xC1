@@ -20,6 +20,8 @@ public class Texture {
     private int texID;
     private int filter;
     private Framebuffer framebuffer;
+    private int target;
+    private int internalFormat;
 
     public Texture(String classpath) throws IOException {
         this(classpath, GL_NEAREST);
@@ -31,6 +33,8 @@ public class Texture {
         width = image.getWidth();
         height = image.getHeight();
         pixels = image.getRGB(0, 0, width, height, null, 0, width);
+        this.target = GL_TEXTURE_2D;
+        this.internalFormat = GL_RGBA;
         init();
     }
 
@@ -39,22 +43,32 @@ public class Texture {
     }
 
     public Texture(int w, int h, int[] pixels, int filter) {
+        this(w, h, pixels, filter, GL_TEXTURE_2D);
+    }
+
+    public Texture(int w, int h, int[] pixels, int filter, int target) {
+        this(w, h, pixels, filter, target, GL_RGBA);
+    }
+
+    public Texture(int w, int h, int[] pixels, int filter, int target, int internalFormat) {
         this.width = w;
         this.height = h;
         this.pixels = pixels;
         this.filter = filter;
+        this.target = target;
+        this.internalFormat = internalFormat;
 
         init();
     }
 
     private void init() {
         texID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texID);
-        glTexParameteri(GL_TEXTURE_2D, GL12.GL_TEXTURE_BASE_LEVEL, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, 0);
+        glBindTexture(target, texID);
+        glTexParameteri(target, GL12.GL_TEXTURE_BASE_LEVEL, 0);
+        glTexParameteri(target, GL12.GL_TEXTURE_MAX_LEVEL, 0);
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, filter);
+        glTexParameteri(target, GL_TEXTURE_MAG_FILTER, filter);
 
         ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4);
         if (pixels != null) {
@@ -75,11 +89,11 @@ public class Texture {
             }
             buffer.flip();
         }
-        glTexImage2D(GL_TEXTURE_2D, 0, GL30.GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        glTexImage2D(target, 0, GL30.GL_RGBA32F, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, buffer);
     }
 
     public void bind() {
-        glBindTexture(GL_TEXTURE_2D, texID);
+        glBindTexture(target, texID);
     }
 
     public void setupRenderTarget(boolean clamp) {
@@ -87,8 +101,8 @@ public class Texture {
             return;
         bind();
         if (clamp) {
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+            glTexParameterf(target, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+            glTexParameterf(target, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
         }
         framebuffer = new Framebuffer(width, height, this);
         isRenderTarget = true;

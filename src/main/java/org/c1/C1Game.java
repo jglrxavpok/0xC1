@@ -96,7 +96,7 @@ public class C1Game {
             shader = new Shader("shaders/blit");
             shader.bind();
             shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
-            Mat4f projection = new Mat4f().perspective((float) (Math.toRadians(90)), 16f / 9f, 0f, 100000f);
+            Mat4f projection = new Mat4f().perspective((float) (Math.toRadians(90)), 16f / 9f, 0.001f, 100000f);
             shader.getUniform("projection").setValueMat4(projection);
             player = new PlayerController(projection);
             camera = player.getCamera();
@@ -132,13 +132,18 @@ public class C1Game {
 
         GameObject testObject2 = new TestObject(texture, vertexArray);
         testObject2.setPos(new Vec3f(0.5f, 0, 11f));
+
+        GameObject testObject3 = new TestObject(texture, vertexArray);
+        testObject3.setPos(new Vec3f(0.5f, 0, 10.5f));
         level.addGameObject(testObject);
         level.addGameObject(testObject2);
+        level.addGameObject(testObject3);
 
         light = new SpotLight(new Vec3f(10, 0, 0), 0.8f, new Vec3f(1f, 1f, 0.0005f), (float) Math.toRadians(90));
         level.addLight(light);
 
         level.update(0);
+
     }
 
     float dx = 0.0f;
@@ -183,11 +188,11 @@ public class C1Game {
     }
 
     private void render(double deltaTime) {
-        renderEngine.clearColorBuffer(1f, 0f, 0f, 1f);
+        renderEngine.clearColorBuffer(0f, 0f, 1f, 1f);
 
         renderEngine.clearDepth();
 
-        //        renderEngine.enableAlphaBlending();
+        renderEngine.enableAlphaBlending();
         renderEngine.enableDepthTesting();
 
         renderEngine.enableTextures();
