@@ -256,4 +256,12 @@ public class C1Game {
         return font;
     }
 
+    public int getDisplayWidth() {
+        return displayWidth;
+    }
+
+    public int getDisplayHeight() {
+        return displayHeight;
+    }
+
 }
