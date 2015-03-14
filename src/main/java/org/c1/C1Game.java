@@ -84,7 +84,7 @@ public class C1Game {
                 frames = 0;
             }
 
-            if (Display.isCloseRequested())
+            if (Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
                 running = false;
         }
 
@@ -138,25 +138,55 @@ public class C1Game {
         dy = Mouse.getDY();
 
         player.mouseInput(dx * 0.005f, -dy * 0.005f);
+        Vec3f translationForward = player.playerCam.getRotation().forward();
+        Vec3f translationRight = player.playerCam.getRotation().right();
+        translationForward.div(2);
+        translationRight.div(2);
 
         Mouse.setGrabbed(true);
-        //Keyboard input
+        // Keyboard input
+
+        //Move forward
+        if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+            player.getTransform().translate(translationForward);
+            player.playerCam.getTransform().translate(translationForward);
+        }
+
+        //Move backward
+        if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+            translationForward.mul(-1);
+            player.getTransform().translate(translationForward);
+            player.playerCam.getTransform().translate(translationForward);
+        }
+
+        //Move right
+        if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+            player.getTransform().translate(translationRight);
+            player.playerCam.getTransform().translate(translationRight);
+        }
+
+        //Move left
+        if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+            translationRight.mul(-1);
+            player.getTransform().translate(translationRight);
+            player.playerCam.getTransform().translate(translationRight);
+        }
+
         while (Keyboard.next()) {
             if (Keyboard.getEventKeyState()) {
-                int key = Keyboard.getEventKey();
-                Vec3f translation = player.playerCam.getRotation().forward();
-                if (key == Keyboard.KEY_Z) {
-                    player.getTransform().translate(translation);
-                    player.playerCam.getTransform().translate(translation);
-                } else if (key == Keyboard.KEY_S) {
-                    translation.mul(-1);
-                    player.getTransform().translate(translation);
-                    player.playerCam.getTransform().translate(translation);
-                } else if (key == Keyboard.KEY_ESCAPE) {
-                    this.running = false;
-                }
+                // int key = Keyboard.getEventKey();
+                //
+                // if (key == Keyboard.KEY_Z) {
+                // player.getTransform().translate(translation);
+                // player.playerCam.getTransform().translate(translation);
+                // } else if (key == Keyboard.KEY_S) {
+                // translation.mul(-1);
+                // player.getTransform().translate(translation);
+                // player.playerCam.getTransform().translate(translation);
+                // } else if (key == Keyboard.KEY_ESCAPE) {
+                // this.running = false;
+                // }
             }
-
         }
 
     }
