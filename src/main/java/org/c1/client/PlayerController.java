@@ -25,13 +25,53 @@ public class PlayerController extends GameObject {
     public void update(double delta) {
 
     }
-
+    
     @Override
     public void render(double delta) {
         // TODO Auto-generated method stub
 
     }
 
+    //All movement methods returns whether or not they were successful ( collisions )
+    
+    public boolean walkForward(double deltaTime){
+        Vec3f translationForward = this.playerCam.getRotation().forward();
+        float speed = (float) deltaTime * 5;
+        translationForward.mul(speed);
+        this.getTransform().translate(translationForward);
+        this.playerCam.getTransform().translate(translationForward);
+        return true;
+    }
+    
+    public boolean walkBackwards(double deltaTime){
+        Vec3f translationForward = this.playerCam.getRotation().forward();
+        float speed = (float) deltaTime * 5;
+        translationForward.mul(speed);
+        translationForward.mul(-1);
+        this.getTransform().translate(translationForward);
+        this.playerCam.getTransform().translate(translationForward);
+        return true;
+    }
+    
+    public boolean walkRight(double deltaTime){
+        Vec3f translationRight = this.playerCam.getRotation().right();
+        float speed = (float) deltaTime * 5;
+        translationRight.mul(speed);
+        this.getTransform().translate(translationRight);
+        this.playerCam.getTransform().translate(translationRight);
+        return true;
+    }
+    
+    public boolean walkLeft(double deltaTime){
+        Vec3f translationRight = this.playerCam.getRotation().right();
+        float speed = (float) deltaTime * 5;
+        translationRight.mul(speed);
+        translationRight.mul(-1);
+        this.getTransform().translate(translationRight);
+        this.playerCam.getTransform().translate(translationRight);
+        return true;
+    }
+    
     @Override
     public boolean shouldDie() {
         return false;

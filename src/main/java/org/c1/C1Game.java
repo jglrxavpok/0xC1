@@ -30,6 +30,7 @@ public class C1Game {
     private PlayerController player;
     private PointLight light;
     private TestModel model;
+    private TestCubicModel modelCube;
     private FontRenderer font;
     private FontRenderer computerFont;
 
@@ -105,6 +106,7 @@ public class C1Game {
             player = new PlayerController(projection);
             camera = player.getCamera();
             model = new TestModel();
+            modelCube = new TestCubicModel();
             renderEngine = new RenderEngine(displayWidth, displayHeight);
             renderEngine.setAmbientColor(new Vec3f(0.5f, 0.5f, 0.5f));
             texture = new Texture("textures/logo.png");
@@ -122,9 +124,13 @@ public class C1Game {
 
         GameObject testObject3 = new TestObject(texture, model);
         testObject3.setPos(new Vec3f(0.5f, 0, 10.5f));
+        
+        GameObject collideableObject = new TestCollideableObject(modelCube, texture);
+        collideableObject.setPos(new Vec3f(5.0f, 0, 5.0f));
         level.addGameObject(testObject);
         level.addGameObject(testObject2);
         level.addGameObject(testObject3);
+        level.addGameObject(collideableObject);
 
         light = new SpotLight(new Vec3f(10, 0, 0), 0.8f, new Vec3f(1f, 1f, 0.0005f), (float) Math.toRadians(90));
         level.addLight(light);
@@ -145,55 +151,33 @@ public class C1Game {
         dy = Mouse.getDY();
 
         player.mouseInput(dx * 0.005f, -dy * 0.005f);
-        Vec3f translationForward = player.playerCam.getRotation().forward();
-        Vec3f translationRight = player.playerCam.getRotation().right();
-        float speed = (float) deltaTime * 5;
-        translationForward.mul(speed);
-        translationRight.mul(speed);
 
         Mouse.setGrabbed(true);
         // Keyboard input
 
         //Move forward
         if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-            player.getTransform().translate(translationForward);
-            player.playerCam.getTransform().translate(translationForward);
+            player.walkForward(deltaTime);
         }
 
         //Move backward
         if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            translationForward.mul(-1);
-            player.getTransform().translate(translationForward);
-            player.playerCam.getTransform().translate(translationForward);
+            player.walkBackwards(deltaTime);
         }
 
         //Move right
         if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            player.getTransform().translate(translationRight);
-            player.playerCam.getTransform().translate(translationRight);
+            player.walkRight(deltaTime);
         }
 
         //Move left
         if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-            translationRight.mul(-1);
-            player.getTransform().translate(translationRight);
-            player.playerCam.getTransform().translate(translationRight);
+            player.walkLeft(deltaTime);
         }
 
         while (Keyboard.next()) {
             if (Keyboard.getEventKeyState()) {
-                // int key = Keyboard.getEventKey();
-                //
-                // if (key == Keyboard.KEY_Z) {
-                // player.getTransform().translate(translation);
-                // player.playerCam.getTransform().translate(translation);
-                // } else if (key == Keyboard.KEY_S) {
-                // translation.mul(-1);
-                // player.getTransform().translate(translation);
-                // player.playerCam.getTransform().translate(translation);
-                // } else if (key == Keyboard.KEY_ESCAPE) {
-                // this.running = false;
-                // }
+
             }
         }
 

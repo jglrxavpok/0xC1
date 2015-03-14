@@ -27,6 +27,7 @@ public class TestObject extends GameObject {
 
     @Override
     public void render(double delta) {
+        texture.bind();
         model.render();
     }
 
