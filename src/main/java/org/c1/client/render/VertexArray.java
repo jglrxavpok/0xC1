@@ -136,4 +136,12 @@ public class VertexArray {
         for (int i = 0; i < tangents.size(); i++)
             tangents.set(i, tangents.get(i).copy().norm());
     }
+
+    public void clear() {
+        positions.clear();
+        indices.clear();
+        tangents.clear();
+        normals.clear();
+        texCoords.clear();
+    }
 }

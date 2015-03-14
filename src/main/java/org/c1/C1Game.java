@@ -3,6 +3,7 @@ package org.c1;
 import java.io.*;
 
 import org.c1.client.*;
+import org.c1.client.gui.*;
 import org.c1.client.render.*;
 import org.c1.level.*;
 import org.c1.level.lights.*;
@@ -29,6 +30,8 @@ public class C1Game {
     private PlayerController player;
     private PointLight light;
     private TestModel model;
+    private FontRenderer font;
+    private FontRenderer computerFont;
 
     public void start() {
         try {
@@ -63,11 +66,11 @@ public class C1Game {
             delta += (now - lastTime) / ns;
             lastTime = now;
             if (delta >= 1.0) {
+                double deltaTime = ns / 1_000_000_000.0;
                 if (!polledInput) {
-                    pollEvents();
+                    pollEvents(deltaTime);
                     polledInput = true;
                 }
-                double deltaTime = ns / 1_000_000_000.0;
                 update(deltaTime);
                 updates++;
                 delta--;
@@ -93,7 +96,7 @@ public class C1Game {
 
     private void initGame() {
         try {
-            texture = new Texture("textures/logo.png");
+            font = new FontRenderer(new TextureAtlas("textures/font.png", 16, 16));
             shader = new Shader("shaders/blit");
             shader.bind();
             shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
@@ -104,6 +107,7 @@ public class C1Game {
             model = new TestModel();
             renderEngine = new RenderEngine(displayWidth, displayHeight);
             renderEngine.setAmbientColor(new Vec3f(0.5f, 0.5f, 0.5f));
+            texture = new Texture("textures/logo.png");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,12 +131,15 @@ public class C1Game {
 
         level.update(0);
 
+        openGui(new GuiShipEditor(this));
     }
 
     float dx = 0.0f;
     float dy = 0.0f;
+    private Gui newGui;
+    private Gui currentGui;
 
-    private void pollEvents() {
+    private void pollEvents(double deltaTime) {
 
         dx = Mouse.getDX();
         dy = Mouse.getDY();
@@ -140,8 +147,9 @@ public class C1Game {
         player.mouseInput(dx * 0.005f, -dy * 0.005f);
         Vec3f translationForward = player.playerCam.getRotation().forward();
         Vec3f translationRight = player.playerCam.getRotation().right();
-        translationForward.div(2);
-        translationRight.div(2);
+        float speed = (float) deltaTime * 5;
+        translationForward.mul(speed);
+        translationRight.mul(speed);
 
         Mouse.setGrabbed(true);
         // Keyboard input
@@ -192,6 +200,12 @@ public class C1Game {
     }
 
     private void update(double deltaTime) {
+        if (newGui != currentGui) {
+            currentGui = newGui;
+            if (currentGui != null) {
+                currentGui.init();
+            }
+        }
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             light.setRotation(player.playerCam.getRotation());
             light.setPos(player.playerCam.getPos());
@@ -204,12 +218,20 @@ public class C1Game {
 
         renderEngine.clearDepth();
 
-        renderEngine.enableAlphaBlending();
         renderEngine.enableDepthTesting();
 
         renderEngine.enableTextures();
 
         renderEngine.renderLevel(level, deltaTime, camera);
+
+        renderEngine.clearDepth();
+        renderEngine.enableAlphaBlending();
+        if (currentGui != null)
+            renderEngine.renderGui(currentGui, deltaTime);
+    }
+
+    public void openGui(Gui newGui) {
+        this.newGui = newGui;
     }
 
     public File getGameFolder() {
@@ -228,6 +250,10 @@ public class C1Game {
     public static void main(String[] args) {
         C1Game game = new C1Game();
         game.start();
+    }
+
+    public FontRenderer getFont() {
+        return font;
     }
 
 }

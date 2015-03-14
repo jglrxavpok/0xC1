@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL30.*;
 import java.io.*;
 import java.util.*;
 
+import org.c1.client.gui.*;
 import org.c1.level.*;
 import org.c1.level.lights.*;
 import org.c1.maths.*;
@@ -37,6 +38,7 @@ public class RenderEngine {
     private Shader nullFilterShader;
     private VertexArray planeObject;
     private Light activeLight;
+    private Camera guiCam;
 
     private static final Mat4f bias = new Mat4f().scale(0.5f, 0.5f, 0.5f).mul(new Mat4f().translation(1, 1, 1));
     public static final int SHADOW_MAP_SLOT = 1;
@@ -63,6 +65,7 @@ public class RenderEngine {
         lightMatrix = new Mat4f().scale(0, 0, 0);
         initMatrix = new Mat4f().identity();
         altCamera = new Camera((float) Math.toRadians(90), 16f / 9f, 0.001f, 10000f);
+        guiCam = new Camera(new Mat4f().orthographic(0, w, 0, h, -1f, 1f));
         ambientColor = new Vec3f(0.5f, 0.5f, 0.5f);
         loadShaders();
         initShadowMaps();
@@ -311,5 +314,12 @@ public class RenderEngine {
 
     public Vec3f getShadowTexelSize() {
         return shadowTexelSize;
+    }
+
+    public void renderGui(Gui gui, double deltaTime) {
+        setCurrentCamera(guiCam);
+        setCurrentShader(nullFilterShader);
+        currentShader.getUniform("modelview").setValueMat4(initMatrix);
+        gui.render(deltaTime);
     }
 }
