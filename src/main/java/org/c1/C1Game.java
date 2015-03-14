@@ -7,6 +7,7 @@ import org.c1.client.render.*;
 import org.c1.level.*;
 import org.c1.level.lights.*;
 import org.c1.maths.*;
+import org.c1.tests.*;
 import org.lwjgl.*;
 import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;
@@ -20,7 +21,6 @@ public class C1Game {
     private File gameFolder;
     private Texture texture;
     private Shader shader;
-    private VertexArray vertexArray;
     private RenderEngine renderEngine;
     private int displayWidth;
     private int displayHeight;
@@ -28,6 +28,7 @@ public class C1Game {
     private Camera camera;
     private PlayerController player;
     private PointLight light;
+    private TestModel model;
 
     public void start() {
         try {
@@ -100,25 +101,7 @@ public class C1Game {
             shader.getUniform("projection").setValueMat4(projection);
             player = new PlayerController(projection);
             camera = player.getCamera();
-            vertexArray = new VertexArray();
-            float left = -1f;
-            float right = 1f;
-            float top = -1f;
-            float bottom = 1f;
-            vertexArray.addVertex(new Vec3f(left, top, 0), new Vec2f(0, 0), new Vec3f(0, 0, -1));
-            vertexArray.addVertex(new Vec3f(right, top, 0), new Vec2f(1, 0), new Vec3f(0, 0, -1));
-            vertexArray.addVertex(new Vec3f(right, bottom, 0), new Vec2f(1, 1), new Vec3f(0, 0, -1));
-            vertexArray.addVertex(new Vec3f(left, bottom, 0), new Vec2f(0, 1), new Vec3f(0, 0, -1));
-
-            vertexArray.addIndex(1);
-            vertexArray.addIndex(0);
-            vertexArray.addIndex(2);
-
-            vertexArray.addIndex(2);
-            vertexArray.addIndex(0);
-            vertexArray.addIndex(3);
-            vertexArray.upload();
-
+            model = new TestModel();
             renderEngine = new RenderEngine(displayWidth, displayHeight);
             renderEngine.setAmbientColor(new Vec3f(0.5f, 0.5f, 0.5f));
         } catch (IOException e) {
@@ -127,13 +110,13 @@ public class C1Game {
 
         level = new Level();
 
-        GameObject testObject = new TestObject(texture, vertexArray);
+        GameObject testObject = new TestObject(texture, model);
         testObject.setPos(new Vec3f(0, 0, 10f));
 
-        GameObject testObject2 = new TestObject(texture, vertexArray);
+        GameObject testObject2 = new TestObject(texture, model);
         testObject2.setPos(new Vec3f(0.5f, 0, 11f));
 
-        GameObject testObject3 = new TestObject(texture, vertexArray);
+        GameObject testObject3 = new TestObject(texture, model);
         testObject3.setPos(new Vec3f(0.5f, 0, 10.5f));
         level.addGameObject(testObject);
         level.addGameObject(testObject2);

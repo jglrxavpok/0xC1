@@ -1,16 +1,18 @@
 package org.c1;
 
+import org.c1.client.*;
 import org.c1.client.render.*;
 import org.c1.level.*;
 
 public class TestObject extends GameObject {
 
-    private VertexArray vertexArray;
+    private Model model;
     private Texture texture;
 
-    public TestObject(Texture texture, VertexArray vertexArray) {
+    public TestObject(Texture texture, Model model) {
         this.texture = texture;
-        this.vertexArray = vertexArray;
+        this.model = model;
+        model.setTexture(texture);
     }
 
     @Override
@@ -25,9 +27,7 @@ public class TestObject extends GameObject {
 
     @Override
     public void render(double delta) {
-        texture.bind();
-        vertexArray.bind();
-        vertexArray.render();
+        model.render();
     }
 
 }

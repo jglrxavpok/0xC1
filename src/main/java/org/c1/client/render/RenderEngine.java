@@ -52,7 +52,7 @@ public class RenderEngine {
 
         glFrontFace(GL_CW);
         glCullFace(GL_BACK);
-        //  glEnable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
         glEnable(GL32.GL_DEPTH_CLAMP);
 
         glShadeModel(GL_SMOOTH);
