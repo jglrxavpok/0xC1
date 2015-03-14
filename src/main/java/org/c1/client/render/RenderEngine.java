@@ -54,7 +54,7 @@ public class RenderEngine {
 
         glFrontFace(GL_CW);
         glCullFace(GL_BACK);
-        glEnable(GL_CULL_FACE);
+        //        glEnable(GL_CULL_FACE);
         glEnable(GL32.GL_DEPTH_CLAMP);
 
         glShadeModel(GL_SMOOTH);
@@ -242,11 +242,7 @@ public class RenderEngine {
     public void setCurrentShader(Shader shader) {
         currentShader = shader;
         shader.bind();
-        if (currentCamera != null) {
-            shader.getUniform("projection").setValueMat4(currentCamera.getViewProjection());
-            shader.getUniform("modelview").setValueMat4(initMatrix);
-        }
-        shader.update(this);
+        updateShader();
     }
 
     private void renderObjects(Shader shader, Level level, double delta, Camera camera) {
@@ -260,6 +256,7 @@ public class RenderEngine {
 
     public void setCurrentCamera(Camera camera) {
         currentCamera = camera;
+        updateShader();
     }
 
     public float getShadowLightBleedingReduction() {
@@ -322,4 +319,16 @@ public class RenderEngine {
         currentShader.getUniform("modelview").setValueMat4(initMatrix);
         gui.render(deltaTime);
     }
+
+    public void updateShader() {
+        if (currentShader == null)
+            return;
+        currentShader.bind();
+        if (currentCamera != null) {
+            currentShader.getUniform("projection").setValueMat4(currentCamera.getViewProjection());
+            currentShader.getUniform("modelview").setValueMat4(initMatrix);
+        }
+        currentShader.update(this);
+    }
+
 }

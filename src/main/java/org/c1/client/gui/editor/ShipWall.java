@@ -1,12 +1,18 @@
 package org.c1.client.gui.editor;
 
+import org.c1.client.models.*;
+
 public class ShipWall extends ShipEditorComponent {
+
+    private ShipWallModel wallModel;
+
+    public ShipWall(float x, float y, float z) {
+        wallModel = new ShipWallModel(x, y, z);
+    }
 
     @Override
     public void render(double delta) {
-        // TODO Implement ShipWall.render
-        throw new RuntimeException("ShipWall.render is not implemented yet");
-
+        wallModel.render();
     }
 
     @Override

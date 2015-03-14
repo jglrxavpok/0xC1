@@ -39,7 +39,7 @@ public class Model {
         for (ModelFace f : faces) {
             int maxIndex = 0;
             for (int i : f.getIndices()) {
-                if (maxIndex < i) {
+                if (maxIndex <= i) {
                     maxIndex = i;
                 }
                 vertexArray.addIndex(index + i);
@@ -52,7 +52,7 @@ public class Model {
                 vertexArray.addVertex(pos, texCoord, normal);
             }
 
-            index += maxIndex;
+            index += f.getPositions().size();
         }
         vertexArray.upload();
     }

@@ -248,4 +248,8 @@ public class C1Game {
         return displayHeight;
     }
 
+    public RenderEngine getRenderEngine() {
+        return renderEngine;
+    }
+
 }
