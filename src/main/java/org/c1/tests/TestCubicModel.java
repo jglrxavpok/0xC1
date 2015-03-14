@@ -29,10 +29,10 @@ public class TestCubicModel extends Model {
         addFace(face, true);
         
         ModelFace face_back = new ModelFace();
-        face_back.addVertex(new Vec3f(left, top, -1f), new Vec2f(0, 0), new Vec3f(0, 0, -1));
-        face_back.addVertex(new Vec3f(right, top, -1f), new Vec2f(1, 0), new Vec3f(0, 0, -1));
-        face_back.addVertex(new Vec3f(right, bottom, -1f), new Vec2f(1, 1), new Vec3f(0, 0, -1));
-        face_back.addVertex(new Vec3f(left, bottom, -1f), new Vec2f(0, 1), new Vec3f(0, 0, -1));
+        face_back.addVertex(new Vec3f(left, top, -2f), new Vec2f(0, 0), new Vec3f(0, 0, -1));
+        face_back.addVertex(new Vec3f(right, top, -2f), new Vec2f(1, 0), new Vec3f(0, 0, -1));
+        face_back.addVertex(new Vec3f(right, bottom, -2f), new Vec2f(1, 1), new Vec3f(0, 0, -1));
+        face_back.addVertex(new Vec3f(left, bottom, -2f), new Vec2f(0, 1), new Vec3f(0, 0, -1));
 
         face_back.addIndex(1);
         face_back.addIndex(0);
@@ -45,8 +45,8 @@ public class TestCubicModel extends Model {
         
         ModelFace face_right = new ModelFace();
         face_right.addVertex(new Vec3f(right, top, 0), new Vec2f(0, 0), new Vec3f(0, 0, -1));
-        face_right.addVertex(new Vec3f(right, top, -1f), new Vec2f(1, 0), new Vec3f(0, 0, -1));
-        face_right.addVertex(new Vec3f(right, bottom, -1f), new Vec2f(1, 1), new Vec3f(0, 0, -1));
+        face_right.addVertex(new Vec3f(right, top, -2f), new Vec2f(1, 0), new Vec3f(0, 0, -1));
+        face_right.addVertex(new Vec3f(right, bottom, -2f), new Vec2f(1, 1), new Vec3f(0, 0, -1));
         face_right.addVertex(new Vec3f(right, bottom, 0), new Vec2f(0, 1), new Vec3f(0, 0, -1));
 
         face_right.addIndex(1);
@@ -57,6 +57,21 @@ public class TestCubicModel extends Model {
         face_right.addIndex(0);
         face_right.addIndex(3);
         addFace(face_right, true);
+        
+        ModelFace face_left = new ModelFace();
+        face_left.addVertex(new Vec3f(left, top, 0), new Vec2f(0, 0), new Vec3f(0, 0, -1));
+        face_left.addVertex(new Vec3f(left, top, -2f), new Vec2f(1, 0), new Vec3f(0, 0, -1));
+        face_left.addVertex(new Vec3f(left, bottom, -2f), new Vec2f(1, 1), new Vec3f(0, 0, -1));
+        face_left.addVertex(new Vec3f(left, bottom, 0), new Vec2f(0, 1), new Vec3f(0, 0, -1));
+
+        face_left.addIndex(1);
+        face_left.addIndex(0);
+        face_left.addIndex(2);
+
+        face_left.addIndex(2);
+        face_left.addIndex(0);
+        face_left.addIndex(3);
+        addFace(face_left, true);
         
         
     }

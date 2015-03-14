@@ -3,6 +3,7 @@ package org.c1;
 import org.c1.client.Model;
 import org.c1.client.render.Texture;
 import org.c1.level.GameObject;
+import org.c1.physics.AABB;
 
 public class TestCollideableObject extends GameObject {
 
@@ -12,12 +13,14 @@ public class TestCollideableObject extends GameObject {
     public TestCollideableObject(Model model, Texture texture){
         this.model = model;
         this.texture = texture;
+        this.hitbox = new AABB(this.getPos(), this.getPos().add(2));
         model.setTexture(texture);
+        this.physicsEnabled = true;
     }
     
     @Override
     public void update(double delta) {
-        
+        hitbox.position = this.getPos();
     }
 
     @Override

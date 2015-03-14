@@ -1,10 +1,13 @@
 package org.c1.level;
 
 import org.c1.maths.*;
+import org.c1.physics.AABB;
 
 public abstract class GameObject {
 
     protected Transform transform;
+    public boolean physicsEnabled;
+    public AABB hitbox;
 
     public GameObject() {
         transform = new Transform();

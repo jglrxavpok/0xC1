@@ -2,6 +2,7 @@ package org.c1.client;
 
 import org.c1.level.*;
 import org.c1.maths.*;
+import org.c1.physics.AABB;
 
 public class PlayerController extends GameObject {
 
@@ -11,6 +12,8 @@ public class PlayerController extends GameObject {
 
     public PlayerController(Mat4f projection) {
         this.playerCam = new Camera(projection);
+        this.physicsEnabled = true;
+        this.hitbox = new AABB(this.getPos(), this.getPos().add(1, 2, 1));
     }
 
     public void mouseInput(float yaw, float pitch) {
@@ -23,7 +26,7 @@ public class PlayerController extends GameObject {
 
     @Override
     public void update(double delta) {
-
+        this.hitbox.position = this.getPos();
     }
     
     @Override
