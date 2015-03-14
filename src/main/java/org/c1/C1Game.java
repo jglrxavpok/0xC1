@@ -152,7 +152,7 @@ public class C1Game {
 
         player.mouseInput(dx * 0.005f, -dy * 0.005f);
 
-        //   Mouse.setGrabbed(true);
+        Mouse.setGrabbed(true);
         // Keyboard input
 
         //Move forward

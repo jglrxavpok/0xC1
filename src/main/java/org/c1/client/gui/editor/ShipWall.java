@@ -13,7 +13,7 @@ public class ShipWall extends ShipEditorComponent {
         if (models == null) {
             initModels();
         }
-        wallModel = models[(int) ((x + z) % 4)];
+        wallModel = models[(int) (Math.abs(x + z) % 4)];
         transformMatrix = new Mat4f().translation(x * 0.25f, y, z * 0.25f);
     }
 

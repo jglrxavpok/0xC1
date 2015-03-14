@@ -27,7 +27,7 @@ public class GuiShipEditor extends Gui {
     @Override
     public void init() {
         components = Lists.newArrayList();
-        grid = new ShipWall[25][2][25];
+        grid = new ShipWall[5][2][5];
 
         for (int x = 0; x < grid.length; x++) {
             for (int z = 0; z < grid[0][0].length; z++) {
@@ -49,6 +49,8 @@ public class GuiShipEditor extends Gui {
     }
 
     public void render(double delta) {
+        if (true)
+            return;
         RenderEngine engine = game.getRenderEngine();
         Camera oldCam = engine.getCurrentCamera();
 
@@ -78,7 +80,8 @@ public class GuiShipEditor extends Gui {
         Vec3f mouseWorldPos = raycast(projectedX, projectedY);
 
         if (mouseWorldPos != null) {
-            ShipWall wall = new ShipWall(mouseWorldPos.x(), mouseWorldPos.y(), mouseWorldPos.z());
+            ShipWall wall = new ShipWall(mouseWorldPos.x() * 4f, mouseWorldPos.y() + 4f, mouseWorldPos.z() * 4f);
+            engine.setModelview(wall.getTransformationMatrix());
             wall.render(delta);
         }
         for (int x = 0; x < grid.length; x++) {
@@ -95,6 +98,10 @@ public class GuiShipEditor extends Gui {
         for (ShipEditorComponent c : components) {
             c.render(delta);
         }
+
+        if (mouseWorldPos != null) {
+            System.out.println(mouseWorldPos);
+        }
     }
 
     private Vec3f raycast(float projectedX, float projectedY) {
@@ -102,16 +109,19 @@ public class GuiShipEditor extends Gui {
         camera.getTransform().transform(mousePos);
         Vec3f startPos = mousePos.copy();
         Vec3f forward = camera.getTransform().rot().forward();
-        System.out.println(mousePos.add(forward.mul(8)) + ", " + startPos);
+        float xAngle = (float) (projectedX * (Math.toRadians(90) / 2f));
+        float yAngle = (float) (projectedY * (Math.toRadians(90) / 2f / (16f / 9f)));
+        forward = forward.rotate(xAngle, Vec3f.Y);
+        forward = forward.rotate(yAngle, Vec3f.X);
         while (mousePos.copy().sub(startPos).length() <= 10000f) {
-            float realX = mousePos.x() / 4f;
+            float realX = mousePos.x() * 1f;
             float realY = mousePos.y();
-            float realZ = mousePos.z() / 4f;
-            int gridX = Math.round(realX);
-            int gridY = Math.round(realY);
-            int gridZ = Math.round(realZ);
+            float realZ = mousePos.z() * 1f;
+            int gridX = (int) Math.floor(realX);
+            int gridY = (int) Math.floor(realY);
+            int gridZ = (int) Math.floor(realZ);
             if (gridY < 0 && inBound(gridX, 0, gridZ)) {
-                mousePos.y(0);
+                mousePos.y(-1000);
                 return mousePos;
             }
             if (inBound(gridX, gridY, gridZ) && grid[gridX][gridY][gridZ] != null) {
@@ -119,6 +129,7 @@ public class GuiShipEditor extends Gui {
             }
             mousePos.add(forward);
         }
+
         return null;
     }
 
