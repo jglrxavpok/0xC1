@@ -179,7 +179,6 @@ public class C1Game {
     }
 
     private void update(double deltaTime) {
-        // TODO Implement
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             light.setRotation(player.playerCam.getRotation());
             light.setPos(player.playerCam.getPos());
