@@ -331,4 +331,9 @@ public class RenderEngine {
         currentShader.update(this);
     }
 
+    public void setModelview(Mat4f mat) {
+        if (currentShader != null)
+            currentShader.getUniform("modelview").setValueMat4(mat);
+    }
+
 }

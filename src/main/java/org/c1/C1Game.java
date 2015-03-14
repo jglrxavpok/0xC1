@@ -124,7 +124,7 @@ public class C1Game {
 
         GameObject testObject3 = new TestObject(texture, model);
         testObject3.setPos(new Vec3f(0.5f, 0, 10.5f));
-        
+
         GameObject collideableObject = new TestCollideableObject(modelCube, texture);
         collideableObject.setPos(new Vec3f(5.0f, 0, 5.0f));
         level.addGameObject(testObject);
@@ -152,7 +152,7 @@ public class C1Game {
 
         player.mouseInput(dx * 0.005f, -dy * 0.005f);
 
-        Mouse.setGrabbed(true);
+        //   Mouse.setGrabbed(true);
         // Keyboard input
 
         //Move forward

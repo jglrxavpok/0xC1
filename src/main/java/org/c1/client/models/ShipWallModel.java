@@ -8,7 +8,7 @@ import org.c1.maths.*;
 
 public class ShipWallModel extends Model {
 
-    public ShipWallModel(float x, float y, float z) {
+    public ShipWallModel(int index) {
         super();
 
         try {
@@ -16,18 +16,22 @@ public class ShipWallModel extends Model {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        addFace(northFace(x, y, z));
-        addFace(eastFace(x, y, z));
-        addFace(westFace(x, y, z));
-        addFace(southFace(x, y, z));
+        addFace(northFace(index));
+        addFace(eastFace(index));
+        addFace(westFace(index));
+        addFace(southFace(index));
+
+        addFace(topFace(index));
     }
 
-    private ModelFace northFace(float x, float y, float z) {
+    private ModelFace topFace(int index) {
         ModelFace face = new ModelFace();
-        face.addVertex(new Vec3f(x, y, z + 1f), new Vec2f(0, 1f), new Vec3f(0, 0, 1));
-        face.addVertex(new Vec3f(x + 1f, y, z + 1f), new Vec2f(64f / 256f, 1f), new Vec3f(0, 0, 1));
-        face.addVertex(new Vec3f(x + 1f, y + 1f, z + 1f), new Vec2f(64f / 256f, 1f - 64f / 256f), new Vec3f(0, 0, 1));
-        face.addVertex(new Vec3f(x, y + 1f, z + 1f), new Vec2f(0, 1f - 64f / 256f), new Vec3f(0, 0, 1));
+        float minU = 64f / 256f;
+        float maxU = 80f / 256f;
+        face.addVertex(new Vec3f(0, 1, 0), new Vec2f(minU, 1f), new Vec3f(0, 1, 0));
+        face.addVertex(new Vec3f(0 + 0.25f, 1, 0), new Vec2f(maxU, 1f), new Vec3f(0, 1, 0));
+        face.addVertex(new Vec3f(0 + 0.25f, 1, 0.25f), new Vec2f(maxU, 1f - 16f / 256f), new Vec3f(0, 1, 0));
+        face.addVertex(new Vec3f(0, 1, 0.25f), new Vec2f(minU, 1f - 16f / 256f), new Vec3f(0, 1, 0));
 
         face.addIndex(1);
         face.addIndex(0);
@@ -39,22 +43,75 @@ public class ShipWallModel extends Model {
         return face;
     }
 
-    private ModelFace eastFace(float x, float y, float z) {
+    private ModelFace northFace(int index) {
         ModelFace face = new ModelFace();
+        float w = 16f / 256f;
+        float minU = index * w;
+        float maxU = (index + 1) * w;
+        face.addVertex(new Vec3f(0, 0 + 1f, 0.25f), new Vec2f(minU, 1f), new Vec3f(0, 0, 1));
+        face.addVertex(new Vec3f(0 + 0.25f, 0 + 1f, 0.25f), new Vec2f(maxU, 1f), new Vec3f(0, 0, 1));
+        face.addVertex(new Vec3f(0 + 0.25f, 0, 0.25f), new Vec2f(maxU, 1f - 64f / 256f), new Vec3f(0, 0, 1));
+        face.addVertex(new Vec3f(0, 0, 0.25f), new Vec2f(minU, 1f - 64f / 256f), new Vec3f(0, 0, 1));
+
+        face.addIndex(1);
+        face.addIndex(0);
+        face.addIndex(2);
+
+        face.addIndex(2);
+        face.addIndex(0);
+        face.addIndex(3);
         return face;
     }
 
-    private ModelFace westFace(float x, float y, float z) {
+    private ModelFace eastFace(int index) {
         ModelFace face = new ModelFace();
+        float w = 16f / 256f;
+        float minU = index * w;
+        float maxU = (index + 1) * w;
+        face.addVertex(new Vec3f(0.25f, 0f, 0f), new Vec2f(minU, 1f), new Vec3f(1, 0, 0));
+        face.addVertex(new Vec3f(0.25f, 1f, 0f), new Vec2f(maxU, 1f), new Vec3f(1, 0, 0));
+        face.addVertex(new Vec3f(0.25f, 1f, 0.25f), new Vec2f(maxU, 1f - 64f / 256f), new Vec3f(1, 0, 0));
+        face.addVertex(new Vec3f(0.25f, 0f, 0.25f), new Vec2f(minU, 1f - 64f / 256f), new Vec3f(1, 0, 0));
+
+        face.addIndex(1);
+        face.addIndex(0);
+        face.addIndex(2);
+
+        face.addIndex(2);
+        face.addIndex(0);
+        face.addIndex(3);
         return face;
     }
 
-    private ModelFace southFace(float x, float y, float z) {
+    private ModelFace westFace(int index) {
         ModelFace face = new ModelFace();
-        face.addVertex(new Vec3f(x + 1f, y, z), new Vec2f(0, 1f), new Vec3f(0, 0, -1));
-        face.addVertex(new Vec3f(x, y, z), new Vec2f(64f / 256f, 1f), new Vec3f(0, 0, -1));
-        face.addVertex(new Vec3f(x, y + 1f, z), new Vec2f(64f / 256f, 1f - 64f / 256f), new Vec3f(0, 0, -1));
-        face.addVertex(new Vec3f(x + 1f, y + 1f, z), new Vec2f(0, 1f - 64f / 256f), new Vec3f(0, 0, -1));
+        float w = 16f / 256f;
+        float minU = index * w;
+        float maxU = (index + 1) * w;
+        face.addVertex(new Vec3f(0.0f, 0f, 0f), new Vec2f(minU, 1f), new Vec3f(-1, 0, 0));
+        face.addVertex(new Vec3f(0.0f, 1f, 0f), new Vec2f(maxU, 1f), new Vec3f(-1, 0, 0));
+        face.addVertex(new Vec3f(0.0f, 1f, 0.25f), new Vec2f(maxU, 1f - 64f / 256f), new Vec3f(-1, 0, 0));
+        face.addVertex(new Vec3f(0.0f, 0f, 0.25f), new Vec2f(minU, 1f - 64f / 256f), new Vec3f(-1, 0, 0));
+
+        face.addIndex(1);
+        face.addIndex(0);
+        face.addIndex(2);
+
+        face.addIndex(2);
+        face.addIndex(0);
+        face.addIndex(3);
+        return face;
+    }
+
+    private ModelFace southFace(int index) {
+        ModelFace face = new ModelFace();
+        float w = 16f / 256f;
+        float minU = index * w;
+        float maxU = (index + 1) * w;
+        face.addVertex(new Vec3f(0, 0 + 1f, 0), new Vec2f(minU, 1f), new Vec3f(0, 0, -1));
+        face.addVertex(new Vec3f(0 + 0.25f, 0 + 1f, 0), new Vec2f(maxU, 1f), new Vec3f(0, 0, -1));
+        face.addVertex(new Vec3f(0 + 0.25f, 0, 0f), new Vec2f(maxU, 1f - 64f / 256f), new Vec3f(0, 0, -1));
+        face.addVertex(new Vec3f(0, 0, 0f), new Vec2f(minU, 1f - 64f / 256f), new Vec3f(0, 0, -1));
 
         face.addIndex(1);
         face.addIndex(0);

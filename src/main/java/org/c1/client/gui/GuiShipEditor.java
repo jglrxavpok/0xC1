@@ -27,13 +27,12 @@ public class GuiShipEditor extends Gui {
     @Override
     public void init() {
         components = Lists.newArrayList();
-        grid = new ShipWall[10][10][5];
+        grid = new ShipWall[25][2][25];
 
         for (int x = 0; x < grid.length; x++) {
-            for (int y = 0; y < grid[0].length; y++) {
-                for (int z = 0; z < grid[0][0].length; z++) {
-                    grid[x][y][z] = new ShipWall(x, y, z);
-                }
+            for (int z = 0; z < grid[0][0].length; z++) {
+                if (x == 0 || z == 0 || x == grid.length - 1 || z == grid[0][0].length - 1)
+                    grid[x][0][z] = new ShipWall(x, 0, z);
             }
         }
 
@@ -57,7 +56,7 @@ public class GuiShipEditor extends Gui {
         engine.clearDepth();
         t += delta / 40f;
         t %= 1f;
-        camera.setPos(new Vec3f(5, 0, (float) (t * 5f - 8f)));
+        camera.setPos(new Vec3f(12.5f * 0.25f, 5, (float) (t * 5f - 8f)));
         renderEditor(delta);
         engine.clearDepth();
         engine.setCurrentCamera(oldCam);
@@ -71,17 +70,23 @@ public class GuiShipEditor extends Gui {
     }
 
     private void renderEditor(double delta) {
+        RenderEngine engine = game.getRenderEngine();
         int mx = Mouse.getX();
         int my = Mouse.getY();
         float projectedX = ((float) mx / (float) game.getDisplayWidth()) * 2f - 1f;
         float projectedY = ((float) my / (float) game.getDisplayHeight()) * 2f - 1f;
         Vec3f mouseWorldPos = raycast(projectedX, projectedY);
 
+        if (mouseWorldPos != null) {
+            ShipWall wall = new ShipWall(mouseWorldPos.x(), mouseWorldPos.y(), mouseWorldPos.z());
+            wall.render(delta);
+        }
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[0].length; y++) {
                 for (int z = 0; z < grid[0][0].length; z++) {
                     ShipWall wall = grid[x][y][z];
                     if (wall != null) {
+                        engine.setModelview(wall.getTransformationMatrix());
                         wall.render(delta);
                     }
                 }
@@ -95,9 +100,30 @@ public class GuiShipEditor extends Gui {
     private Vec3f raycast(float projectedX, float projectedY) {
         Vec3f mousePos = new Vec3f(projectedX, projectedY, 0);
         camera.getTransform().transform(mousePos);
+        Vec3f startPos = mousePos.copy();
         Vec3f forward = camera.getTransform().rot().forward();
-
+        System.out.println(mousePos.add(forward.mul(8)) + ", " + startPos);
+        while (mousePos.copy().sub(startPos).length() <= 10000f) {
+            float realX = mousePos.x() / 4f;
+            float realY = mousePos.y();
+            float realZ = mousePos.z() / 4f;
+            int gridX = Math.round(realX);
+            int gridY = Math.round(realY);
+            int gridZ = Math.round(realZ);
+            if (gridY < 0 && inBound(gridX, 0, gridZ)) {
+                mousePos.y(0);
+                return mousePos;
+            }
+            if (inBound(gridX, gridY, gridZ) && grid[gridX][gridY][gridZ] != null) {
+                return mousePos;
+            }
+            mousePos.add(forward);
+        }
         return null;
+    }
+
+    private boolean inBound(int gridX, int gridY, int gridZ) {
+        return gridX >= 0 && gridY >= 0 && gridZ >= 0 && gridX < grid.length && gridY < grid[0].length && gridZ < grid[0][0].length;
     }
 
 }
