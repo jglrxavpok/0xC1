@@ -78,8 +78,8 @@ public class RenderEngine {
             int size = mapSize.size();
             Texture shadowMap = new Texture(size, size, null, GL_NEAREST, GL_TEXTURE_2D);
             Texture shadowMapTmp = new Texture(size, size, null, GL_NEAREST, GL_TEXTURE_2D);
-            shadowMap.setupRenderTarget(true);
-            shadowMapTmp.setupRenderTarget(true);
+            shadowMap.setupRenderTarget(false);
+            shadowMapTmp.setupRenderTarget(false);
 
             shadowMaps[i] = shadowMap;
             shadowMapsTmp[i] = shadowMapTmp;
@@ -156,11 +156,11 @@ public class RenderEngine {
             currentShadowMap = shadowMaps[mapIndex];
             currentTmpShadowMap = shadowMapsTmp[mapIndex];
 
+            setLightMatrix(initMatrix);
             currentShadowMap.bindAsRenderTarget();
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            setLightMatrix(initMatrix);
             if (shadowingData != null) {
                 shadowLightBleedingReduction = shadowingData.getLightBleedingReduction();
                 shadowVarianceMin = shadowingData.getVarianceMin();

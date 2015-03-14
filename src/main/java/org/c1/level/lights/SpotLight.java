@@ -18,9 +18,10 @@ public class SpotLight extends PointLight {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        setShadowingData(new ShadowingData(new Mat4f().perspective(fov, 1f, 0.001f, getRange())));
-        //        getShadowingData().setFlipCullFace(true);
-        getShadowingData().setShadowMapSize(ShadowMapSize._256x256);
+        //  setShadowingData(new ShadowingData(new Mat4f().perspective(fov, 1f, 0.001f, getRange())));
+        //  getShadowingData().setFlipCullFace(true);
+        //  getShadowingData().setShadowMapSize(ShadowMapSize._256x256);
+        // FIXME: make shadows work 
     }
 
     public float getCutoff() {

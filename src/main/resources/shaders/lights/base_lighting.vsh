@@ -20,7 +20,7 @@ void main()
 	gl_Position = projection * modelview * vec4(position, 1.0);
     texCoord0 = texCoords;
     normal0 = normal;
-    shadowMapCoords0 = lightMatrix * vec4(position, 1.0);
+    shadowMapCoords0 = lightMatrix * modelview * vec4(position, 1.0);
     worldPos0 = (modelview * vec4(position, 1.0)).xyz;
 
     vec3 n = normalize((modelview * vec4(normal, 0.0)).xyz);
