@@ -23,7 +23,7 @@ public class PlayerController extends GameObject {
 
     @Override
     public void update(double delta) {
-        this.playerCam.getTransform().translate(getPos().x() - playerCam.getTransform().pos().x(), this.getTransform().pos().y() - playerCam.getTransform().pos().y(), this.getTransform().pos().z() - playerCam.getTransform().pos().z());
+
     }
 
     @Override
