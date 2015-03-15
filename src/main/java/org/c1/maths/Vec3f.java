@@ -24,6 +24,10 @@ public class Vec3f implements IBufferWritable {
         this.z = z;
     }
 
+    public Vec3f(Vec3f vector) {
+        this.set(vector);
+    }
+
     public float x() {
         return x;
     }

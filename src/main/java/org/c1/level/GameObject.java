@@ -8,6 +8,7 @@ public abstract class GameObject {
     protected Transform transform;
     public boolean physicsEnabled;
     public AABB hitbox;
+    protected Level level;
 
     public GameObject() {
         transform = new Transform();
@@ -41,5 +42,13 @@ public abstract class GameObject {
 
     public Transform getTransform() {
         return transform;
+    }
+    
+    public void setLevel(Level level){
+        this.level = level;
+    }
+    
+    public Level getLevel(){
+        return this.level;
     }
 }

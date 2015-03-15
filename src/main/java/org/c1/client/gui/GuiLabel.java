@@ -15,12 +15,20 @@ public class GuiLabel extends GuiComponent {
 
     @Override
     public void render(double deltaTime) {
-        font.renderString(text, getPos().x(), getPos().y(), 0xFFFFFFFF);
+        font.renderString(getText(), getPos().x(), getPos().y(), 0xFFFFFFFF);
     }
 
     @Override
     public void update(double deltaTime) {
         ;
+    }
+    
+    public String getText(){
+        return this.text;
+    }
+    
+    public void setText(String text){
+        this.text = text;
     }
 
 }

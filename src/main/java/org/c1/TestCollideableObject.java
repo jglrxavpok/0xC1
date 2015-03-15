@@ -13,7 +13,7 @@ public class TestCollideableObject extends GameObject {
     public TestCollideableObject(Model model, Texture texture){
         this.model = model;
         this.texture = texture;
-        this.hitbox = new AABB(this.getPos(), this.getPos().add(2));
+        this.hitbox = new AABB(this.getPos(), this.getPos().add(1));
         model.setTexture(texture);
         this.physicsEnabled = true;
     }

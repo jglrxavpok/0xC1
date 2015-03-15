@@ -27,12 +27,14 @@ public class C1Game {
     private int displayHeight;
     private Level level;
     private Camera camera;
-    private PlayerController player;
+    public PlayerController player;
     private PointLight light;
     private TestModel model;
     private TestCubicModel modelCube;
     private FontRenderer font;
     private FontRenderer computerFont;
+
+    private boolean isDebugEnabled = false;
 
     public void start() {
         try {
@@ -131,6 +133,7 @@ public class C1Game {
         level.addGameObject(testObject2);
         level.addGameObject(testObject3);
         level.addGameObject(collideableObject);
+        level.addGameObject(player);
 
         light = new SpotLight(new Vec3f(10, 0, 0), 0.8f, new Vec3f(1f, 1f, 0.0005f), (float) Math.toRadians(90));
         level.addLight(light);
@@ -177,7 +180,15 @@ public class C1Game {
 
         while (Keyboard.next()) {
             if (Keyboard.getEventKeyState()) {
-
+                if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
+                    if (!isDebugEnabled) {
+                        openGui(new GuiDebug(this));
+                        isDebugEnabled = true;
+                    } else {
+                        openGui(new GuiShipEditor(this));
+                        isDebugEnabled = false;
+                    }
+                }
             }
         }
 
@@ -195,6 +206,7 @@ public class C1Game {
             light.setPos(player.playerCam.getPos());
         }
         level.update(deltaTime);
+        currentGui.update(deltaTime);
     }
 
     private void render(double deltaTime) {

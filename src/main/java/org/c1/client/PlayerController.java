@@ -13,7 +13,7 @@ public class PlayerController extends GameObject {
     public PlayerController(Mat4f projection) {
         this.playerCam = new Camera(projection);
         this.physicsEnabled = true;
-        this.hitbox = new AABB(this.getPos(), this.getPos().add(1, 2, 1));
+        this.hitbox = new AABB(this.getPos(), this.getPos().add(1, 1, 1));
     }
 
     public void mouseInput(float yaw, float pitch) {
@@ -26,13 +26,19 @@ public class PlayerController extends GameObject {
 
     @Override
     public void update(double delta) {
-        this.hitbox.position = this.getPos();
+        this.hitbox.setPosition(this.getPos());
+        for(GameObject o : this.getLevel().getGameObjects()){
+            if(o.physicsEnabled){
+                if(AABB.collides(this.hitbox, o.hitbox)){
+                    System.out.println("Collision !!!!!!!");
+                }
+            }
+        }
     }
     
     @Override
     public void render(double delta) {
-        // TODO Auto-generated method stub
-
+       
     }
 
     //All movement methods returns whether or not they were successful ( collisions )

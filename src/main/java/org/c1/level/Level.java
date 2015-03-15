@@ -28,6 +28,7 @@ public class Level {
         if (o instanceof Light)
             lights.add((Light) o);
         spawningList.add(o);
+        o.setLevel(this);
     }
 
     public void removeGameObject(GameObject o) {
