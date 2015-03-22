@@ -4,10 +4,27 @@ public class Transform {
 
     private Quaternion rotation;
     private Vec3f position;
+    private Vec3f scale;
 
     public Transform() {
         rotation = new Quaternion();
         position = new Vec3f();
+        scale = new Vec3f(1, 1, 1);
+    }
+
+    public Vec3f scale() {
+        return scale;
+    }
+
+    public Transform scale(Vec3f v) {
+        return scale(v.x(), v.y(), v.z());
+    }
+
+    public Transform scale(float x, float y, float z) {
+        scale.x(x);
+        scale.y(y);
+        scale.z(z);
+        return this;
     }
 
     public Vec3f pos() {
@@ -49,14 +66,15 @@ public class Transform {
     public Mat4f getTransformationMatrix() {
         Mat4f translationMatrix = new Mat4f().translation(position.x(), position.y(), position.z());
         Mat4f rotationMatrix = rotation.toRotationMatrix();
-        return translationMatrix.mul(rotationMatrix);
+        Mat4f scaling = new Mat4f().scale(scale.x(), scale.y(), scale.z());
+        return translationMatrix.mul(rotationMatrix.mul(scaling));
     }
 
     public Vec3f translate(float x, float y, float z) {
         position.x(position.x() + x);
         position.y(position.y() + y);
         position.z(position.z() + z);
-        
+
         return this.position;
     }
 

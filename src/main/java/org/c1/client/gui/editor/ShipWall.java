@@ -1,33 +1,29 @@
 package org.c1.client.gui.editor;
 
-import org.c1.client.models.*;
-import org.c1.maths.*;
+import java.io.*;
+
+import org.c1.client.render.*;
 
 public class ShipWall extends ShipEditorComponent {
 
-    private static ShipWallModel[] models;
-    private ShipWallModel wallModel;
-    private Mat4f transformMatrix;
+    private float x;
+    private float y;
+    private Sprite sprite;
 
-    public ShipWall(float x, float y, float z) {
-        if (models == null) {
-            initModels();
+    public ShipWall(float x, float y) {
+        this.x = x;
+        this.y = y;
+        try {
+            sprite = new Sprite(new Texture("textures/ship/editor_ship.png"), new StaticRegion(0, 1f - 32f / 256f, 32f / 256f, 1f));
+            sprite.setSize(32, 32);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        wallModel = models[(int) (Math.abs(x + z) % 4)];
-        transformMatrix = new Mat4f().translation(x * 0.25f, y, z * 0.25f);
-    }
-
-    private void initModels() {
-        models = new ShipWallModel[4];
-        models[0] = new ShipWallModel(0);
-        models[1] = new ShipWallModel(1);
-        models[2] = new ShipWallModel(2);
-        models[3] = new ShipWallModel(3);
     }
 
     @Override
-    public void render(double delta) {
-        wallModel.render();
+    public void render(double delta, RenderEngine engine) {
+        sprite.render(x, y, engine);
     }
 
     @Override
@@ -43,10 +39,6 @@ public class ShipWall extends ShipEditorComponent {
     @Override
     public int getHeight() {
         return 1;
-    }
-
-    public Mat4f getTransformationMatrix() {
-        return transformMatrix;
     }
 
 }
