@@ -2,6 +2,8 @@ package org.c1.client.render;
 
 import java.io.*;
 
+import org.c1.maths.*;
+
 public class TextureAtlas {
 
     private Texture texture;
@@ -31,14 +33,23 @@ public class TextureAtlas {
         atlasRegions = new TextureRegion[xFrequency][yFrequency];
         for (int x = 0; x < xFrequency; x++) {
             for (int y = 0; y < yFrequency; y++) {
-                float minU = (float) (x * tileWidth) / (float) (texture.getWidth());
-                float maxU = (float) ((x + 1) * tileWidth) / (float) (texture.getWidth());
-                float minV = (float) 1f - ((y + 1) * tileHeight) / (float) (texture.getHeight());
-                float maxV = (float) 1f - (y * tileHeight) / (float) (texture.getHeight());
-                StaticRegion region = new StaticRegion(minU, minV, maxU, maxV);
+                Vec2f minUV = getTexelCoords(x * tileWidth, texture.getHeight() - (y + 1) * tileHeight);
+                Vec2f maxUV = getTexelCoords((x + 1) * tileWidth - 1, texture.getHeight() - y * tileHeight - 1);
+                StaticRegion region = new StaticRegion(minUV.x(), minUV.y(), maxUV.x(), maxUV.y());
                 atlasRegions[x][y] = region;
             }
         }
+    }
+
+    /**
+     * Performs a half-pixel correction and then returns the UV coords based on the pixel coordinates
+     */
+    private Vec2f getTexelCoords(int x, int y) {
+        float xpos = x + .5f;
+        float ypos = y + .5f;
+        float u = xpos / (float) texture.getWidth();
+        float v = ypos / (float) texture.getHeight();
+        return new Vec2f(u, v);
     }
 
     public TextureRegion[][] getRegions() {

@@ -104,7 +104,8 @@ public class FontRenderer {
             float z = (float) i / (float) text.length();
             verticesArray.addVertex(new Vec3f(xo + x, y, z), new Vec2f(region.minU(), region.minV()), new Vec3f());
             verticesArray.addVertex(new Vec3f(xo + x + getCharWidth(c), y, z), new Vec2f(region.maxU(), region.minV()), new Vec3f());
-            verticesArray.addVertex(new Vec3f(xo + x + getCharWidth(c), y + getCharHeight(c), z), new Vec2f(region.maxU(), region.maxV()), new Vec3f());
+            verticesArray.addVertex(new Vec3f(xo + x + getCharWidth(c), y + getCharHeight(c), z), new Vec2f(region.maxU(), region.maxV()),
+                    new Vec3f());
             verticesArray.addVertex(new Vec3f(xo + x, y + getCharHeight(c), z), new Vec2f(region.minU(), region.maxV()), new Vec3f());
 
             verticesArray.addIndex(currentIndex + 1);
@@ -134,7 +135,7 @@ public class FontRenderer {
     }
 
     private float getCharSpacing() {
-        return -8f * scale;
+        return -6f * scale;
     }
 
     public float getCharHeight(char c) {

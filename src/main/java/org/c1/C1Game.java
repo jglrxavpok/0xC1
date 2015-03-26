@@ -1,6 +1,12 @@
 package org.c1;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
+
 import java.io.*;
+import java.util.*;
+
+import com.google.common.collect.*;
 
 import org.c1.client.*;
 import org.c1.client.gui.*;
@@ -31,10 +37,15 @@ public class C1Game {
     private PointLight light;
     private TestModel model;
     private TestCubicModel modelCube;
+    private Gui newGui;
+    private Gui currentGui;
+
     private FontRenderer font;
     private FontRenderer computerFont;
 
     private boolean isDebugEnabled = false;
+    private List<String> loadingScreenLines;
+    private VertexArray loadingScreenBuffer;
 
     public void start() {
         try {
@@ -51,6 +62,7 @@ public class C1Game {
 
         logger = LoggerFactory.getLogger("0xC1");
 
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
         initGame();
 
         long lastTime = System.nanoTime();
@@ -99,23 +111,36 @@ public class C1Game {
 
     private void initGame() {
         try {
+            loadingScreenLines = Lists.newArrayList();
+            prepareLoadingScreen();
             font = new FontRenderer(new TextureAtlas("textures/font.png", 16, 16));
+            computerFont = new FontRenderer(new TextureAtlas("textures/font.png", 16, 16)); // TODO: Custom font for the computers
             shader = new Shader("shaders/blit");
             shader.bind();
             shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
+
+            updateLoadingScreen("Loading render engine");
+            renderEngine = new RenderEngine(displayWidth, displayHeight);
+            renderEngine.setAmbientColor(new Vec3f(0.5f, 0.5f, 0.5f));
+            updateLoadingScreen();
+
+            updateLoadingScreen("Loading camera");
             Mat4f projection = new Mat4f().perspective((float) (Math.toRadians(90)), 16f / 9f, 0.001f, 100000f);
             shader.getUniform("projection").setValueMat4(projection);
             player = new PlayerController(projection);
             camera = player.getCamera();
+            updateLoadingScreen();
+
+            updateLoadingScreen("Loading texture");
             model = new TestModel();
             modelCube = new TestCubicModel();
-            renderEngine = new RenderEngine(displayWidth, displayHeight);
-            renderEngine.setAmbientColor(new Vec3f(0.5f, 0.5f, 0.5f));
             texture = new Texture("textures/logo.png");
+            updateLoadingScreen();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        updateLoadingScreen("Loading level");
         level = new Level();
 
         GameObject testObject = new TestObject(texture, model);
@@ -139,17 +164,55 @@ public class C1Game {
         level.addLight(light);
 
         level.update(0);
+        updateLoadingScreen();
 
+        updateLoadingScreen("Loading ship editor");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         openGui(new GuiShipEditor(this));
+        updateLoadingScreen();
     }
 
-    float dx = 0.0f;
-    float dy = 0.0f;
-    private Gui newGui;
-    private Gui currentGui;
+    private void prepareLoadingScreen() {}
+
+    private void updateLoadingScreen() {
+        String oldLine = loadingScreenLines.get(loadingScreenLines.size() - 1);
+        String newLine = oldLine + " done";
+        loadingScreenLines.set(loadingScreenLines.size() - 1, newLine);
+        refreshLoadingScreen();
+    }
+
+    private void updateLoadingScreen(String line) {
+        loadingScreenLines.add(line + "...");
+        refreshLoadingScreen();
+    }
+
+    private void refreshLoadingScreen() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClearColor(0, 0, 0.75f, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        shader.bind();
+        shader.getUniform("modelview").setValueMat4(new Mat4f().identity());
+        float h = 250f;
+        shader.getUniform("projection").setValueMat4(new Mat4f().orthographic(0, h * (16f / 9f), 0, h, -1, 1f));
+        for (int i = 0; i < loadingScreenLines.size(); i++) {
+            String line = loadingScreenLines.get(i);
+            float x = 2;
+            float y = (loadingScreenLines.size() - i - 1) * font.getCharHeight('A');
+            computerFont.renderString(line, x, y, 0xFFFFFFFF);
+        }
+        Display.update();
+    }
 
     private void pollEvents(double deltaTime) {
 
+        float dx = 0.0f;
+        float dy = 0.0f;
         dx = Mouse.getDX();
         dy = Mouse.getDY();
 
