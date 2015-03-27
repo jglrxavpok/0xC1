@@ -14,10 +14,11 @@ public abstract class Light extends GameObject {
     private ShadowingData shadowingData;
 
     public Light(Vec3f color, float intensity) {
-        super();
+        super("light");
         this.color = color;
         active = true;
         shadowing = true;
+        setCollidable(false);
     }
 
     public void setIntensity(float intensity) {

@@ -96,11 +96,11 @@ public class Texture {
         glBindTexture(target, texID);
     }
 
-    public void setupRenderTarget(boolean clamp) {
+    public void setupRenderTarget(boolean clampUV) {
         if (isRenderTarget)
             return;
         bind();
-        if (clamp) {
+        if (clampUV) {
             glTexParameterf(target, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
             glTexParameterf(target, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
         }

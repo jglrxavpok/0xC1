@@ -11,6 +11,7 @@ public class Camera extends GameObject {
     }
 
     public Camera(Mat4f projection) {
+        super("camera");
         this.projection = projection;
     }
 

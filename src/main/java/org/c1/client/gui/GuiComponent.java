@@ -21,4 +21,8 @@ public abstract class GuiComponent {
     public abstract void render(double deltaTime);
 
     public abstract void update(double deltaTime);
+
+    public void onKeyPressed(int keycode, char eventchar) {}
+
+    public void onKeyReleased(int keycode, char eventchar) {}
 }

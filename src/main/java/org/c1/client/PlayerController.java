@@ -2,7 +2,6 @@ package org.c1.client;
 
 import org.c1.level.*;
 import org.c1.maths.*;
-import org.c1.physics.AABB;
 
 public class PlayerController extends GameObject {
 
@@ -11,9 +10,9 @@ public class PlayerController extends GameObject {
     private float pitch;
 
     public PlayerController(Mat4f projection) {
+        super("player_controller");
         this.playerCam = new Camera(projection);
-        this.physicsEnabled = true;
-        this.hitbox = new AABB(this.getPos(), this.getPos().add(1, 1, 1));
+        this.boundingBox.setSize(new Vec3f(1, 1, 1));
     }
 
     public void mouseInput(float yaw, float pitch) {
@@ -26,24 +25,26 @@ public class PlayerController extends GameObject {
 
     @Override
     public void update(double delta) {
-        this.hitbox.setPosition(this.getPos());
-        for(GameObject o : this.getLevel().getGameObjects()){
-            if(o.physicsEnabled){
-                if(AABB.collides(this.hitbox, o.hitbox)){
-                    System.out.println("Collision !!!!!!!");
-                }
-            }
-        }
+        this.boundingBox.setCentered(this.getPos());
+        this.getLevel().getGameObjects().stream()
+                .filter(o -> o != this)
+                .forEach(o -> {
+                    if (o.isCollidable()) {
+                        if (this.boundingBox.collides(o.getBoundingBox())) {
+                            System.out.println("Collision with " + o + " < " + o.getBoundingBox());
+                        }
+                    }
+                });
     }
-    
+
     @Override
     public void render(double delta) {
-       
+        ;
     }
 
     //All movement methods returns whether or not they were successful ( collisions )
-    
-    public boolean walkForward(double deltaTime){
+
+    public boolean walkForward(double deltaTime) {
         Vec3f translationForward = this.playerCam.getRotation().forward();
         float speed = (float) deltaTime * 5;
         translationForward.mul(speed);
@@ -51,8 +52,8 @@ public class PlayerController extends GameObject {
         this.playerCam.getTransform().translate(translationForward);
         return true;
     }
-    
-    public boolean walkBackwards(double deltaTime){
+
+    public boolean walkBackwards(double deltaTime) {
         Vec3f translationForward = this.playerCam.getRotation().forward();
         float speed = (float) deltaTime * 5;
         translationForward.mul(speed);
@@ -61,8 +62,8 @@ public class PlayerController extends GameObject {
         this.playerCam.getTransform().translate(translationForward);
         return true;
     }
-    
-    public boolean walkRight(double deltaTime){
+
+    public boolean walkRight(double deltaTime) {
         Vec3f translationRight = this.playerCam.getRotation().right();
         float speed = (float) deltaTime * 5;
         translationRight.mul(speed);
@@ -70,8 +71,8 @@ public class PlayerController extends GameObject {
         this.playerCam.getTransform().translate(translationRight);
         return true;
     }
-    
-    public boolean walkLeft(double deltaTime){
+
+    public boolean walkLeft(double deltaTime) {
         Vec3f translationRight = this.playerCam.getRotation().right();
         float speed = (float) deltaTime * 5;
         translationRight.mul(speed);
@@ -80,7 +81,7 @@ public class PlayerController extends GameObject {
         this.playerCam.getTransform().translate(translationRight);
         return true;
     }
-    
+
     @Override
     public boolean shouldDie() {
         return false;

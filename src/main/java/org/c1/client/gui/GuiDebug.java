@@ -1,13 +1,13 @@
 package org.c1.client.gui;
 
-import org.c1.C1Game;
+import org.c1.*;
 
 public class GuiDebug extends Gui {
 
     private GuiLabel playerPos;
     private GuiLabel playerHitbox;
     private C1Game game;
-    
+
     public GuiDebug(C1Game gameInstance) {
         super(gameInstance);
         this.game = gameInstance;
@@ -17,21 +17,14 @@ public class GuiDebug extends Gui {
 
     @Override
     public void init() {
-        
+        addComponent(playerHitbox);
+        addComponent(playerPos);
     }
-    
+
     @Override
     public void update(double delta) {
         playerPos.setText("Player pos: " + this.game.player.getPos().toString());
-        playerHitbox.setText("Pl Hitbox : " + game.player.hitbox.toString());
+        playerHitbox.setText("Pl Hitbox : " + game.player.getBoundingBox().toString());
         super.update(delta);
     }
-
-    @Override
-    public void render(double delta) {
-        playerPos.render(delta);
-        playerHitbox.render(delta);
-        super.render(delta);
-    }
-
 }

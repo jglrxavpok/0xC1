@@ -19,18 +19,26 @@ public abstract class Gui {
     public abstract void init();
 
     public void render(double delta) {
-        for (GuiComponent component : components) {
-            component.render(delta);
-        }
+        components.forEach(comp -> comp.render(delta));
     }
 
     public void update(double delta) {
-        for (GuiComponent component : components) {
-            component.update(delta);
-        }
+        components.forEach(comp -> comp.update(delta));
     }
 
     public void addComponent(GuiComponent comp) {
         components.add(comp);
+    }
+
+    public void onKeyPressed(int keycode, char eventchar) {
+        components.forEach(comp -> comp.onKeyPressed(keycode, eventchar));
+    }
+
+    public void onKeyReleased(int keycode, char eventchar) {
+        components.forEach(comp -> comp.onKeyReleased(keycode, eventchar));
+    }
+
+    public void clearComponents() {
+        components.clear();
     }
 }

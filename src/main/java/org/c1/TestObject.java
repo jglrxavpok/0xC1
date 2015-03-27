@@ -10,8 +10,10 @@ public class TestObject extends GameObject {
     private Texture texture;
 
     public TestObject(Texture texture, Model model) {
+        super("test_object");
         this.texture = texture;
         this.model = model;
+        setCollidable(false);
         model.setTexture(texture);
     }
 

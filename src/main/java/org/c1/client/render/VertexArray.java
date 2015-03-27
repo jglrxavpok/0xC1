@@ -101,8 +101,7 @@ public class VertexArray {
 
     private void computeTangents() {
         tangents.clear();
-        for (int i = 0; i < positions.size(); i++)
-            tangents.add(Vec3f.NULL.copy());
+        positions.forEach(pos -> tangents.add(Vec3f.NULL.copy()));
 
         for (int i = 0; i < indices.size(); i += 3) {
             int i0 = indices.get(i);
@@ -120,7 +119,8 @@ public class VertexArray {
             double dividend = (deltaU1 * deltaV2 - deltaU2 * deltaV1);
             double f = dividend == 0.0f ? 0.0f : 1.0f / dividend;
 
-            Vec3f tangent = new Vec3f((float) (f * (deltaV2 * edge1.x() - deltaV1 * edge2.x())), (float) (f * (deltaV2 * edge1.y() - deltaV1 * edge2.y())), (float) (f * (deltaV2 * edge1.z() - deltaV1 * edge2.z())));
+            Vec3f tangent = new Vec3f((float) (f * (deltaV2 * edge1.x() - deltaV1 * edge2.x())),
+                    (float) (f * (deltaV2 * edge1.y() - deltaV1 * edge2.y())), (float) (f * (deltaV2 * edge1.z() - deltaV1 * edge2.z())));
 
             // Bitangent example, in Java
             // Vector3 bitangent = Vector3.get((float)(f * (-deltaU2 *
@@ -132,9 +132,7 @@ public class VertexArray {
             tangents.set(i1, tangents.get(i1).copy().add(tangent));
             tangents.set(i2, tangents.get(i2).copy().add(tangent));
         }
-
-        for (int i = 0; i < tangents.size(); i++)
-            tangents.set(i, tangents.get(i).copy().norm());
+        tangents.forEach(Vec3f::norm);
     }
 
     public void clear() {

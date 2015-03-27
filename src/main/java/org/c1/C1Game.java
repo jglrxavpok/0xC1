@@ -45,7 +45,6 @@ public class C1Game {
 
     private boolean isDebugEnabled = false;
     private List<String> loadingScreenLines;
-    private VertexArray loadingScreenBuffer;
 
     public void start() {
         try {
@@ -72,9 +71,7 @@ public class C1Game {
         int updates = 0;
         int frames = 0;
         running = true;
-        while (running) // Thanks to TheCherno for the code of this loop,
-                        // check him out on GitHub, he does a lot of cool
-                        // stuff
+        while (running) // Thanks to TheCherno for the code of this loop, check him out on GitHub, he does a lot of cool stuff
         {
             long now = System.nanoTime();
             boolean polledInput = false;
@@ -243,6 +240,16 @@ public class C1Game {
 
         while (Keyboard.next()) {
             if (Keyboard.getEventKeyState()) {
+                boolean pressed = Keyboard.getEventKeyState();
+                int keycode = Keyboard.getEventKey();
+                char eventchar = Keyboard.getEventCharacter();
+
+                if (currentGui != null) {
+                    if (pressed)
+                        currentGui.onKeyPressed(keycode, eventchar);
+                    else
+                        currentGui.onKeyReleased(keycode, eventchar);
+                }
                 if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
                     if (!isDebugEnabled) {
                         openGui(new GuiDebug(this));
@@ -261,6 +268,7 @@ public class C1Game {
         if (newGui != currentGui) {
             currentGui = newGui;
             if (currentGui != null) {
+                currentGui.clearComponents();
                 currentGui.init();
             }
         }
@@ -269,17 +277,18 @@ public class C1Game {
             light.setPos(player.playerCam.getPos());
         }
         level.update(deltaTime);
-        currentGui.update(deltaTime);
+
+        if (currentGui != null)
+            currentGui.update(deltaTime);
     }
 
     private void render(double deltaTime) {
+        renderEngine.enableTextures();
+
         renderEngine.clearColorBuffer(0f, 0f, 1f, 1f);
 
         renderEngine.clearDepth();
-
         renderEngine.enableDepthTesting();
-
-        renderEngine.enableTextures();
 
         renderEngine.renderLevel(level, deltaTime, camera);
 

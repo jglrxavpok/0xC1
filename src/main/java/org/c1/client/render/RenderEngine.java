@@ -54,7 +54,7 @@ public class RenderEngine {
 
         glFrontFace(GL_CW);
         glCullFace(GL_BACK);
-        //        glEnable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
         glEnable(GL32.GL_DEPTH_CLAMP);
 
         glShadeModel(GL_SMOOTH);
@@ -167,7 +167,8 @@ public class RenderEngine {
             if (shadowingData != null) {
                 shadowLightBleedingReduction = shadowingData.getLightBleedingReduction();
                 shadowVarianceMin = shadowingData.getVarianceMin();
-                shadowTexelSize = new Vec3f(1.0f / (float) ShadowMapSize.values()[mapIndex].size(), 1.0f / (float) ShadowMapSize.values()[mapIndex].size(), 0f);
+                shadowTexelSize = new Vec3f(1.0f / (float) ShadowMapSize.values()[mapIndex].size(),
+                        1.0f / (float) ShadowMapSize.values()[mapIndex].size(), 0f);
                 altCamera.setProjection(shadowingData.getProjectionMatrix());
                 altCamera.getTransform().pos(l.getTransform().pos());
                 altCamera.getTransform().rot(l.getTransform().rot());
@@ -248,10 +249,10 @@ public class RenderEngine {
     private void renderObjects(Shader shader, Level level, double delta, Camera camera) {
         setCurrentCamera(camera);
         setCurrentShader(shader);
-        for (GameObject o : level.getGameObjects()) {
-            currentShader.getUniform("modelview").setValueMat4(o.getTransform().getTransformationMatrix());
-            o.render(delta);
-        }
+        level.getGameObjects().forEach(object -> {
+            currentShader.getUniform("modelview").setValueMat4(object.getTransform().getTransformationMatrix());
+            object.render(delta);
+        });
     }
 
     public void setCurrentCamera(Camera camera) {

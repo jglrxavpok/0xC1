@@ -1,26 +1,26 @@
 package org.c1;
 
-import org.c1.client.Model;
-import org.c1.client.render.Texture;
-import org.c1.level.GameObject;
-import org.c1.physics.AABB;
+import org.c1.client.*;
+import org.c1.client.render.*;
+import org.c1.level.*;
+import org.c1.maths.*;
 
 public class TestCollideableObject extends GameObject {
 
     private Model model;
     private Texture texture;
-    
-    public TestCollideableObject(Model model, Texture texture){
+
+    public TestCollideableObject(Model model, Texture texture) {
+        super("test_collisions");
         this.model = model;
         this.texture = texture;
-        this.hitbox = new AABB(this.getPos(), this.getPos().add(1));
+        this.boundingBox.setSize(new Vec3f(1, 1, 1));
         model.setTexture(texture);
-        this.physicsEnabled = true;
     }
-    
+
     @Override
     public void update(double delta) {
-        hitbox.position = this.getPos();
+        boundingBox.setPosition(this.getPos());
     }
 
     @Override
@@ -31,7 +31,6 @@ public class TestCollideableObject extends GameObject {
 
     @Override
     public boolean shouldDie() {
-        // TODO Auto-generated method stub
         return false;
     }
 

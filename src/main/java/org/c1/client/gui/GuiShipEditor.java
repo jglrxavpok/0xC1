@@ -79,9 +79,7 @@ public class GuiShipEditor extends Gui {
                 }
             }
         }
-        for (ShipEditorComponent c : components) {
-            c.render(delta, engine);
-        }
+        components.forEach(comp -> comp.render(delta, engine));
 
     }
 

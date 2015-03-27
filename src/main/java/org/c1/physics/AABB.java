@@ -1,55 +1,98 @@
 package org.c1.physics;
 
-import org.c1.maths.Vec3f;
-import org.lwjgl.opengl.GL11;
+import org.c1.maths.*;
 
 public class AABB {
 
-    public Vec3f position;
-    public Vec3f size;
+    private Vec3f position;
+    private Vec3f size;
 
     //Used for down vector
-    public Vec3f center;
+    private Vec3f center;
 
     //Used for collision detection
-    public Vec3f halfSize;
+    private Vec3f halfSize;
+
+    public AABB(Vec3f size) {
+        this(new Vec3f(), size);
+    }
 
     public AABB(Vec3f pos, Vec3f size) {
         this.position = pos;
         this.size = size;
 
-        this.halfSize = size.div(2);
-        this.center = position.sub(halfSize);
+        this.halfSize = size.copy().div(2);
+        computerCenter();
     }
 
-    public static boolean collides(AABB a, AABB b) {
-        if (Math.abs(a.center.x() - b.center.x()) < (a.halfSize.x() + b.halfSize.x())) {
-            if (Math.abs(a.center.y() - b.center.y()) < (a.halfSize.y() + b.halfSize.y())) {
-                if (Math.abs(a.center.z() - b.center.z()) < (a.halfSize.z() + b.halfSize.z())) {
-                    return true;
-                }
-            }
-        }
+    public boolean collides(AABB other) {
+        float x = position.x();
+        float y = position.y();
+        float z = position.z();
+        float w = size.x();
+        float h = size.x();
+        float d = size.x();
 
-        return false;
+        float otherX = other.position.x();
+        float otherY = other.position.y();
+        float otherZ = other.position.z();
+        float otherW = other.size.x();
+        float otherH = other.size.x();
+        float otherD = other.size.x();
+
+        if (x > otherX + otherW || y > otherY + otherH || z > otherZ + otherD || x + w < otherX || y + h < otherY || z + d < otherZ)
+            return false;
+        return true;
     }
 
-    public static boolean isPointInside(AABB aabb, Vec3f point) {
-        if (Math.abs(aabb.center.x() - point.x()) < aabb.halfSize.x()) {
-            if (Math.abs(aabb.center.y() - point.y()) < aabb.halfSize.y()) {
-                if (Math.abs(aabb.center.z() - point.z()) < aabb.halfSize.z()) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public boolean isPointInside(Vec3f point) {
+        float x = position.x();
+        float y = position.y();
+        float z = position.z();
+        float w = size.x();
+        float h = size.x();
+        float d = size.x();
+
+        float pX = point.x();
+        float pY = point.y();
+        float pZ = point.z();
+
+        if (pX > x + w || pY > y + h || pZ > z + d || pX < x || pY < y || pZ < z)
+            return false;
+        return true;
     }
-    
-    public void setPosition(Vec3f position){
+
+    public void setPosition(Vec3f position) {
         this.position.set(position);
+        computerCenter();
+    }
+
+    public Vec3f getPosition() {
+        return position;
+    }
+
+    public Vec3f getCenter() {
+        return center;
+    }
+
+    private void computerCenter() {
+        this.center = position.copy().add(halfSize);
     }
 
     public String toString() {
         return new String("Position : " + position.toString() + " - Size : " + size.toString());
+    }
+
+    public Vec3f getSize() {
+        return size;
+    }
+
+    public void setSize(Vec3f size) {
+        this.size.set(size);
+        halfSize = size.copy().div(2);
+    }
+
+    public void setCentered(Vec3f pos) {
+        this.position.set(pos.copy().sub(halfSize));
     }
 }

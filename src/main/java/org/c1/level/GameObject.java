@@ -1,17 +1,45 @@
 package org.c1.level;
 
 import org.c1.maths.*;
-import org.c1.physics.AABB;
+import org.c1.physics.*;
 
 public abstract class GameObject {
 
     protected Transform transform;
-    public boolean physicsEnabled;
-    public AABB hitbox;
+    protected AABB boundingBox;
+    private boolean collidable;
     protected Level level;
+    private String id;
 
-    public GameObject() {
+    public GameObject(String id) {
+        this.id = id;
+        collidable = true;
         transform = new Transform();
+        boundingBox = new AABB(new Vec3f());
+    }
+
+    public String getID() {
+        return id;
+    }
+
+    public void setSize(Vec3f size) {
+        boundingBox.setSize(size);
+    }
+
+    public Vec3f getSize() {
+        return boundingBox.getSize();
+    }
+
+    public AABB getBoundingBox() {
+        return boundingBox;
+    }
+
+    public boolean isCollidable() {
+        return collidable;
+    }
+
+    public void setCollidable(boolean collidable) {
+        this.collidable = collidable;
     }
 
     public abstract void update(double delta);
@@ -43,12 +71,12 @@ public abstract class GameObject {
     public Transform getTransform() {
         return transform;
     }
-    
-    public void setLevel(Level level){
+
+    public void setLevel(Level level) {
         this.level = level;
     }
-    
-    public Level getLevel(){
+
+    public Level getLevel() {
         return this.level;
     }
 }
