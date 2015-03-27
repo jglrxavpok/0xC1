@@ -7,15 +7,15 @@ public class TestCubicModel extends Model {
 
     public TestCubicModel() {
         super();
-        float left = 0f;
+        float left = -1f;
         float right = 1f;
-        float top = 0f;
+        float top = -1f;
         float bottom = 1f;
         ModelFace frontFace = new ModelFace();
-        frontFace.addVertex(new Vec3f(left, top, 0), new Vec2f(0, 0), new Vec3f(0, 0, -1));
-        frontFace.addVertex(new Vec3f(right, top, 0), new Vec2f(1, 0), new Vec3f(0, 0, -1));
-        frontFace.addVertex(new Vec3f(right, bottom, 0), new Vec2f(1, 1), new Vec3f(0, 0, -1));
-        frontFace.addVertex(new Vec3f(left, bottom, 0), new Vec2f(0, 1), new Vec3f(0, 0, -1));
+        frontFace.addVertex(new Vec3f(left, top, -1f), new Vec2f(0, 0), new Vec3f(0, 0, -1));
+        frontFace.addVertex(new Vec3f(right, top, -1f), new Vec2f(1, 0), new Vec3f(0, 0, -1));
+        frontFace.addVertex(new Vec3f(right, bottom, -1f), new Vec2f(1, 1), new Vec3f(0, 0, -1));
+        frontFace.addVertex(new Vec3f(left, bottom, -1f), new Vec2f(0, 1), new Vec3f(0, 0, -1));
 
         frontFace.addIndex(1);
         frontFace.addIndex(0);
@@ -42,10 +42,10 @@ public class TestCubicModel extends Model {
         addFace(backFace, true);
 
         ModelFace rightFace = new ModelFace();
-        rightFace.addVertex(new Vec3f(right, top, 0), new Vec2f(0, 0), new Vec3f(1, 0, 0));
+        rightFace.addVertex(new Vec3f(right, top, -1f), new Vec2f(0, 0), new Vec3f(1, 0, 0));
         rightFace.addVertex(new Vec3f(right, top, 1f), new Vec2f(1, 0), new Vec3f(1, 0, 0));
         rightFace.addVertex(new Vec3f(right, bottom, 1f), new Vec2f(1, 1), new Vec3f(1, 0, 0));
-        rightFace.addVertex(new Vec3f(right, bottom, 0), new Vec2f(0, 1), new Vec3f(1, 0, 0));
+        rightFace.addVertex(new Vec3f(right, bottom, -1f), new Vec2f(0, 1), new Vec3f(1, 0, 0));
 
         rightFace.addIndex(1);
         rightFace.addIndex(0);
@@ -57,10 +57,10 @@ public class TestCubicModel extends Model {
         addFace(rightFace, true);
 
         ModelFace leftFace = new ModelFace();
-        leftFace.addVertex(new Vec3f(left, top, 0), new Vec2f(0, 0), new Vec3f(-1, 0, 0));
+        leftFace.addVertex(new Vec3f(left, top, -1f), new Vec2f(0, 0), new Vec3f(-1, 0, 0));
         leftFace.addVertex(new Vec3f(left, top, 1f), new Vec2f(1, 0), new Vec3f(-1, 0, 0));
         leftFace.addVertex(new Vec3f(left, bottom, 1f), new Vec2f(1, 1), new Vec3f(-1, 0, 0));
-        leftFace.addVertex(new Vec3f(left, bottom, 0), new Vec2f(0, 1), new Vec3f(-1, 0, 0));
+        leftFace.addVertex(new Vec3f(left, bottom, -1f), new Vec2f(0, 1), new Vec3f(-1, 0, 0));
 
         leftFace.addIndex(1);
         leftFace.addIndex(0);
@@ -70,7 +70,6 @@ public class TestCubicModel extends Model {
         leftFace.addIndex(0);
         leftFace.addIndex(3);
         addFace(leftFace, true);
-
     }
 
 }

@@ -43,7 +43,7 @@ public class C1Game {
     private FontRenderer font;
     private FontRenderer computerFont;
 
-    private boolean isDebugEnabled = false;
+    private boolean isDebugEnabled;
     private List<String> loadingScreenLines;
 
     public void start() {
@@ -108,6 +108,7 @@ public class C1Game {
 
     private void initGame() {
         try {
+            isDebugEnabled = true;
             loadingScreenLines = Lists.newArrayList();
             prepareLoadingScreen();
             font = new FontRenderer(new TextureAtlas("textures/font.png", 16, 16));
@@ -164,12 +165,7 @@ public class C1Game {
         updateLoadingScreen();
 
         updateLoadingScreen("Loading ship editor");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        openGui(new GuiShipEditor(this));
+        openGui(new GuiDebug(this));
         updateLoadingScreen();
     }
 
@@ -219,23 +215,24 @@ public class C1Game {
         // Keyboard input
 
         //Move forward
+        float speed = (float) (deltaTime * 5f);
         if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-            player.walkForward(deltaTime);
+            player.walkForward(speed, deltaTime);
         }
 
         //Move backward
         if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            player.walkBackwards(deltaTime);
+            player.walkBackwards(speed, deltaTime);
         }
 
         //Move right
         if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            player.walkRight(deltaTime);
+            player.walkRight(speed, deltaTime);
         }
 
         //Move left
         if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-            player.walkLeft(deltaTime);
+            player.walkLeft(speed, deltaTime);
         }
 
         while (Keyboard.next()) {
@@ -261,7 +258,6 @@ public class C1Game {
                 }
             }
         }
-
     }
 
     private void update(double deltaTime) {

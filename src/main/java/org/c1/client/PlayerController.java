@@ -1,5 +1,7 @@
 package org.c1.client;
 
+import java.util.concurrent.atomic.*;
+
 import org.c1.level.*;
 import org.c1.maths.*;
 
@@ -37,6 +39,23 @@ public class PlayerController extends GameObject {
                 });
     }
 
+    private boolean hasFreeSpace(Vec3f pos) {
+        AtomicBoolean result = new AtomicBoolean(true);
+        Vec3f oldPos = getPos();
+        boundingBox.setPosition(pos);
+        this.getLevel().getGameObjects().stream()
+                .filter(o -> o != this)
+                .forEach(o -> {
+                    if (o.isCollidable()) {
+                        if (this.boundingBox.collides(o.getBoundingBox())) {
+                            result.set(false);
+                        }
+                    }
+                });
+        boundingBox.setPosition(oldPos);
+        return result.get();
+    }
+
     @Override
     public void render(double delta) {
         ;
@@ -44,42 +63,35 @@ public class PlayerController extends GameObject {
 
     //All movement methods returns whether or not they were successful ( collisions )
 
-    public boolean walkForward(double deltaTime) {
-        Vec3f translationForward = this.playerCam.getRotation().forward();
-        float speed = (float) deltaTime * 5;
-        translationForward.mul(speed);
-        this.getTransform().translate(translationForward);
-        this.playerCam.getTransform().translate(translationForward);
+    public boolean walkForward(float speed, double deltaTime) {
+        Vec3f newPos = this.playerCam.getRotation().forward();
+        newPos.mul(speed);
+        newPos.add(getPos());
+
+        if (hasFreeSpace(newPos)) {
+            setPos(newPos);
+            playerCam.setPos(newPos);
+        }
         return true;
     }
 
-    public boolean walkBackwards(double deltaTime) {
-        Vec3f translationForward = this.playerCam.getRotation().forward();
-        float speed = (float) deltaTime * 5;
-        translationForward.mul(speed);
-        translationForward.mul(-1);
-        this.getTransform().translate(translationForward);
-        this.playerCam.getTransform().translate(translationForward);
+    public boolean walkBackwards(float speed, double deltaTime) {
+        return walkForward(-speed, deltaTime);
+    }
+
+    public boolean walkRight(float speed, double deltaTime) {
+        Vec3f newPos = this.playerCam.getRotation().right();
+        newPos.mul(speed);
+        newPos.add(getPos());
+        if (hasFreeSpace(newPos)) {
+            setPos(newPos);
+            playerCam.setPos(newPos);
+        }
         return true;
     }
 
-    public boolean walkRight(double deltaTime) {
-        Vec3f translationRight = this.playerCam.getRotation().right();
-        float speed = (float) deltaTime * 5;
-        translationRight.mul(speed);
-        this.getTransform().translate(translationRight);
-        this.playerCam.getTransform().translate(translationRight);
-        return true;
-    }
-
-    public boolean walkLeft(double deltaTime) {
-        Vec3f translationRight = this.playerCam.getRotation().right();
-        float speed = (float) deltaTime * 5;
-        translationRight.mul(speed);
-        translationRight.mul(-1);
-        this.getTransform().translate(translationRight);
-        this.playerCam.getTransform().translate(translationRight);
-        return true;
+    public boolean walkLeft(float speed, double deltaTime) {
+        return walkRight(-speed, deltaTime);
     }
 
     @Override

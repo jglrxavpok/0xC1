@@ -10,7 +10,9 @@ public class AABB {
     //Used for down vector
     private Vec3f center;
 
-    //Used for collision detection
+    /**
+     * Used for collision detection
+     */
     private Vec3f halfSize;
 
     public AABB(Vec3f size) {
