@@ -17,7 +17,7 @@ public class GuiShipEditor extends Gui {
     private ShipWall[][] grid;
     private Vec2f firstSelector;
     private Vec2f secondSelector;
-    private Camera camera;
+    private OrthographicCamera camera;
 
     public GuiShipEditor(C1Game gameInstance) {
         super(gameInstance);
@@ -38,7 +38,7 @@ public class GuiShipEditor extends Gui {
         firstSelector = new Vec2f(-1, -1);
         secondSelector = new Vec2f(-1, -1);
 
-        camera = new Camera(new Mat4f().orthographic(0, game.getDisplayWidth(), 0, game.getDisplayHeight(), -1f, 1f));
+        camera = new OrthographicCamera(game.getDisplayWidth(), game.getDisplayHeight());
         addComponent(new GuiLabel(0, 0, "I'm a test label!", game.getFont()));
     }
 

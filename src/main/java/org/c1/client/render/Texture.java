@@ -2,19 +2,20 @@ package org.c1.client.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.awt.image.*;
 import java.io.*;
-import java.nio.*;
+import java.util.*;
 
-import javax.imageio.*;
+import com.google.common.collect.*;
 
+import org.c1.*;
+import org.c1.utils.*;
 import org.lwjgl.opengl.*;
 
-public class Texture {
+public class Texture implements IDisposable {
 
+    private static Map<String, TextureData> resources = Maps.newHashMap();
     private int width;
     private int height;
-    private int[] pixels;
 
     private boolean isRenderTarget;
     private int texID;
@@ -22,6 +23,7 @@ public class Texture {
     private Framebuffer framebuffer;
     private int target;
     private int internalFormat;
+    private TextureData data;
 
     public Texture(String classpath) throws IOException {
         this(classpath, GL_NEAREST);
@@ -29,10 +31,14 @@ public class Texture {
 
     public Texture(String classpath, int filter) throws IOException {
         this.filter = filter;
-        BufferedImage image = ImageIO.read(Texture.class.getResourceAsStream("/" + classpath));
-        width = image.getWidth();
-        height = image.getHeight();
-        pixels = image.getRGB(0, 0, width, height, null, 0, width);
+        if (resources.containsKey(classpath)) {
+            data = resources.get(classpath);
+        } else {
+            data = new TextureData(classpath);
+            resources.put(classpath, data);
+        }
+        width = data.getWidth();
+        height = data.getHeight();
         this.target = GL_TEXTURE_2D;
         this.internalFormat = GL_RGBA;
         init();
@@ -53,47 +59,26 @@ public class Texture {
     public Texture(int w, int h, int[] pixels, int filter, int target, int internalFormat) {
         this.width = w;
         this.height = h;
-        this.pixels = pixels;
         this.filter = filter;
         this.target = target;
         this.internalFormat = internalFormat;
-
+        data = new TextureData(w, h, pixels);
         init();
     }
 
     private void init() {
-        texID = glGenTextures();
-        glBindTexture(target, texID);
-        glTexParameteri(target, GL12.GL_TEXTURE_BASE_LEVEL, 0);
-        glTexParameteri(target, GL12.GL_TEXTURE_MAX_LEVEL, 0);
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, filter);
-        glTexParameteri(target, GL_TEXTURE_MAG_FILTER, filter);
-
-        ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4);
-        if (pixels != null) {
-            for (int y = height - 1; y >= 0; y--) {
-                for (int x = 0; x < width; x++) {
-                    int color = pixels[x + y * width];
-                    int alpha = (color >> 24) & 0xFF;
-                    int red = (color >> 16) & 0xFF;
-                    int green = (color >> 8) & 0xFF;
-                    int blue = (color >> 0) & 0xFF;
-
-                    // We swap composites to go from ARGB to RGBA
-                    buffer.put((byte) red);
-                    buffer.put((byte) green);
-                    buffer.put((byte) blue);
-                    buffer.put((byte) alpha);
-                }
-            }
-            buffer.flip();
+        if (!data.isInit()) {
+            data.init(target, filter, internalFormat);
         }
-        glTexImage2D(target, 0, GL30.GL_RGBA32F, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, buffer);
+        this.texID = data.getTextureID();
     }
 
     public void bind() {
         glBindTexture(target, texID);
+    }
+
+    public void unbind() {
+        glBindTexture(target, 0);
     }
 
     public void setupRenderTarget(boolean clampUV) {
@@ -129,6 +114,12 @@ public class Texture {
 
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public void dispose() {
+        // TODO Implement Texture.dispose
+        throw new RuntimeException("IDisposable.dispose is not implemented yet");
     }
 
 }

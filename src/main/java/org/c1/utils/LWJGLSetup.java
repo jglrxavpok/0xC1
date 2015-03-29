@@ -1,4 +1,4 @@
-package org.c1;
+package org.c1.utils;
 
 import java.io.*;
 import java.util.*;
@@ -6,8 +6,8 @@ import java.util.regex.*;
 
 import com.google.common.collect.*;
 
-import org.c1.SystemUtils.OperatingSystem;
 import org.c1.utils.*;
+import org.c1.utils.SystemUtils.*;
 import org.slf4j.*;
 
 public class LWJGLSetup {

@@ -15,6 +15,7 @@ import org.c1.level.*;
 import org.c1.level.lights.*;
 import org.c1.maths.*;
 import org.c1.tests.*;
+import org.c1.utils.*;
 import org.lwjgl.*;
 import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;

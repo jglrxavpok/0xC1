@@ -1,4 +1,4 @@
-package org.c1;
+package org.c1.utils;
 
 import java.io.*;
 
@@ -14,17 +14,11 @@ public final class SystemUtils {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) {
             return OperatingSystem.WINDOWS;
-        }
-        if (os.contains("sunos") || os.contains("solaris")) {
+        } else if (os.contains("sunos") || os.contains("solaris")) {
             return OperatingSystem.SOLARIS;
-        }
-        if (os.contains("unix")) {
+        } else if (os.contains("unix") || os.contains("linux")) {
             return OperatingSystem.LINUX;
-        }
-        if (os.contains("linux")) {
-            return OperatingSystem.LINUX;
-        }
-        if (os.contains("mac")) {
+        } else if (os.contains("mac")) {
             return OperatingSystem.MACOSX;
         }
         return OperatingSystem.UNKNOWN;
@@ -43,8 +37,7 @@ public final class SystemUtils {
             if (appdata != null)
                 gameFolder = new File(appdata, ".ourcraft");
             else
-                gameFolder = new File(System.getProperty("user.home"),
-                        ".ourcraft");
+                gameFolder = new File(System.getProperty("user.home"), ".ourcraft");
         }
         return gameFolder;
     }

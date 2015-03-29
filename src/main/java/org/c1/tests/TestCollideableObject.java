@@ -1,4 +1,4 @@
-package org.c1;
+package org.c1.tests;
 
 import org.c1.client.*;
 import org.c1.client.render.*;
