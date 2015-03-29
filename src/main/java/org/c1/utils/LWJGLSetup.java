@@ -6,8 +6,7 @@ import java.util.regex.*;
 
 import com.google.common.collect.*;
 
-import org.c1.utils.*;
-import org.c1.utils.SystemUtils.*;
+import org.c1.utils.SystemUtils.OperatingSystem;
 import org.slf4j.*;
 
 public class LWJGLSetup {

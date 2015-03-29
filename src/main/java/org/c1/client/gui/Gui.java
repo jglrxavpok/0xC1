@@ -41,4 +41,24 @@ public abstract class Gui {
     public void clearComponents() {
         components.clear();
     }
+
+    public void onMousePressed(int x, int y, int button) {
+        components.forEach(comp -> comp.onMousePressed(x, y, button));
+    }
+
+    public void onMouseReleased(int x, int y, int button) {
+        components.forEach(comp -> comp.onMouseReleased(x, y, button));
+    }
+
+    public void onScroll(int x, int y, int direction) {
+        components.forEach(comp -> comp.onScroll(x, y, direction));
+    }
+
+    public void onMouseMoved(int x, int y, float dx, float dy) {
+        components.forEach(comp -> comp.onMouseMoved(x, y, dx, dy));
+    }
+
+    public boolean locksMouse() {
+        return true;
+    }
 }

@@ -212,7 +212,16 @@ public class C1Game {
 
         player.mouseInput(dx * 0.005f, -dy * 0.005f);
 
-        Mouse.setGrabbed(true);
+        if (currentGui != null) {
+            if (currentGui.locksMouse() && !Mouse.isGrabbed()) {
+                Mouse.setGrabbed(true);
+            }
+            if (!currentGui.locksMouse() && Mouse.isGrabbed()) {
+                Mouse.setGrabbed(false);
+            }
+        }
+        else if (!Mouse.isGrabbed())
+            Mouse.setGrabbed(true);
         // Keyboard input
 
         //Move forward
@@ -237,24 +246,48 @@ public class C1Game {
         }
 
         while (Keyboard.next()) {
-            if (Keyboard.getEventKeyState()) {
-                boolean pressed = Keyboard.getEventKeyState();
-                int keycode = Keyboard.getEventKey();
-                char eventchar = Keyboard.getEventCharacter();
+            boolean pressed = Keyboard.getEventKeyState();
+            int keycode = Keyboard.getEventKey();
+            char eventchar = Keyboard.getEventCharacter();
 
-                if (currentGui != null) {
-                    if (pressed)
-                        currentGui.onKeyPressed(keycode, eventchar);
-                    else
-                        currentGui.onKeyReleased(keycode, eventchar);
+            if (currentGui != null) {
+                if (pressed)
+                    currentGui.onKeyPressed(keycode, eventchar);
+                else
+                    currentGui.onKeyReleased(keycode, eventchar);
+            }
+            if (keycode == Keyboard.KEY_F1 && !pressed) {
+                if (!isDebugEnabled) {
+                    openGui(new GuiDebug(this));
+                    isDebugEnabled = true;
+                } else {
+                    openGui(new GuiShipEditor(this));
+                    isDebugEnabled = false;
                 }
-                if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
-                    if (!isDebugEnabled) {
-                        openGui(new GuiDebug(this));
-                        isDebugEnabled = true;
+            }
+        }
+
+        while (Mouse.next()) {
+            int button = Mouse.getEventButton();
+            int x = Mouse.getEventX();
+            int y = Mouse.getEventY();
+            dx = Mouse.getEventDX();
+            dy = Mouse.getEventDY();
+            int dwheel = Mouse.getEventDWheel();
+            boolean pressedButton = Mouse.getEventButtonState();
+
+            if (currentGui != null) {
+                if (button != -1) {
+                    if (pressedButton) {
+                        currentGui.onMousePressed(x, y, button);
                     } else {
-                        openGui(new GuiShipEditor(this));
-                        isDebugEnabled = false;
+                        currentGui.onMouseReleased(x, y, button);
+                    }
+                } else {
+                    if (dwheel != 0) {
+                        currentGui.onScroll(x, y, (int) Math.signum(dwheel));
+                    } else {
+                        currentGui.onMouseMoved(x, y, dx, dy);
                     }
                 }
             }

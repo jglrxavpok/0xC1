@@ -27,4 +27,8 @@ public class GuiDebug extends Gui {
         playerHitbox.setText("Pl Hitbox : " + game.player.getBoundingBox().toString());
         super.update(delta);
     }
+
+    public boolean locksMouse() {
+        return true;
+    }
 }

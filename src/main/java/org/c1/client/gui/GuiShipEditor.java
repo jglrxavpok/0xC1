@@ -66,6 +66,17 @@ public class GuiShipEditor extends Gui {
         }
     }
 
+    public void onScroll(int x, int y, int direction) {
+        super.onScroll(x, y, direction);
+        float newZoom = camera.getZoom();
+        float zoomFactor = 1.125f;
+        if (direction < 0) {
+            newZoom /= zoomFactor;
+        } else
+            newZoom *= zoomFactor;
+        camera.setZoom(newZoom);
+    }
+
     private void renderEditor(double delta) {
         RenderEngine engine = game.getRenderEngine();
         int mx = Mouse.getX();
@@ -87,4 +98,7 @@ public class GuiShipEditor extends Gui {
         return gridX >= 0 && gridY >= 0 && gridX < grid.length && gridY < grid[0].length;
     }
 
+    public boolean locksMouse() {
+        return false;
+    }
 }

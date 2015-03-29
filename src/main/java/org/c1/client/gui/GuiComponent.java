@@ -25,4 +25,12 @@ public abstract class GuiComponent {
     public void onKeyPressed(int keycode, char eventchar) {}
 
     public void onKeyReleased(int keycode, char eventchar) {}
+
+    public void onMousePressed(int x, int y, int button) {}
+
+    public void onMouseReleased(int x, int y, int button) {}
+
+    public void onScroll(int x, int y, int direction) {}
+
+    public void onMouseMoved(int x, int y, float dx, float dy) {}
 }
