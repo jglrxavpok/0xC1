@@ -82,7 +82,7 @@ public class AABB {
     }
 
     public String toString() {
-        return new String("Position : " + position.toString() + " - Size : " + size.toString());
+        return "Position : " + position.toString() + " - Size : " + size.toString();
     }
 
     public Vec3f getSize() {
