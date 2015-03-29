@@ -7,7 +7,7 @@ import org.c1.maths.*;
 
 public class PlayerController extends GameObject {
 
-    public Camera playerCam;
+    private Camera playerCam;
     private float yaw;
     private float pitch;
 

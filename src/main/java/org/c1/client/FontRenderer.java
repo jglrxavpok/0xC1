@@ -17,13 +17,13 @@ public class FontRenderer {
     private VertexArray verticesArray;
 
     private final static class TextInfos {
-        public String text;
-        public int color;
-        public float posX;
-        public float posY;
-        public float scale;
+        protected String text;
+        protected int color;
+        protected float posX;
+        protected float posY;
+        protected float scale;
 
-        public TextInfos() {
+        protected TextInfos() {
 
         }
 

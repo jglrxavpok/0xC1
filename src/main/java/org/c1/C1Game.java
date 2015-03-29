@@ -34,7 +34,7 @@ public class C1Game {
     private int displayHeight;
     private Level level;
     private Camera camera;
-    public PlayerController player;
+    private PlayerController player;
     private PointLight light;
     private TestModel model;
     private TestCubicModel modelCube;
@@ -303,8 +303,8 @@ public class C1Game {
             }
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-            light.setRotation(player.playerCam.getRotation());
-            light.setPos(player.playerCam.getPos());
+            light.setRotation(player.getCamera().getRotation());
+            light.setPos(player.getCamera().getPos());
         }
         level.update(deltaTime);
 
