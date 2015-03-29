@@ -366,4 +366,8 @@ public class C1Game {
         return renderEngine;
     }
 
+    public PlayerController getPlayer() {
+        return player;
+    }
+
 }

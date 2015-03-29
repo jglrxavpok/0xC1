@@ -11,7 +11,7 @@ public class GuiDebug extends Gui {
     public GuiDebug(C1Game gameInstance) {
         super(gameInstance);
         this.game = gameInstance;
-        playerPos = new GuiLabel(10, 400, "Player pos: " + gameInstance.player.getPos().toString(), gameInstance.getFont());
+        playerPos = new GuiLabel(10, 400, "Player pos: " + gameInstance.getPlayer().getPos().toString(), gameInstance.getFont());
         playerHitbox = new GuiLabel(10, 380, "Pl Hitbox : ", gameInstance.getFont());
     }
 
@@ -23,8 +23,8 @@ public class GuiDebug extends Gui {
 
     @Override
     public void update(double delta) {
-        playerPos.setText("Player pos: " + this.game.player.getPos().toString());
-        playerHitbox.setText("Pl Hitbox : " + game.player.getBoundingBox().toString());
+        playerPos.setText("Player pos: " + this.game.getPlayer().getPos().toString());
+        playerHitbox.setText("Pl Hitbox : " + game.getPlayer().getBoundingBox().toString());
         super.update(delta);
     }
 
