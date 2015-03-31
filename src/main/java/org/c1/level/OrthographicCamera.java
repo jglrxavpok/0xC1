@@ -23,6 +23,6 @@ public class OrthographicCamera extends Camera {
 
     public void setZoom(float zoom) {
         this.zoom = zoom;
-        setProjection(baseMatrix.copy().mul(new Mat4f().scale(zoom, zoom, zoom)));
+        setProjection(new Mat4f().scale(zoom, zoom, zoom).mul(baseMatrix));
     }
 }

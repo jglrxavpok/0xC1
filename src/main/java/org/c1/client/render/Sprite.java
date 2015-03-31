@@ -12,6 +12,10 @@ public class Sprite {
     private float width;
     private VertexArray vertexArray;
 
+    public Sprite(Texture text) {
+        this(text, new StaticRegion(0, 0, 1, 1));
+    }
+
     public Sprite(Texture text, TextureRegion region) {
         this.text = text;
         this.region = region;

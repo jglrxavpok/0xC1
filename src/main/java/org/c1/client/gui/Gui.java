@@ -5,8 +5,9 @@ import java.util.*;
 import com.google.common.collect.*;
 
 import org.c1.*;
+import org.c1.utils.*;
 
-public abstract class Gui {
+public abstract class Gui implements MouseConstants {
 
     private List<GuiComponent> components;
     protected C1Game game;
@@ -54,7 +55,7 @@ public abstract class Gui {
         components.forEach(comp -> comp.onScroll(x, y, direction));
     }
 
-    public void onMouseMoved(int x, int y, float dx, float dy) {
+    public void onMouseMoved(int x, int y, int dx, int dy) {
         components.forEach(comp -> comp.onMouseMoved(x, y, dx, dy));
     }
 

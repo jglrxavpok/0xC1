@@ -205,12 +205,10 @@ public class C1Game {
 
     private void pollEvents(double deltaTime) {
 
-        float dx = 0.0f;
-        float dy = 0.0f;
-        dx = Mouse.getDX();
-        dy = Mouse.getDY();
+        int dx = Mouse.getDX();
+        int dy = Mouse.getDY();
 
-        player.mouseInput(dx * 0.005f, -dy * 0.005f);
+        player.mouseInput((float) dx * 0.005f, -(float) dy * 0.005f);
 
         if (currentGui != null) {
             if (currentGui.locksMouse() && !Mouse.isGrabbed()) {
