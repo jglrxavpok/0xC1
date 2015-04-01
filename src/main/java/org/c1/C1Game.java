@@ -46,8 +46,10 @@ public class C1Game {
 
     private boolean isDebugEnabled;
     private List<String> loadingScreenLines;
+    private static C1Game instance;
 
     public void start() {
+        instance = this;
         try {
             float ratio = 16f / 9f;
             displayWidth = 940;
@@ -366,6 +368,10 @@ public class C1Game {
 
     public PlayerController getPlayer() {
         return player;
+    }
+
+    public static C1Game getInstance() {
+        return instance;
     }
 
 }

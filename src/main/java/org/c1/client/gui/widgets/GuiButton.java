@@ -51,7 +51,6 @@ public class GuiButton extends GuiComponent {
         if (mouseOn) {
             color = hoveredTextColor;
         }
-        System.out.println(color);
         renderCentered(font, text, getPos().x() + width / 2f, getPos().y() + height / 2f - font.getCharHeight('A') / 2f, color);
     }
 
