@@ -7,7 +7,6 @@ import java.util.*;
 
 import com.google.common.collect.*;
 
-import org.c1.*;
 import org.c1.utils.*;
 import org.lwjgl.opengl.*;
 

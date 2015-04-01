@@ -233,8 +233,6 @@ public class GuiShipEditor extends Gui {
 
     private void renderEditor(double delta) {
         RenderEngine engine = game.getRenderEngine();
-        int mx = Mouse.getX();
-        int my = Mouse.getY();
 
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[0].length; y++) {
