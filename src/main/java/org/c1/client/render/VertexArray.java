@@ -14,32 +14,40 @@ import org.c1.utils.*;
 
 public class VertexArray {
 
-    private ArrayList<Vec3f> positions;
-    private ArrayList<Integer> indices;
-    private ArrayList<Vec2f> texCoords;
-    private ArrayList<Vec3f> normals;
+    private List<Vec3f> positions;
+    private List<Integer> indices;
+    private List<Vec2f> texCoords;
+    private List<Vec3f> normals;
+    private List<Vec3f> tangents;
+    private List<Quaternion> colors;
     private int vao;
     private int vbo;
     private int tbo;
     private int ibo;
     private int nbo;
     private int count;
-    private ArrayList<Vec3f> tangents;
     private int tangentsbo;
+    private int colorsbo;
 
     public VertexArray() {
         positions = Lists.newArrayList();
         texCoords = Lists.newArrayList();
         normals = Lists.newArrayList();
         tangents = Lists.newArrayList();
+        colors = Lists.newArrayList();
 
         indices = Lists.newArrayList();
     }
 
     public void addVertex(Vec3f pos, Vec2f texCoord, Vec3f normal) {
+        addVertex(pos, texCoord, normal, new Quaternion(1, 1, 1, 1));
+    }
+
+    public void addVertex(Vec3f pos, Vec2f texCoord, Vec3f normal, Quaternion q) {
         positions.add(pos);
         texCoords.add(texCoord);
         normals.add(normal);
+        colors.add(q);
     }
 
     public void addIndex(int index) {
@@ -75,6 +83,12 @@ public class VertexArray {
         glBufferData(GL_ARRAY_BUFFER, BufferHelper.floatBuffer(tangents), GL_STATIC_DRAW);
         glVertexAttribPointer(Shader.TANGENT_INDEX, 3, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(Shader.TANGENT_INDEX);
+
+        colorsbo = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, colorsbo);
+        glBufferData(GL_ARRAY_BUFFER, BufferHelper.floatBuffer(colors), GL_STATIC_DRAW);
+        glVertexAttribPointer(Shader.COLOR_INDEX, 4, GL_FLOAT, false, 0, 0);
+        glEnableVertexAttribArray(Shader.COLOR_INDEX);
 
         ibo = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);

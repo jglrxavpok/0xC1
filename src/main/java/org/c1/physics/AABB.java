@@ -15,6 +15,10 @@ public class AABB {
      */
     private Vec3f halfSize;
 
+    public AABB() {
+        this(new Vec3f());
+    }
+
     public AABB(Vec3f size) {
         this(new Vec3f(), size);
     }
@@ -32,15 +36,15 @@ public class AABB {
         float y = position.y();
         float z = position.z();
         float w = size.x();
-        float h = size.x();
-        float d = size.x();
+        float h = size.y();
+        float d = size.z();
 
         float otherX = other.position.x();
         float otherY = other.position.y();
         float otherZ = other.position.z();
         float otherW = other.size.x();
-        float otherH = other.size.x();
-        float otherD = other.size.x();
+        float otherH = other.size.y();
+        float otherD = other.size.z();
 
         if (x > otherX + otherW || y > otherY + otherH || z > otherZ + otherD || x + w < otherX || y + h < otherY || z + d < otherZ)
             return false;
@@ -52,14 +56,14 @@ public class AABB {
         float y = position.y();
         float z = position.z();
         float w = size.x();
-        float h = size.x();
-        float d = size.x();
+        float h = size.y();
+        float d = size.z();
 
         float pX = point.x();
         float pY = point.y();
         float pZ = point.z();
 
-        if (pX > x + w || pY > y + h || pZ > z + d || pX < x || pY < y || pZ < z)
+        if (pX < x || pY < y || pZ < z || pX > x + w || pY > y + h || pZ > z + d)
             return false;
         return true;
     }

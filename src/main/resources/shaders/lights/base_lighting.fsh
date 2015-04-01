@@ -4,6 +4,7 @@ in vec3 worldPos0;
 in mat3 tbnMatrix;
 in vec3 normal0;
 in vec4 shadowMapCoords0;
+in vec4 baseColor;
 
 out vec4 fragColor;
 
@@ -46,6 +47,6 @@ void main()
 		lightAmount = calcLightEffect(normal, worldPos0);
 //	if(R_shadowingEnabled)
 		lightAmount = lightAmount * mix(vec4(1), vec4(R_shadowColor,1), 1.0-calcShadowMapEffect(R_shadowMap, shadowMapCoords0));
-	vec4 color = texture2D(diffuse, texCoords.xy) * lightAmount;
+	vec4 color = texture2D(diffuse, texCoords.xy) * baseColor * lightAmount;
     fragColor = color;
 }

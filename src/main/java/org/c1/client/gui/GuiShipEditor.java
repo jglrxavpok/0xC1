@@ -7,6 +7,7 @@ import com.google.common.collect.*;
 
 import org.c1.*;
 import org.c1.client.gui.editor.*;
+import org.c1.client.gui.widgets.*;
 import org.c1.client.render.*;
 import org.c1.level.*;
 import org.c1.maths.*;
@@ -51,6 +52,7 @@ public class GuiShipEditor extends Gui {
 
         camera = new OrthographicCamera(game.getDisplayWidth(), game.getDisplayHeight());
         addComponent(new GuiLabel(0, 0, "I'm a test label!", game.getFont()));
+        addComponent(new GuiButton(0, 20, 400, 20, "I'm a test button!", game.getFont()));
 
         try {
             hoverSprite = new Sprite(new Texture("textures/ship/editor/hover.png"));

@@ -1,6 +1,10 @@
 package org.c1.maths;
 
-public class Quaternion {
+import java.nio.*;
+
+import org.c1.utils.*;
+
+public class Quaternion implements IBufferWritable {
     public static final Quaternion NULL = new Quaternion(0, 0, 0, 1);
 
     private float x;
@@ -252,5 +256,18 @@ public class Quaternion {
 
     public Quaternion div(float factor) {
         return new Quaternion(x / factor, y / factor, z / factor, w / factor);
+    }
+
+    @Override
+    public void write(FloatBuffer buffer) {
+        buffer.put(x);
+        buffer.put(y);
+        buffer.put(z);
+        buffer.put(w);
+    }
+
+    @Override
+    public int getSize() {
+        return 4;
     }
 }

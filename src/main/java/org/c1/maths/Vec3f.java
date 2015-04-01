@@ -14,8 +14,8 @@ public class Vec3f implements IBufferWritable {
     private float y;
     private float z;
 
-    public Vec3f() {
-        this(0, 0, 0);
+    public Vec3f(Vec2f v, float z) {
+        this(v.x(), v.y(), z);
     }
 
     public Vec3f(float x, float y, float z) {
@@ -26,6 +26,14 @@ public class Vec3f implements IBufferWritable {
 
     public Vec3f(Vec3f vector) {
         this.set(vector);
+    }
+
+    public Vec3f(Vec2f v) {
+        this(v, 0);
+    }
+
+    public Vec3f() {
+        ;
     }
 
     public float x() {
@@ -253,12 +261,12 @@ public class Vec3f implements IBufferWritable {
     /**
      * Sets the vector data to other vector
      */
-    public void set(Vec3f other){
-    	this.x = other.x;
-    	this.y = other.y;
-    	this.z = other.z;
+    public void set(Vec3f other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.z = other.z;
     }
-    
+
     public String toString() {
         return "vec3(" + x() + "," + y() + "," + z() + ")";
     }

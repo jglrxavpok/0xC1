@@ -61,6 +61,8 @@ public class Shader {
     public final static int TEXT_INDEX = 2;
     public final static int NORMAL_INDEX = 3;
     public final static int TANGENT_INDEX = 4;
+    public final static int COLOR_INDEX = 5;
+
     private ArrayList<Uniform> uniforms;
     private Map<String, Integer> uniformLocs;
     private int program;

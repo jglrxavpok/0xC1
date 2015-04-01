@@ -4,12 +4,14 @@ layout(location = 1) in vec3 position;
 layout(location = 2) in vec2 texCoords;
 layout(location = 3) in vec3 normal;
 layout(location = 4) in vec3 tangent;
+layout(location = 5) in vec4 color;
 
 out vec2 texCoord0;
 out vec3 worldPos0;
 out mat3 tbnMatrix;
 out vec3 normal0;
 out vec4 shadowMapCoords0;
+out vec4 baseColor;
 
 uniform mat4 modelview;
 uniform mat4 projection;
@@ -17,6 +19,7 @@ uniform mat4 lightMatrix;
 
 void main()
 {
+	baseColor = color;
 	gl_Position = projection * modelview * vec4(position, 1.0);
     texCoord0 = texCoords;
     normal0 = normal;

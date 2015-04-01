@@ -88,6 +88,15 @@ public class FontRenderer {
         int currentIndex = 0;
 
         float xo = 0;
+        int alpha = color >> 24 & 0xFF;
+        int red = color >> 16 & 0xFF;
+        int green = color >> 8 & 0xFF;
+        int blue = color & 0xFF;
+        float r = (float) red / 255f;
+        float g = (float) green / 255f;
+        float b = (float) blue / 255f;
+        float a = (float) alpha / 255f;
+        Quaternion colorQuaternion = new Quaternion(r, g, b, a);
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             if (c == ' ') {
@@ -102,11 +111,13 @@ public class FontRenderer {
             TextureRegion region = atlas.getRegion(xIndex, yIndex);
 
             float z = (float) i / (float) text.length();
-            verticesArray.addVertex(new Vec3f(xo + x, y, z), new Vec2f(region.minU(), region.minV()), new Vec3f());
-            verticesArray.addVertex(new Vec3f(xo + x + getCharWidth(c), y, z), new Vec2f(region.maxU(), region.minV()), new Vec3f());
+            verticesArray.addVertex(new Vec3f(xo + x, y, z), new Vec2f(region.minU(), region.minV()), new Vec3f(), colorQuaternion);
+            verticesArray.addVertex(new Vec3f(xo + x + getCharWidth(c), y, z), new Vec2f(region.maxU(), region.minV()), new Vec3f(),
+                    colorQuaternion);
             verticesArray.addVertex(new Vec3f(xo + x + getCharWidth(c), y + getCharHeight(c), z), new Vec2f(region.maxU(), region.maxV()),
-                    new Vec3f());
-            verticesArray.addVertex(new Vec3f(xo + x, y + getCharHeight(c), z), new Vec2f(region.minU(), region.maxV()), new Vec3f());
+                    new Vec3f(), colorQuaternion);
+            verticesArray.addVertex(new Vec3f(xo + x, y + getCharHeight(c), z), new Vec2f(region.minU(), region.maxV()), new Vec3f(),
+                    colorQuaternion);
 
             verticesArray.addIndex(currentIndex + 1);
             verticesArray.addIndex(currentIndex + 0);
