@@ -35,6 +35,9 @@ public class GuiScrollPane extends GuiComponent {
     }
 
     public void addComponent(GuiComponent component) {
+        if (!siblings.contains(component)) {
+            component.getPos().add(getPos());
+        }
         siblings.add(component);
     }
 
@@ -47,14 +50,13 @@ public class GuiScrollPane extends GuiComponent {
         glEnable(GL_SCISSOR_TEST);
         glScissor((int) getPos().x(), (int) getPos().y(), (int) width, (int) height);
 
+        siblings.forEach(comp -> comp.render(deltaTime));
         glDisable(GL_SCISSOR_TEST);
     }
 
     @Override
     public void update(double deltaTime) {
-        // TODO Implement GuiScrollPane.update
-        throw new RuntimeException("GuiScrollPane.update is not implemented yet");
-
+        siblings.forEach(comp -> comp.update(deltaTime));
     }
 
 }

@@ -5,15 +5,18 @@ import java.util.*;
 import com.google.common.collect.*;
 
 import org.c1.*;
+import org.c1.client.gui.layout.*;
 import org.c1.utils.*;
 
 public abstract class Gui implements MouseConstants {
 
     private List<GuiComponent> components;
     protected C1Game game;
+    private AbsoluteLayout layout;
 
     public Gui(C1Game gameInstance) {
         this.game = gameInstance;
+        layout = new AbsoluteLayout();
         components = Lists.newArrayList();
     }
 
@@ -29,6 +32,7 @@ public abstract class Gui implements MouseConstants {
 
     public void addComponent(GuiComponent comp) {
         components.add(comp);
+        layout.onAdded(comp, this);
     }
 
     public void onKeyPressed(int keycode, char eventchar) {

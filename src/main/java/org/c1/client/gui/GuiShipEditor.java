@@ -54,12 +54,21 @@ public class GuiShipEditor extends Gui {
         addComponent(new GuiLabel(0, 0, "I'm a test label!", game.getFont()));
         addComponent(new GuiButton(0, 20, 400, 20, "I'm a test button!", game.getFont()));
 
+        addComponent(createToolList());
+
         try {
             hoverSprite = new Sprite(new Texture("textures/ship/editor/hover.png"));
             hoverSprite.setSize(32, 32);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private GuiComponent createToolList() {
+        float w = game.getDisplayWidth() / 4f;
+        GuiScrollPane pane = new GuiScrollPane(game.getDisplayWidth() - w, 0, w, game.getDisplayHeight());
+        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane", game.getFont()));
+        return pane;
     }
 
     public void update(double delta) {
