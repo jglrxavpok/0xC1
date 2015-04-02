@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.*;
 
 import org.c1.level.*;
 import org.c1.maths.*;
-import org.c1.physics.*;
 
 public class PlayerController extends GameObject {
 
@@ -15,8 +14,8 @@ public class PlayerController extends GameObject {
     public PlayerController(Mat4f projection) {
         super("player_controller");
         this.playerCam = new Camera(projection);
-        //setSize(new Vec3f(1, 1, 1));
-        this.boundingBox = new Sphere(new Vec3f(), 0.5f);
+        setSize(new Vec3f(1, 1, 1));
+        //   this.boundingBox = new Sphere(new Vec3f(), 0.5f);
     }
 
     public void mouseInput(float yaw, float pitch) {
@@ -35,10 +34,10 @@ public class PlayerController extends GameObject {
                 .forEach(o -> {
                     if (o.isCollidable()) {
                         if (this.boundingBox.collides(o.getBoundingBox())) {
-                            System.out.println("Collision with " + o + " < " + boundingBox + " & " + o.getBoundingBox());
-                        }
+                            // TODO: Use as debug when needed      System.out.println("Collision with " + o + " < " + boundingBox + " & " + o.getBoundingBox());
                     }
-                });
+                }
+            }   );
     }
 
     private boolean hasFreeSpace(Vec3f pos) {

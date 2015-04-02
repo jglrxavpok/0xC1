@@ -1,14 +1,19 @@
-package org.c1.client.gui;
+package org.c1.client.gui.widgets;
 
 import org.c1.client.*;
+import org.c1.client.gui.*;
 
 public class GuiLabel extends GuiComponent {
 
     private FontRenderer font;
     private String text;
 
+    public GuiLabel(String text, FontRenderer font) {
+        this(0, 0, text, font);
+    }
+
     public GuiLabel(float x, float y, String text, FontRenderer font) {
-        super(x, y);
+        super(x, y, font.getStringWidth(text), font.getCharHeight('A'));
         this.font = font;
         this.text = text;
     }
@@ -22,12 +27,12 @@ public class GuiLabel extends GuiComponent {
     public void update(double deltaTime) {
         ;
     }
-    
-    public String getText(){
+
+    public String getText() {
         return this.text;
     }
-    
-    public void setText(String text){
+
+    public void setText(String text) {
         this.text = text;
     }
 

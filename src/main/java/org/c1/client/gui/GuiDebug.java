@@ -1,6 +1,7 @@
 package org.c1.client.gui;
 
 import org.c1.*;
+import org.c1.client.gui.widgets.*;
 
 public class GuiDebug extends Gui {
 

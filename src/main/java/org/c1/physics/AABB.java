@@ -134,7 +134,7 @@ public class AABB extends CollisionShape {
     }
 
     public void setCentered(Vec3f pos) {
-        this.getPosition().set(pos.copy().sub(halfSize));
+        this.setPosition(pos.copy().sub(halfSize));
         computeCenterAndPlanes();
     }
 

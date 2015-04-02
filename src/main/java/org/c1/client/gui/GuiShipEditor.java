@@ -7,6 +7,7 @@ import com.google.common.collect.*;
 
 import org.c1.*;
 import org.c1.client.gui.editor.*;
+import org.c1.client.gui.layout.*;
 import org.c1.client.gui.widgets.*;
 import org.c1.client.render.*;
 import org.c1.level.*;
@@ -67,7 +68,13 @@ public class GuiShipEditor extends Gui {
     private GuiComponent createToolList() {
         float w = game.getDisplayWidth() / 4f;
         GuiScrollPane pane = new GuiScrollPane(game.getDisplayWidth() - w, 0, w, game.getDisplayHeight());
-        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane", game.getFont()));
+        pane.setLayout(new DirectionLayout(DirectionLayout.Directions.VERTICAL_UPWARDS));
+        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane1", game.getFont()));
+        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane2", game.getFont()));
+        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane3", game.getFont()));
+        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane4", game.getFont()));
+        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane5", game.getFont()));
+        pane.resetScrollToTop();
         return pane;
     }
 
@@ -95,8 +102,9 @@ public class GuiShipEditor extends Gui {
         }
     }
 
-    public void onMouseMoved(int x, int y, int dx, int dy) {
-        super.onMouseMoved(x, y, dx, dy);
+    public boolean onMouseMoved(int x, int y, int dx, int dy) {
+        if (super.onMouseMoved(x, y, dx, dy))
+            return true;
         if (translating) {
             float translationX = -dx / camera.getZoom();
             float translationY = -dy / camera.getZoom();
@@ -109,6 +117,7 @@ public class GuiShipEditor extends Gui {
             secondSelector.x(tileX);
             secondSelector.y(tileY);
         }
+        return true;
     }
 
     private void setHoveredTile(int x, int y) {
@@ -129,12 +138,15 @@ public class GuiShipEditor extends Gui {
         tileY = (float) Math.floor(tileY);
     }
 
-    public void onMousePressed(int x, int y, int button) {
-        super.onMousePressed(x, y, button);
+    public boolean onMousePressed(int x, int y, int button) {
+        if (super.onMousePressed(x, y, button))
+            return true;
         setHoveredTile(x, y);
         if (button == MOUSE_RIGHT) {
-            if (shiftPressed)
+            if (shiftPressed) {
                 translating = true;
+                return true;
+            }
         } else if (button == MOUSE_LEFT) {
             resetSelectors();
             firstSelector.x(tileX);
@@ -143,7 +155,9 @@ public class GuiShipEditor extends Gui {
             if (shiftPressed) {
                 selecting = true;
             }
+            return true;
         }
+        return false;
     }
 
     private void resetSelectors() {
@@ -153,19 +167,22 @@ public class GuiShipEditor extends Gui {
         secondSelector.y(-1);
     }
 
-    public void onKeyReleased(int keycode, char eventchar) {
-        super.onKeyReleased(keycode, eventchar);
+    public boolean onKeyReleased(int keycode, char eventchar) {
+        if (super.onKeyReleased(keycode, eventchar))
+            return true;
         if (keycode == Keyboard.KEY_LSHIFT || keycode == Keyboard.KEY_RSHIFT) {
             shiftPressed = false;
-        } else if (keycode == Keyboard.KEY_RETURN) {
-            if (!isSelectionEmpty()) {
+            return true;
+        } else if (!isSelectionEmpty()) {
+            if (keycode == Keyboard.KEY_RETURN) {
                 fillSelection(ShipGridType.WALL);
-            }
-        } else if (keycode == Keyboard.KEY_BACK || keycode == Keyboard.KEY_DELETE) {
-            if (!isSelectionEmpty()) {
+                return true;
+            } else if (keycode == Keyboard.KEY_BACK || keycode == Keyboard.KEY_DELETE) {
                 fillSelection(ShipGridType.VOID);
+                return true;
             }
         }
+        return false;
     }
 
     private boolean isSelectionEmpty() {
@@ -195,15 +212,19 @@ public class GuiShipEditor extends Gui {
         }
     }
 
-    public void onKeyPressed(int keycode, char eventchar) {
-        super.onKeyPressed(keycode, eventchar);
+    public boolean onKeyPressed(int keycode, char eventchar) {
+        if (super.onKeyPressed(keycode, eventchar))
+            return true;
         if (keycode == Keyboard.KEY_LSHIFT || keycode == Keyboard.KEY_RSHIFT) {
             shiftPressed = true;
+            return true;
         }
+        return false;
     }
 
-    public void onMouseReleased(int x, int y, int button) {
-        super.onMouseReleased(x, y, button);
+    public boolean onMouseReleased(int x, int y, int button) {
+        if (super.onMouseReleased(x, y, button))
+            return true;
         setHoveredTile(x, y);
         if (button == MOUSE_RIGHT) {
             if (!translating) {
@@ -215,6 +236,7 @@ public class GuiShipEditor extends Gui {
                 }
             }
             translating = false;
+            return true;
         } else if (button == MOUSE_LEFT) {
             if (!selecting) {
                 int cellX = (int) Math.floor(tileX);
@@ -226,11 +248,14 @@ public class GuiShipEditor extends Gui {
             } else {
                 selecting = false;
             }
+            return true;
         }
+        return false;
     }
 
-    public void onScroll(int x, int y, int direction) {
-        super.onScroll(x, y, direction);
+    public boolean onScroll(int x, int y, int direction) {
+        if (super.onScroll(x, y, direction))
+            return true;
         float newZoom = camera.getZoom();
         float zoomFactor = 1.125f;
         if (direction < 0) {
@@ -238,6 +263,7 @@ public class GuiShipEditor extends Gui {
         } else
             newZoom *= zoomFactor;
         camera.setZoom(newZoom);
+        return true;
     }
 
     private void renderEditor(double delta) {

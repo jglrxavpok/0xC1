@@ -8,13 +8,14 @@ import org.c1.*;
 import org.c1.client.gui.layout.*;
 import org.c1.utils.*;
 
-public abstract class Gui implements MouseConstants {
+public abstract class Gui extends GuiComponent implements MouseConstants {
 
     private List<GuiComponent> components;
     protected C1Game game;
     private AbsoluteLayout layout;
 
     public Gui(C1Game gameInstance) {
+        super(0, 0, gameInstance.getDisplayWidth(), gameInstance.getDisplayHeight());
         this.game = gameInstance;
         layout = new AbsoluteLayout();
         components = Lists.newArrayList();
@@ -35,32 +36,58 @@ public abstract class Gui implements MouseConstants {
         layout.onAdded(comp, this);
     }
 
-    public void onKeyPressed(int keycode, char eventchar) {
-        components.forEach(comp -> comp.onKeyPressed(keycode, eventchar));
+    public boolean onKeyPressed(int keycode, char eventchar) {
+        for (GuiComponent comp : components) {
+            if (comp.onKeyPressed(keycode, eventchar))
+                return true;
+        }
+        return false;
+
     }
 
-    public void onKeyReleased(int keycode, char eventchar) {
-        components.forEach(comp -> comp.onKeyReleased(keycode, eventchar));
+    public boolean onKeyReleased(int keycode, char eventchar) {
+        for (GuiComponent comp : components) {
+            if (comp.onKeyReleased(keycode, eventchar))
+                return true;
+        }
+        return false;
     }
 
     public void clearComponents() {
         components.clear();
     }
 
-    public void onMousePressed(int x, int y, int button) {
-        components.forEach(comp -> comp.onMousePressed(x, y, button));
+    public boolean onMousePressed(int x, int y, int button) {
+        for (GuiComponent comp : components) {
+            if (comp.onMousePressed(x, y, button))
+                return true;
+        }
+        return false;
     }
 
-    public void onMouseReleased(int x, int y, int button) {
-        components.forEach(comp -> comp.onMouseReleased(x, y, button));
+    public boolean onMouseReleased(int x, int y, int button) {
+        for (GuiComponent comp : components) {
+            if (comp.onMouseReleased(x, y, button))
+                return true;
+        }
+        return false;
     }
 
-    public void onScroll(int x, int y, int direction) {
-        components.forEach(comp -> comp.onScroll(x, y, direction));
+    public boolean onScroll(int x, int y, int direction) {
+        for (GuiComponent comp : components) {
+            if (comp.onScroll(x, y, direction))
+                return true;
+        }
+        return false;
+
     }
 
-    public void onMouseMoved(int x, int y, int dx, int dy) {
-        components.forEach(comp -> comp.onMouseMoved(x, y, dx, dy));
+    public boolean onMouseMoved(int x, int y, int dx, int dy) {
+        for (GuiComponent comp : components) {
+            if (comp.onMouseMoved(x, y, dx, dy))
+                return true;
+        }
+        return false;
     }
 
     public boolean locksMouse() {

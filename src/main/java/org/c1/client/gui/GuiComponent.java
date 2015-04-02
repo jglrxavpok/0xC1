@@ -9,9 +9,21 @@ public abstract class GuiComponent {
     private Vec2f pos;
     private AABB boundingBox;
 
-    public GuiComponent(float x, float y) {
-        boundingBox = new AABB();
+    public GuiComponent(float w, float h) {
+        this(0, 0, w, h);
+    }
+
+    public GuiComponent(float x, float y, float w, float h) {
+        boundingBox = new AABB(new Vec3f(w, h, 0));
         setPos(new Vec2f(x, y));
+    }
+
+    public float getWidth() {
+        return boundingBox.getSize().x();
+    }
+
+    public float getHeight() {
+        return boundingBox.getSize().y();
     }
 
     public Vec2f getPos() {
@@ -29,6 +41,10 @@ public abstract class GuiComponent {
         font.renderString(text, textX, y, color);
     }
 
+    public boolean isMouseOn(int mx, int my) {
+        return isMouseOn(mx, my, boundingBox.getSize().x(), boundingBox.getSize().y());
+    }
+
     public boolean isMouseOn(int mx, int my, float w, float h) {
         return isMouseOn(mx, my, getPos().x(), getPos().y(), w, h);
     }
@@ -43,15 +59,27 @@ public abstract class GuiComponent {
 
     public abstract void update(double deltaTime);
 
-    public void onKeyPressed(int keycode, char eventchar) {}
+    public boolean onKeyPressed(int keycode, char eventchar) {
+        return false;
+    }
 
-    public void onKeyReleased(int keycode, char eventchar) {}
+    public boolean onKeyReleased(int keycode, char eventchar) {
+        return false;
+    }
 
-    public void onMousePressed(int x, int y, int button) {}
+    public boolean onMousePressed(int x, int y, int button) {
+        return false;
+    }
 
-    public void onMouseReleased(int x, int y, int button) {}
+    public boolean onMouseReleased(int x, int y, int button) {
+        return false;
+    }
 
-    public void onScroll(int x, int y, int direction) {}
+    public boolean onScroll(int x, int y, int direction) {
+        return false;
+    }
 
-    public void onMouseMoved(int x, int y, float dx, float dy) {}
+    public boolean onMouseMoved(int x, int y, float dx, float dy) {
+        return false;
+    }
 }

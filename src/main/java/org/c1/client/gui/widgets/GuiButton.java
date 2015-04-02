@@ -9,19 +9,19 @@ public class GuiButton extends GuiComponent {
     private String text;
     private int textColor;
     private int hoveredTextColor;
-    private float width;
-    private float height;
     private int mouseX;
     private int mouseY;
+
+    public GuiButton(String text, FontRenderer font) {
+        this(0, 0, text, font);
+    }
 
     public GuiButton(float x, float y, String text, FontRenderer font) {
         this(x, y, 200, 20, text, font);
     }
 
     public GuiButton(float x, float y, float w, float h, String text, FontRenderer font) {
-        super(x, y);
-        this.width = w;
-        this.height = h;
+        super(x, y, w, h);
         this.font = font;
         this.text = text;
         textColor = 0xFFFFFFFF;
@@ -47,11 +47,11 @@ public class GuiButton extends GuiComponent {
     @Override
     public void render(double deltaTime) {
         int color = textColor;
-        boolean mouseOn = isMouseOn(mouseX, mouseY, width, height);
+        boolean mouseOn = isMouseOn(mouseX, mouseY, getWidth(), getHeight());
         if (mouseOn) {
             color = hoveredTextColor;
         }
-        renderCentered(font, text, getPos().x() + width / 2f, getPos().y() + height / 2f - font.getCharHeight('A') / 2f, color);
+        renderCentered(font, text, getPos().x() + getWidth() / 2f, getPos().y() + getHeight() / 2f - font.getCharHeight('A') / 2f, color);
     }
 
     @Override
@@ -59,24 +59,28 @@ public class GuiButton extends GuiComponent {
         // TODO Implement GuiButton.update
     }
 
-    public void onMousePressed(int x, int y, int button) {
+    public boolean onMousePressed(int x, int y, int button) {
         mouseX = x;
         mouseY = y;
+        return isMouseOn(x, y, getWidth(), getHeight());
     }
 
-    public void onMouseReleased(int x, int y, int button) {
+    public boolean onMouseReleased(int x, int y, int button) {
         mouseX = x;
         mouseY = y;
+        return isMouseOn(x, y, getWidth(), getHeight());
     }
 
-    public void onScroll(int x, int y, int direction) {
+    public boolean onScroll(int x, int y, int direction) {
         mouseX = x;
         mouseY = y;
+        return isMouseOn(x, y, getWidth(), getHeight());
     }
 
-    public void onMouseMoved(int x, int y, float dx, float dy) {
+    public boolean onMouseMoved(int x, int y, float dx, float dy) {
         mouseX = x;
         mouseY = y;
+        return isMouseOn(x, y, getWidth(), getHeight());
     }
 
 }
