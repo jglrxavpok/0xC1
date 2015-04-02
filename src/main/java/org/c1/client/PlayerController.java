@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.*;
 
 import org.c1.level.*;
 import org.c1.maths.*;
+import org.c1.physics.*;
 
 public class PlayerController extends GameObject {
 
@@ -14,7 +15,8 @@ public class PlayerController extends GameObject {
     public PlayerController(Mat4f projection) {
         super("player_controller");
         this.playerCam = new Camera(projection);
-        this.boundingBox.setSize(new Vec3f(1, 1, 1));
+        //setSize(new Vec3f(1, 1, 1));
+        this.boundingBox = new Sphere(new Vec3f(), 0.5f);
     }
 
     public void mouseInput(float yaw, float pitch) {
@@ -33,7 +35,7 @@ public class PlayerController extends GameObject {
                 .forEach(o -> {
                     if (o.isCollidable()) {
                         if (this.boundingBox.collides(o.getBoundingBox())) {
-                            System.out.println("Collision with " + o + " < " + o.getBoundingBox());
+                            System.out.println("Collision with " + o + " < " + boundingBox + " & " + o.getBoundingBox());
                         }
                     }
                 });

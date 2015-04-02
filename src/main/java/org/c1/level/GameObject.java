@@ -6,7 +6,7 @@ import org.c1.physics.*;
 public abstract class GameObject {
 
     protected Transform transform;
-    protected AABB boundingBox;
+    protected CollisionShape boundingBox;
     private boolean collidable;
     protected Level level;
     private String id;
@@ -23,14 +23,13 @@ public abstract class GameObject {
     }
 
     public void setSize(Vec3f size) {
-        boundingBox.setSize(size);
+        if (!(boundingBox instanceof AABB)) {
+            boundingBox = new AABB(size);
+        }
+        ((AABB) boundingBox).setSize(size);
     }
 
-    public Vec3f getSize() {
-        return boundingBox.getSize();
-    }
-
-    public AABB getBoundingBox() {
+    public CollisionShape getBoundingBox() {
         return boundingBox;
     }
 

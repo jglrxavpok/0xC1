@@ -14,7 +14,7 @@ public class TestCollideableObject extends GameObject {
         super("test_collisions");
         this.model = model;
         this.texture = texture;
-        this.boundingBox.setSize(new Vec3f(1, 1, 1));
+        setSize(new Vec3f(1, 1, 1));
         model.setTexture(texture);
     }
 

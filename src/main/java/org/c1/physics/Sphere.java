@@ -1,62 +1,68 @@
 package org.c1.physics;
 
-import org.c1.maths.Vec3f;
+import org.c1.maths.*;
 
-public class Sphere {
+public class Sphere extends CollisionShape {
 
-	private Vec3f position;
-	private float radius;
+    private Vec3f position;
+    private float radius;
 
-	public Sphere(){
-		this(new Vec3f(), 0.0f);
-	}
-	
-	public Sphere(Vec3f pos){
-		this(pos, 0.0f);
-	}
-	
-	public Sphere(Vec3f pos, float rad) {	
-		this.position = pos;
-		this.radius = rad;
-	}
-	
-	public boolean collidesSphere(Sphere o){
-		
-		float xd = position.x() - o.position.x();
-	    float yd = position.y() - o.position.y();
-	    float zd = position.z() - o.position.z();
-	    
-	    float sumRadius = getRadius() + o.getRadius();
-	    float sqrRadius = sumRadius * sumRadius;
+    public Sphere() {
+        this(new Vec3f(), 0.0f);
+    }
 
-	    float distSqr = (xd * xd) + (yd * yd) + (zd * zd);
+    public Sphere(Vec3f pos) {
+        this(pos, 0.0f);
+    }
 
-	    if (distSqr <= sqrRadius)
-	    {
-	        return true;
-	    }
-		
-		return false;
-	}
-	
-	public boolean collidesAABB(AABB aabb){
-		
-		return false;
-	}
+    public Sphere(Vec3f pos, float rad) {
+        this.position = pos;
+        this.radius = rad;
+    }
 
-	public Vec3f getPosition() {
-		return position;
-	}
+    public boolean collidesSphere(Sphere o) {
 
-	public void setPosition(Vec3f position) {
-		this.position = position;
-	}
+        float xd = position.x() - o.position.x();
+        float yd = position.y() - o.position.y();
+        float zd = position.z() - o.position.z();
 
-	public float getRadius() {
-		return radius;
-	}
+        float sumRadius = getRadius() + o.getRadius();
+        float sqrRadius = sumRadius * sumRadius;
 
-	public void setRadius(float radius) {
-		this.radius = radius;
-	}
+        float distSqr = (xd * xd) + (yd * yd) + (zd * zd);
+
+        if (distSqr <= sqrRadius)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean collidesAABB(AABB aabb) {
+        return aabb.collidesSphere(this); // Yeah, I know that's not really good but the implementation would be the same, sorry ;(
+    }
+
+    public float getRadius() {
+        return radius;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public boolean isPointInside(Vec3f point) {
+        float distance = point.copy().sub(position).length();
+        return distance <= radius;
+    }
+
+    @Override
+    public void setCentered(Vec3f pos) {
+        setPosition(pos);
+    }
+
+    public String toString() {
+        return "Sphere(Position: " + position + ", Radius: " + radius + ")";
+    }
 }
