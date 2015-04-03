@@ -53,7 +53,7 @@ public class GuiShipEditor extends Gui {
 
         camera = new OrthographicCamera(game.getDisplayWidth(), game.getDisplayHeight());
         addComponent(new GuiLabel(0, 0, "I'm a test label!", game.getFont()));
-        addComponent(new GuiButton(0, 20, 400, 20, "I'm a test button!", game.getFont()));
+        addComponent(new GuiButton(0, game.getDisplayHeight() - 80, 400, 80, "I'm a test button!", game.getFont()));
 
         addComponent(createToolList());
 

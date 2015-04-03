@@ -39,6 +39,7 @@ public class RenderEngine {
     private VertexArray planeObject;
     private Light activeLight;
     private Camera guiCam;
+    private Mat4f modelview;
 
     private static final Mat4f bias = new Mat4f().scale(0.5f, 0.5f, 0.5f).mul(new Mat4f().translation(1, 1, 1));
     public static final int SHADOW_MAP_SLOT = 1;
@@ -250,7 +251,7 @@ public class RenderEngine {
         setCurrentCamera(camera);
         setCurrentShader(shader);
         level.getGameObjects().forEach(object -> {
-            currentShader.getUniform("modelview").setValueMat4(object.getTransform().getTransformationMatrix());
+            setModelview(object.getTransform().getTransformationMatrix());
             object.render(delta);
         });
     }
@@ -317,7 +318,7 @@ public class RenderEngine {
     public void renderGui(Gui gui, double deltaTime) {
         setCurrentCamera(guiCam);
         setCurrentShader(nullFilterShader);
-        currentShader.getUniform("modelview").setValueMat4(initMatrix);
+        setModelview(initMatrix);
         gui.render(deltaTime);
     }
 
@@ -327,7 +328,7 @@ public class RenderEngine {
         currentShader.bind();
         if (currentCamera != null) {
             currentShader.getUniform("projection").setValueMat4(currentCamera.getViewProjection());
-            currentShader.getUniform("modelview").setValueMat4(initMatrix);
+            setModelview(initMatrix);
         }
         currentShader.update(this);
     }
@@ -335,6 +336,11 @@ public class RenderEngine {
     public void setModelview(Mat4f mat) {
         if (currentShader != null)
             currentShader.getUniform("modelview").setValueMat4(mat);
+        this.modelview = mat;
+    }
+
+    public Mat4f getModelview() {
+        return modelview;
     }
 
 }

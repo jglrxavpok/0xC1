@@ -67,10 +67,12 @@ public class Sprite {
 
     public void render(RenderEngine engine) {
         transform.scale(width, height, 1);
+        Mat4f oldModelview = engine.getModelview();
         engine.setModelview(transform.getTransformationMatrix());
         text.bind();
         vertexArray.bind();
         vertexArray.render();
+        engine.setModelview(oldModelview);
     }
 
     public void setAngle(float angle) {
