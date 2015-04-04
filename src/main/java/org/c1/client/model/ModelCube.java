@@ -5,7 +5,7 @@ import org.c1.maths.*;
 
 public class ModelCube extends Model {
 
-    public ModelCube() {
+    public ModelCube(Vec3f pos, Vec3f size) {
         super();
         float left = -1f;
         float right = 1f;
@@ -13,6 +13,8 @@ public class ModelCube extends Model {
         float bottom = 1f;
         float back = -1f;
         float front = 1f;
+        
+        
         
         ModelFace frontFace = new ModelFace();
         frontFace.addVertex(new Vec3f(left, top, back), new Vec2f(0, 0), new Vec3f(0, 0, -1));
