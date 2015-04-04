@@ -34,6 +34,7 @@ public class GuiShipEditor extends Gui {
 
     public GuiShipEditor(C1Game gameInstance) {
         super(gameInstance);
+        
     }
 
     @Override
@@ -53,7 +54,7 @@ public class GuiShipEditor extends Gui {
 
         camera = new OrthographicCamera(game.getDisplayWidth(), game.getDisplayHeight());
         addComponent(new GuiLabel(0, 0, "I'm a test label!", game.getFont()));
-        addComponent(new GuiButton(0, game.getDisplayHeight() - 80, 400, 80, "I'm a test button!", game.getFont()));
+        addComponent(new GuiButton(0, game.getDisplayHeight() - 80, 400, 80, "I'm a test button!", game.getFont(), 1));
 
         addComponent(createToolList());
 
@@ -63,6 +64,8 @@ public class GuiShipEditor extends Gui {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        super.init();
     }
 
     private GuiComponent createToolList() {
@@ -303,5 +306,12 @@ public class GuiShipEditor extends Gui {
 
     public boolean locksMouse() {
         return false;
+    }
+
+    @Override
+    public void onButtonClicked(int id) {
+        if(id == 1){
+            System.out.println("Button clicked !");
+        }
     }
 }

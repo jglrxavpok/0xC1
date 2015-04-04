@@ -6,11 +6,13 @@ import com.google.common.collect.*;
 
 import org.c1.*;
 import org.c1.client.gui.layout.*;
+import org.c1.client.gui.widgets.GuiButton;
 import org.c1.utils.*;
 
 public abstract class Gui extends GuiComponent implements MouseConstants {
 
     private List<GuiComponent> components;
+    private List<GuiButton> buttons;
     protected C1Game game;
     private AbsoluteLayout layout;
 
@@ -19,9 +21,17 @@ public abstract class Gui extends GuiComponent implements MouseConstants {
         this.game = gameInstance;
         layout = new AbsoluteLayout();
         components = Lists.newArrayList();
+        buttons = Lists.newArrayList();
     }
 
-    public abstract void init();
+    public void init() {
+        for (GuiComponent c : components) {
+            if (c instanceof GuiButton) {
+                GuiButton button = (GuiButton) c;
+                buttons.add(button);
+            }
+        }
+    }
 
     public void render(double delta) {
         components.forEach(comp -> comp.render(delta));
@@ -59,8 +69,13 @@ public abstract class Gui extends GuiComponent implements MouseConstants {
 
     public boolean onMousePressed(int x, int y, int button) {
         for (GuiComponent comp : components) {
-            if (comp.onMousePressed(x, y, button))
+            if (comp.onMousePressed(x, y, button)) {
+                if (buttons.contains(comp)) {
+                    GuiButton b = (GuiButton) comp;
+                    this.onButtonClicked(b.getId());
+                }
                 return true;
+            }
         }
         return false;
     }
@@ -88,6 +103,10 @@ public abstract class Gui extends GuiComponent implements MouseConstants {
                 return true;
         }
         return false;
+    }
+
+    public void onButtonClicked(int id) {
+
     }
 
     public boolean locksMouse() {

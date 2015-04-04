@@ -210,7 +210,8 @@ public class C1Game {
         int dx = Mouse.getDX();
         int dy = Mouse.getDY();
 
-        player.mouseInput((float) dx * 0.005f, -(float) dy * 0.005f);
+        if(currentGui == null || currentGui.locksMouse())
+            player.mouseInput((float) dx * 0.005f, -(float) dy * 0.005f);
 
         if (currentGui != null) {
             if (currentGui.locksMouse() && !Mouse.isGrabbed()) {
