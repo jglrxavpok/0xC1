@@ -371,6 +371,10 @@ public class C1Game {
         return player;
     }
 
+    public Level getLevel() {
+        return level;
+    }
+
     public static C1Game getInstance() {
         return instance;
     }

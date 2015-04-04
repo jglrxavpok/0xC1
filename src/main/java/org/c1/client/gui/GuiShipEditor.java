@@ -12,6 +12,7 @@ import org.c1.client.gui.widgets.*;
 import org.c1.client.render.*;
 import org.c1.level.*;
 import org.c1.maths.*;
+import org.c1.tests.ModularShipObject;
 import org.lwjgl.input.*;
 
 public class GuiShipEditor extends Gui {
@@ -20,6 +21,8 @@ public class GuiShipEditor extends Gui {
         WALL, VOID
     }
 
+    private C1Game gameInstance;
+    
     private List<ShipEditorComponent> components;
     private ShipWall[][] grid;
     private Vec2f firstSelector;
@@ -34,7 +37,7 @@ public class GuiShipEditor extends Gui {
 
     public GuiShipEditor(C1Game gameInstance) {
         super(gameInstance);
-        
+        this.gameInstance = gameInstance;
     }
 
     @Override
@@ -311,7 +314,12 @@ public class GuiShipEditor extends Gui {
     @Override
     public void onButtonClicked(int id) {
         if(id == 1){
-            System.out.println("Button clicked !");
+            ModularShipObject ship = new ModularShipObject("ship_test");
+            for(ShipEditorComponent comp : components){
+                ship.addShipComponent(comp);
+            }
+            
+            ship.createShipModel();
         }
     }
 }
