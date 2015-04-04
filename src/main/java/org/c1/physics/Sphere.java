@@ -31,12 +31,7 @@ public class Sphere extends CollisionShape {
 
         float distSqr = (xd * xd) + (yd * yd) + (zd * zd);
 
-        if (distSqr <= sqrRadius)
-        {
-            return true;
-        }
-
-        return false;
+        return distSqr <= sqrRadius;
     }
 
     public boolean collidesAABB(AABB aabb) {

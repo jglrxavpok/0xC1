@@ -6,8 +6,6 @@ import org.c1.client.render.TextureRegion;
 import org.c1.maths.Vec2f;
 import org.c1.maths.Vec3f;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**

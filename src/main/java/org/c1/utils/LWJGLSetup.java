@@ -56,7 +56,7 @@ public class LWJGLSetup {
     }
 
     private static String sum(String[] parts, int offset, int length) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = offset; i < offset + length; i++) {
             buffer.append(parts[i]);
         }

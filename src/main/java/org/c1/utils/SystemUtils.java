@@ -31,13 +31,13 @@ public final class SystemUtils {
     /**
      * Returns the folder where game data is saved
      */
-    public static File getGameFolder() {
+    public static File getGameFolder(String gameID) {
         if (gameFolder == null) {
             String appdata = System.getenv("APPDATA");
             if (appdata != null)
-                gameFolder = new File(appdata, ".ourcraft");
+                gameFolder = new File(appdata, gameID);
             else
-                gameFolder = new File(System.getProperty("user.home"), ".ourcraft");
+                gameFolder = new File(System.getProperty("user.home"), gameID);
         }
         return gameFolder;
     }

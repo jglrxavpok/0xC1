@@ -67,8 +67,6 @@ public class GuiShipEditor extends Gui {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        super.init();
     }
 
     private GuiComponent createToolList() {
@@ -318,7 +316,7 @@ public class GuiShipEditor extends Gui {
             for(ShipEditorComponent c : components){
                 ship.addShipComponent(c);
             }
-            System.out.println("jdzqd");
+
             ship.createShipModel();
             gameInstance.getLevel().addGameObject(ship);
         }

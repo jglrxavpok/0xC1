@@ -12,7 +12,6 @@ import org.c1.utils.*;
 public abstract class Gui extends GuiComponent implements MouseConstants {
 
     private List<GuiComponent> components;
-    private List<GuiButton> buttons;
     protected C1Game game;
     private AbsoluteLayout layout;
     private GuiComponent focused;
@@ -22,17 +21,9 @@ public abstract class Gui extends GuiComponent implements MouseConstants {
         this.game = gameInstance;
         layout = new AbsoluteLayout();
         components = Lists.newArrayList();
-        buttons = Lists.newArrayList();
     }
 
-    public void init() {
-        for (GuiComponent c : components) {
-            if (c instanceof GuiButton) {
-                GuiButton button = (GuiButton) c;
-                buttons.add(button);
-            }
-        }
-    }
+    public abstract void init();
 
     public void render(double delta) {
         components.forEach(comp -> comp.render(delta));

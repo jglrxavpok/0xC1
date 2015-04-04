@@ -149,19 +149,16 @@ public class Mat4f implements IBufferWritable {
 
     public Mat4f rotation(Vec3f forward, Vec3f up, Vec3f right) {
         all(0);
-        Vec3f f = forward;
-        Vec3f r = right;
-        Vec3f u = up;
 
-        set(0, 0, r.x());
-        set(0, 1, r.y());
-        set(0, 2, r.z());
-        set(1, 0, u.x());
-        set(1, 1, u.y());
-        set(1, 2, u.z());
-        set(2, 0, f.x());
-        set(2, 1, f.y());
-        set(2, 2, f.z());
+        set(0, 0, right.x());
+        set(0, 1, right.y());
+        set(0, 2, right.z());
+        set(1, 0, up.x());
+        set(1, 1, up.y());
+        set(1, 2, up.z());
+        set(2, 0, forward.x());
+        set(2, 1, forward.y());
+        set(2, 2, forward.z());
         set(3, 3, 1);
 
         return this;

@@ -62,7 +62,7 @@ public class TextureData {
                     int alpha = (color >> 24) & 0xFF;
                     int red = (color >> 16) & 0xFF;
                     int green = (color >> 8) & 0xFF;
-                    int blue = (color >> 0) & 0xFF;
+                    int blue = color & 0xFF;
 
                     // We swap composites to go from ARGB to RGBA
                     buffer.put((byte) red);

@@ -29,7 +29,7 @@ public class Plane {
         float a = normal.x();
         float b = normal.y();
         float c = normal.z();
-        float d = -a * this.point.x() - b * this.point.y() - c * this.point.z(); // Thog, I need help
+        float d = -a * this.point.x() - b * this.point.y() - c * this.point.z();
         float numerator = new Vec3f(a * point.x(), b * point.y(), c * point.z()).add(d).length();
         float denominator = (float) Math.sqrt(a * a + b * b + c * c);
         return numerator / denominator;

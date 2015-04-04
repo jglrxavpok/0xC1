@@ -26,7 +26,7 @@ public abstract class GameObject {
         if (!(boundingBox instanceof AABB)) {
             boundingBox = new AABB(size);
         }
-        ((AABB) boundingBox).setSize(size);
+        boundingBox.setSize(size);
     }
 
     public CollisionShape getBoundingBox() {

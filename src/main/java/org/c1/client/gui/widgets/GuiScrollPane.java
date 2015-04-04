@@ -32,9 +32,7 @@ public class GuiScrollPane extends GuiComponent {
     public void setScroll(float scroll) {
         float oldScroll = this.scroll;
         this.scroll = scroll;
-        siblings.forEach(comp -> {
-            comp.setPos(comp.getPos().add(0, this.scroll - oldScroll));
-        });
+        siblings.forEach(comp -> comp.setPos(comp.getPos().add(0, this.scroll - oldScroll)));
     }
 
     public boolean onScroll(int x, int y, int dir) {
@@ -79,13 +77,7 @@ public class GuiScrollPane extends GuiComponent {
     public void resetScrollToTop() {
         GuiComponent topComponent = siblings
                 .stream()
-                .sorted(
-                        new Comparator<GuiComponent>() {
-                            @Override
-                            public int compare(GuiComponent a, GuiComponent b) {
-                                return -Float.compare(a.getPos().y(), b.getPos().y());
-                            }
-                        })
+                .sorted((a, b) -> -Float.compare(a.getPos().y(), b.getPos().y()))
                 .findFirst().get();
         float minY = topComponent.getPos().y();
         float dy = (getHeight() - topComponent.getHeight()) - minY;

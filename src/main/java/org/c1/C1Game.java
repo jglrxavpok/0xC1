@@ -334,16 +334,7 @@ public class C1Game {
     }
 
     public File getGameFolder() {
-        if (gameFolder == null) {
-            String appdata = System.getenv("APPDATA");
-            if (appdata == null)
-                gameFolder = new File(System.getProperty("user.home"), "0xC1");
-            else
-                gameFolder = new File(appdata, "0xC1");
-            if (!gameFolder.exists())
-                gameFolder.mkdirs();
-        }
-        return gameFolder;
+        return SystemUtils.getGameFolder("0xC1");
     }
 
     public static void main(String[] args) {

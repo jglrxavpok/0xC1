@@ -4,5 +4,5 @@ import org.c1.client.gui.*;
 
 public interface GuiLayout {
 
-    public void onAdded(GuiComponent component, GuiComponent parent);
+    void onAdded(GuiComponent component, GuiComponent parent);
 }

@@ -2,11 +2,11 @@ package org.c1.client.render;
 
 public interface TextureRegion {
 
-    public float minU();
+    float minU();
 
-    public float maxU();
+    float maxU();
 
-    public float minV();
+    float minV();
 
-    public float maxV();
+    float maxV();
 }

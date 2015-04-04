@@ -33,7 +33,7 @@ public class Level {
 
     public void removeGameObject(GameObject o) {
         if (o instanceof Light)
-            lights.remove((Light) o);
+            lights.remove(o);
         despawningList.add(o);
     }
 

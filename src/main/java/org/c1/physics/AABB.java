@@ -70,9 +70,7 @@ public class AABB extends CollisionShape {
         float otherH = other.size.y();
         float otherD = other.size.z();
 
-        if (x > otherX + otherW || y > otherY + otherH || z > otherZ + otherD || x + w < otherX || y + h < otherY || z + d < otherZ)
-            return false;
-        return true;
+        return !(x > otherX + otherW || y > otherY + otherH || z > otherZ + otherD || x + w < otherX || y + h < otherY || z + d < otherZ);
     }
 
     public boolean isPointInside(Vec3f point) {
@@ -87,9 +85,7 @@ public class AABB extends CollisionShape {
         float pY = point.y();
         float pZ = point.z();
 
-        if (pX < x || pY < y || pZ < z || pX > x + w || pY > y + h || pZ > z + d)
-            return false;
-        return true;
+        return !(pX < x || pY < y || pZ < z || pX > x + w || pY > y + h || pZ > z + d);
     }
 
     public void setPosition(Vec3f position) {

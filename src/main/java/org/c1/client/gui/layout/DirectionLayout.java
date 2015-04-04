@@ -5,7 +5,7 @@ import org.c1.maths.*;
 
 public class DirectionLayout implements GuiLayout {
 
-    public static enum Directions {
+    public enum Directions {
         VERTICAL_DOWNWARDS, HORIZONTAL, VERTICAL_UPWARDS
     }
 
