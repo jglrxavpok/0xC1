@@ -320,6 +320,7 @@ public class GuiShipEditor extends Gui {
             }
             
             ship.createShipModel();
+            gameInstance.getLevel().addGameObject(ship);
         }
     }
 }
