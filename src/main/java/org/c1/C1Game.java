@@ -75,13 +75,12 @@ public class C1Game {
         int updates = 0;
         int frames = 0;
         running = true;
-        while (running) // Thanks to TheCherno for the code of this loop, check him out on GitHub, he does a lot of cool stuff
-        {
+        while (running) { // Thanks to TheCherno for the code of this loop, check him out on GitHub, he does a lot of cool stuff
             long now = System.nanoTime();
             boolean polledInput = false;
             delta += (now - lastTime) / ns;
             lastTime = now;
-            if (delta >= 1.0) {
+            while (delta >= 1.0) {
                 double deltaTime = ns / 1_000_000_000.0;
                 if (!polledInput) {
                     pollEvents(deltaTime);
@@ -97,7 +96,7 @@ public class C1Game {
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 logger.trace(updates + " ups, " + frames + " fps");
-                Display.setTitle("0xC1 - " + fps + " fps");
+                Display.setTitle("0xC1 " + getVersion() + "- " + fps + " fps");
                 fps = frames;
                 updates = 0;
                 frames = 0;
@@ -135,7 +134,7 @@ public class C1Game {
 
             updateLoadingScreen("Loading texture");
             model = new TestModel();
-            modelCube = new ModelCube();
+            modelCube = new ModelCube(new Vec3f(), new Vec3f());
             texture = new Texture("textures/logo.png");
             updateLoadingScreen();
         } catch (IOException e) {
@@ -375,4 +374,7 @@ public class C1Game {
         return instance;
     }
 
+    public static String getVersion() {
+        return "0xC1:BuildNumber";
+    }
 }

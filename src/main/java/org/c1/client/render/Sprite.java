@@ -69,7 +69,7 @@ public class Sprite {
         transform.scale(width, height, 1);
         Mat4f oldModelview = engine.getModelview();
         engine.setModelview(transform.getTransformationMatrix());
-        text.bind();
+        text.bind(0);
         vertexArray.bind();
         vertexArray.render();
         engine.setModelview(oldModelview);

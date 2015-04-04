@@ -12,8 +12,8 @@ public class ShadowingData {
 
     public ShadowingData(Mat4f projection) {
         this.projection = projection;
-        this.varianceMin = 0.00000002f;
-        this.lightBleedReduc = 0.9f;
+        this.varianceMin = 0.0000002f;
+        this.lightBleedReduc = 0.8f;
         this.shadowMapSize = ShadowMapSize._1024x1024;
     }
 

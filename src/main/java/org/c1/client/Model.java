@@ -63,7 +63,7 @@ public class Model {
         if (texture == null) {
             glBindTexture(GL_TEXTURE_2D, 0);
         } else {
-            texture.bind();
+            texture.bind(0);
         }
         vertexArray.bind();
         vertexArray.render();

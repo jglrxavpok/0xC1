@@ -78,7 +78,7 @@ public class FontRenderer {
         textInfos.scale = scale;
         if (cache.containsKey(textInfos)) {
             VertexArray array = cache.get(textInfos);
-            atlas.getTexture().bind();
+            atlas.getTexture().bind(0);
             array.bind();
             array.render();
             return;
@@ -131,7 +131,7 @@ public class FontRenderer {
         }
         verticesArray.upload();
 
-        atlas.getTexture().bind();
+        atlas.getTexture().bind(0);
         verticesArray.bind();
         verticesArray.render();
 

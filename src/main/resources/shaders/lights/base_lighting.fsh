@@ -28,25 +28,16 @@ float calcShadowMapEffect(sampler2D shadowMap, vec4 shadowMapCoords)
 	vec3 shadowMapCoord1 = shadowMapCoords.xyz/shadowMapCoords.w;
 	if(inRange(shadowMapCoord1.x) && inRange(shadowMapCoord1.y) && inRange(shadowMapCoord1.z))
 		return sampleVarianceShadowMap(shadowMap, shadowMapCoord1.xy, shadowMapCoord1.z, R_shadowVarianceMin, R_shadowLightBleedingReduction);
-	return 0.5f;
+	return 1.0f;
 }
 
 void main()
 {
 	vec3 directionToEye = normalize(Cam_eyePos - worldPos0);
 	vec2 texCoords = texCoord0;
-//	if(R_parallaxDispMappingEnabled)
-//		texCoords = calcParallaxTexCoords(dispMap, tbnMatrix, directionToEye, texCoord0, dispMapScale, dispMapBias);
 
 	vec3 normal = normal0;
-//	if(R_normalMappingOn)
-//		normal = normalize( (tbnMatrix * (( (texture2D(normalMap, texCoords).xyz - 0.5 ) * 2.0) )) );
-
-	vec4 lightAmount = vec4(1,1,1,1);
-//	if(!R_lightingOff)
-		lightAmount = calcLightEffect(normal, worldPos0);
-//	if(R_shadowingEnabled)
-		lightAmount = lightAmount * mix(vec4(1), vec4(R_shadowColor,1), 1.0-calcShadowMapEffect(R_shadowMap, shadowMapCoords0));
+	vec4 lightAmount = calcLightEffect(normal, worldPos0) * mix(vec4(1), vec4(R_shadowColor,1), 1.0-calcShadowMapEffect(R_shadowMap, shadowMapCoords0));
 	vec4 color = texture2D(diffuse, texCoords.xy) * baseColor * lightAmount;
     fragColor = color;
 }

@@ -4,7 +4,7 @@ import java.io.*;
 
 public final class SystemUtils {
 
-    public static enum OperatingSystem {
+    public enum OperatingSystem {
         WINDOWS, LINUX, MACOSX, SOLARIS, UNKNOWN;
     }
 

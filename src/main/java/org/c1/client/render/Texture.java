@@ -13,6 +13,7 @@ import org.lwjgl.opengl.*;
 public class Texture implements IDisposable {
 
     private static Map<String, TextureData> resources = Maps.newHashMap();
+    private int format;
     private int width;
     private int height;
 
@@ -40,6 +41,7 @@ public class Texture implements IDisposable {
         height = data.getHeight();
         this.target = GL_TEXTURE_2D;
         this.internalFormat = GL_RGBA;
+        this.format = GL30.GL_RGBA32F;
         init();
     }
 
@@ -56,10 +58,15 @@ public class Texture implements IDisposable {
     }
 
     public Texture(int w, int h, int[] pixels, int filter, int target, int internalFormat) {
+        this(w, h, pixels, filter, target, internalFormat, GL30.GL_RGBA32F);
+    }
+
+    public Texture(int w, int h, int[] pixels, int filter, int target, int internalFormat, int format) {
         this.width = w;
         this.height = h;
         this.filter = filter;
         this.target = target;
+        this.format = format;
         this.internalFormat = internalFormat;
         data = new TextureData(w, h, pixels);
         init();
@@ -67,12 +74,13 @@ public class Texture implements IDisposable {
 
     private void init() {
         if (!data.isInit()) {
-            data.init(target, filter, internalFormat);
+            data.init(target, filter, internalFormat, format);
         }
         this.texID = data.getTextureID();
     }
 
-    public void bind() {
+    public void bind(int slot) {
+        GL13.glActiveTexture(GL13.GL_TEXTURE0 + slot);
         glBindTexture(target, texID);
     }
 
@@ -83,7 +91,7 @@ public class Texture implements IDisposable {
     public void setupRenderTarget(boolean clampUV) {
         if (isRenderTarget)
             return;
-        bind();
+        bind(0);
         if (clampUV) {
             glTexParameterf(target, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
             glTexParameterf(target, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);

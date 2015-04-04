@@ -43,7 +43,7 @@ public class TextureData {
         return pixels;
     }
 
-    public void init(int target, int filter, int internalFormat) {
+    public void init(int target, int filter, int internalFormat, int format) {
         texID = glGenTextures();
         glBindTexture(target, texID);
         glTexParameteri(target, GL12.GL_TEXTURE_BASE_LEVEL, 0);
@@ -51,6 +51,8 @@ public class TextureData {
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         glTexParameteri(target, GL_TEXTURE_MIN_FILTER, filter);
         glTexParameteri(target, GL_TEXTURE_MAG_FILTER, filter);
+        glTexParameterf(target, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+        glTexParameterf(target, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 
         ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4);
         if (pixels != null) {
@@ -71,7 +73,7 @@ public class TextureData {
             }
             buffer.flip();
         }
-        glTexImage2D(target, 0, GL30.GL_RGBA32F, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, buffer);
+        glTexImage2D(target, 0, format, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, buffer);
         init = true;
     }
 

@@ -72,6 +72,7 @@ public class Framebuffer {
 
     public void bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
+        glViewport(0,0,width,height);
     }
 
     public Texture getColorBuffer() {

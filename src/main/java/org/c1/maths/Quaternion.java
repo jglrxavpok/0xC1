@@ -35,7 +35,7 @@ public class Quaternion implements IBufferWritable {
 
     // From Ken Shoemake's "Quaternion Calculus and Fast Animation" article
     public Quaternion(Mat4f rot) {
-        float trace = (float) (rot.get(0, 0) + rot.get(1, 1) + rot.get(2, 2));
+        float trace = rot.get(0, 0) + rot.get(1, 1) + rot.get(2, 2);
 
         if (trace > 0) {
             float s = 0.5f / (float) Math.sqrt(trace + 1.0f);

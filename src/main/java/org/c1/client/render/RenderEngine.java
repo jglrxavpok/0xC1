@@ -80,8 +80,8 @@ public class RenderEngine {
         for (int i = 0; i < shadowMaps.length; i++) {
             ShadowMapSize mapSize = ShadowMapSize.values()[i];
             int size = mapSize.size();
-            Texture shadowMap = new Texture(size, size, null, GL_NEAREST, GL_TEXTURE_2D);
-            Texture shadowMapTmp = new Texture(size, size, null, GL_NEAREST, GL_TEXTURE_2D);
+            Texture shadowMap = new Texture(size, size, null, GL_LINEAR, GL_TEXTURE_2D, GL_RGBA,GL_RG32F);
+            Texture shadowMapTmp = new Texture(size, size, null, GL_LINEAR, GL_TEXTURE_2D, GL_RGBA,GL_RG32F);
             shadowMap.setupRenderTarget(false);
             shadowMapTmp.setupRenderTarget(false);
 
@@ -162,17 +162,17 @@ public class RenderEngine {
 
             setLightMatrix(initMatrix);
             currentShadowMap.bindAsRenderTarget();
+            glViewport(0,0,currentShadowMap.getWidth(),currentShadowMap.getHeight());
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if (shadowingData != null) {
                 shadowLightBleedingReduction = shadowingData.getLightBleedingReduction();
                 shadowVarianceMin = shadowingData.getVarianceMin();
-                shadowTexelSize = new Vec3f(1.0f / (float) ShadowMapSize.values()[mapIndex].size(),
-                        1.0f / (float) ShadowMapSize.values()[mapIndex].size(), 0f);
+                shadowTexelSize = new Vec3f(1.0f / (float) ShadowMapSize.values()[mapIndex].size(), 1.0f / (float) ShadowMapSize.values()[mapIndex].size(), 0f);
                 altCamera.setProjection(shadowingData.getProjectionMatrix());
-                altCamera.getTransform().pos(l.getTransform().pos());
-                altCamera.getTransform().rot(l.getTransform().rot());
+                altCamera.getTransform().pos(l.getPos());
+                altCamera.getTransform().rot(l.getRotation());
 
                 setLightMatrix(bias.mul(altCamera.getViewProjection()));
 
@@ -188,6 +188,7 @@ public class RenderEngine {
                 shadowVarianceMin = 0.0002f;
             }
             renderTarget.bindAsRenderTarget();
+            glViewport(0, 0, renderTarget.getWidth(), renderTarget.getHeight());
 
             bindTexture(currentShadowMap, SHADOW_MAP_SLOT);
             glEnable(GL_BLEND);
@@ -205,9 +206,9 @@ public class RenderEngine {
 
         applyFilter(nullFilterShader, renderTarget, null);
 
-        //        if (currentShadowMap != null) {
-        //            applyFilter(nullFilterShader, currentShadowMap, null);
-        //        }
+        if (currentShadowMap != null) {
+//            applyFilter(nullFilterShader, currentShadowMap, null);
+        }
     }
 
     public void applyFilter(Shader filter, Texture source, Texture dest) {
@@ -233,12 +234,11 @@ public class RenderEngine {
     }
 
     private void bindTexture(Texture text, int slot) {
-        GL13.glActiveTexture(GL13.GL_TEXTURE0 + slot);
-        text.bind();
+        text.bind(slot);
     }
 
     private void setLightMatrix(Mat4f mat) {
-        lightMatrix = mat;
+        lightMatrix.set(mat);
     }
 
     public void setCurrentShader(Shader shader) {
@@ -334,8 +334,9 @@ public class RenderEngine {
     }
 
     public void setModelview(Mat4f mat) {
-        if (currentShader != null)
+        if (currentShader != null) {
             currentShader.getUniform("modelview").setValueMat4(mat);
+        }
         this.modelview = mat;
     }
 

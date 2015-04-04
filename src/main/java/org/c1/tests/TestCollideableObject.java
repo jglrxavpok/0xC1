@@ -25,7 +25,7 @@ public class TestCollideableObject extends GameObject {
 
     @Override
     public void render(double delta) {
-        texture.bind();
+        texture.bind(0);
         model.render();
     }
 
