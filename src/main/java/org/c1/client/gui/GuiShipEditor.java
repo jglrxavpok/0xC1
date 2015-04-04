@@ -312,13 +312,13 @@ public class GuiShipEditor extends Gui {
     }
 
     @Override
-    public void onButtonClicked(int id) {
-        if(id == 1){
+    public void onComponentClicked(GuiComponent component) {
+        if(component.getID() == 1){
             ModularShipObject ship = new ModularShipObject("ship_test");
-            for(ShipEditorComponent comp : components){
-                ship.addShipComponent(comp);
+            for(ShipEditorComponent c : components){
+                ship.addShipComponent(c);
             }
-            
+            System.out.println("jdzqd");
             ship.createShipModel();
             gameInstance.getLevel().addGameObject(ship);
         }

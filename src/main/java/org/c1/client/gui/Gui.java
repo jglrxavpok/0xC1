@@ -15,9 +15,10 @@ public abstract class Gui extends GuiComponent implements MouseConstants {
     private List<GuiButton> buttons;
     protected C1Game game;
     private AbsoluteLayout layout;
+    private GuiComponent focused;
 
     public Gui(C1Game gameInstance) {
-        super(0, 0, gameInstance.getDisplayWidth(), gameInstance.getDisplayHeight());
+        super(0, 0, gameInstance.getDisplayWidth(), gameInstance.getDisplayHeight(),-1);
         this.game = gameInstance;
         layout = new AbsoluteLayout();
         components = Lists.newArrayList();
@@ -70,10 +71,7 @@ public abstract class Gui extends GuiComponent implements MouseConstants {
     public boolean onMousePressed(int x, int y, int button) {
         for (GuiComponent comp : components) {
             if (comp.onMousePressed(x, y, button)) {
-                if (buttons.contains(comp)) {
-                    GuiButton b = (GuiButton) comp;
-                    this.onButtonClicked(b.getId());
-                }
+                focused = comp;
                 return true;
             }
         }
@@ -82,8 +80,12 @@ public abstract class Gui extends GuiComponent implements MouseConstants {
 
     public boolean onMouseReleased(int x, int y, int button) {
         for (GuiComponent comp : components) {
-            if (comp.onMouseReleased(x, y, button))
+            if (comp.onMouseReleased(x, y, button)) {
+                if(comp == focused) {
+                    onComponentClicked(comp);
+                }
                 return true;
+            }
         }
         return false;
     }
@@ -105,9 +107,10 @@ public abstract class Gui extends GuiComponent implements MouseConstants {
         return false;
     }
 
-    public void onButtonClicked(int id) {
+    public void onComponentClicked(GuiComponent component) {}
 
-    }
+    @Deprecated
+    public void onButtonClicked(int id) {}
 
     public boolean locksMouse() {
         return true;

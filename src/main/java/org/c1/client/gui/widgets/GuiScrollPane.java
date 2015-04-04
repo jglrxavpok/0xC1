@@ -20,7 +20,7 @@ public class GuiScrollPane extends GuiComponent {
     }
 
     public GuiScrollPane(float x, float y, float w, float h) {
-        super(x, y, w, h);
+        super(x, y, w, h,-1);
         this.layout = new AbsoluteLayout();
         siblings = Lists.newArrayList();
     }

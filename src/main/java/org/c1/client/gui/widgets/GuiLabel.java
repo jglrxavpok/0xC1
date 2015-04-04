@@ -13,7 +13,7 @@ public class GuiLabel extends GuiComponent {
     }
 
     public GuiLabel(float x, float y, String text, FontRenderer font) {
-        super(x, y, font.getStringWidth(text), font.getCharHeight('A'));
+        super(x, y, font.getStringWidth(text), font.getCharHeight('A'),-1);
         this.font = font;
         this.text = text;
     }

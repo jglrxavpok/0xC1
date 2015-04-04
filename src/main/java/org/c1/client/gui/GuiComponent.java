@@ -6,16 +6,22 @@ import org.c1.physics.*;
 
 public abstract class GuiComponent {
 
+    private final int id;
     private Vec2f pos;
     private AABB boundingBox;
 
-    public GuiComponent(float w, float h) {
-        this(0, 0, w, h);
+    public GuiComponent(float w, float h, int id) {
+        this(0, 0, w, h, id);
     }
 
-    public GuiComponent(float x, float y, float w, float h) {
+    public GuiComponent(float x, float y, float w, float h, int id) {
+        this.id = id;
         boundingBox = new AABB(new Vec3f(w, h, 0));
         setPos(new Vec2f(x, y));
+    }
+
+    public int getID() {
+        return id;
     }
 
     public float getWidth() {

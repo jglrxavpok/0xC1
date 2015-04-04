@@ -11,13 +11,13 @@ public class GuiButton extends GuiComponent {
 
     private FontRenderer font;
     private String text;
-    private int id;
     private int textColor;
     private int hoveredTextColor;
     private int mouseX;
     private int mouseY;
     private boolean drawBackground;
     private TextureAtlas atlas;
+    private boolean pressed;
 
     public GuiButton(String text, FontRenderer font, int id) {
         this(0, 0, text, font, id);
@@ -28,10 +28,9 @@ public class GuiButton extends GuiComponent {
     }
 
     public GuiButton(float x, float y, float w, float h, String text, FontRenderer font, int id) {
-        super(x, y, w, h);
+        super(x, y, w, h, id);
         this.font = font;
         this.text = text;
-        this.id = id;
         textColor = 0xFFFFFFFF;
         hoveredTextColor = 0xFFFF0000;
         drawBackground = true;
@@ -59,18 +58,9 @@ public class GuiButton extends GuiComponent {
         textColor = color;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @Override
     public void render(double deltaTime) {
         boolean mouseOn = isMouseOn(mouseX, mouseY, getWidth(), getHeight());
-        boolean pressed = false;
         if (drawBackground) {
             renderBackground(deltaTime, mouseOn, pressed);
         }
@@ -144,12 +134,17 @@ public class GuiButton extends GuiComponent {
     public boolean onMousePressed(int x, int y, int button) {
         mouseX = x;
         mouseY = y;
-        return isMouseOn(x, y, getWidth(), getHeight());
+        if(isMouseOn(x, y, getWidth(), getHeight())) {
+            pressed = true;
+            return true;
+        }
+        return false;
     }
 
     public boolean onMouseReleased(int x, int y, int button) {
         mouseX = x;
         mouseY = y;
+        pressed = false;
         return isMouseOn(x, y, getWidth(), getHeight());
     }
 
