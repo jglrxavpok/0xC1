@@ -4,12 +4,14 @@
 We're making it because Notch never released 0x10c, and abandonned it.
 
 
-To-do :
+"Done" :
 - Basic render engine (Light and basic shapes)
-- Basic physics ( AABB based )
+- Basic physics ( AABB based ) - Still needs improvements
 
-After that :
-- Basic ship construction
+Being worked on :
+- Basic ship construction ( Editor )
+ 
+Later on :
 - Procedural generation for planets ( Mostly spheres with perlin noise heightmap )
 
 Ideas for the future (Like, in a long time) :
