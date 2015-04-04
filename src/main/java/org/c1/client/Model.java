@@ -11,6 +11,7 @@ import org.c1.maths.*;
 
 public class Model {
 
+    private List<ModelBox> boxes;
     private VertexArray vertexArray;
     private List<ModelFace> faces;
     private Texture texture;
@@ -19,6 +20,7 @@ public class Model {
     public Model() {
         vertexArray = new VertexArray();
         faces = Lists.newArrayList();
+        boxes = Lists.newArrayList();
     }
 
     public void addFace(ModelFace face) {
@@ -36,6 +38,7 @@ public class Model {
     public void compile() {
         compiled = true;
         int index = 0;
+        boxes.forEach(box -> faces.addAll(box.getFaces()));
         for (ModelFace f : faces) {
             int maxIndex = 0;
             for (int i : f.getIndices()) {
@@ -55,6 +58,12 @@ public class Model {
             index += f.getPositions().size();
         }
         vertexArray.upload();
+    }
+
+    public ModelBox addBox(Vec3f pos, Vec3f size) {
+        ModelBox box = new ModelBox(pos, size);
+        boxes.add(box);
+        return box;
     }
 
     public void render() {

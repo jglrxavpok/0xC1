@@ -2,18 +2,20 @@ package org.c1.tests;
 
 import java.util.List;
 
+import org.c1.client.Model;
 import org.c1.client.gui.editor.ShipEditorComponent;
+import org.c1.client.model.ModelCube;
 import org.c1.level.GameObject;
 import org.c1.maths.Vec3f;
 
 public class ModularShipObject extends GameObject {
 
     private List<ShipEditorComponent> components;
-    private ModularModel model;
+    private Model model;
     
     public ModularShipObject(String id) {
         super(id);
-        this.model = new ModularModel();
+        this.model = new Model();
     }
     
     /**

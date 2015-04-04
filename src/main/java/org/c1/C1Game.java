@@ -134,7 +134,7 @@ public class C1Game {
 
             updateLoadingScreen("Loading texture");
             model = new TestModel();
-            modelCube = new ModelCube(new Vec3f(), new Vec3f());
+            modelCube = new ModelCube(new Vec3f(-1,-1,-1), new Vec3f(2,2,2));
             texture = new Texture("textures/logo.png");
             updateLoadingScreen();
         } catch (IOException e) {
