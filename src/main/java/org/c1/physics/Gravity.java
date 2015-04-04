@@ -1,6 +1,5 @@
 package org.c1.physics;
 
-import org.c1.level.GameObject;
 import org.c1.maths.Vec3f;
 
 public class Gravity {

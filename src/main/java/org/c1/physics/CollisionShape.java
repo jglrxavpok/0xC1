@@ -30,5 +30,7 @@ public abstract class CollisionShape {
     }
 
     public abstract void setCentered(Vec3f pos);
+    
+    public abstract void setSize(Vec3f size);
 
 }

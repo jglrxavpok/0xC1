@@ -290,9 +290,10 @@ public class GuiShipEditor extends Gui {
                 }
             }
         }
-        hoverSprite.setPos(tileX * 32f, tileY * 32f);
-        hoverSprite.render(engine);
-
+        if(tileX >= 0 && tileX <= grid.length - 1 && tileY >= 0 && tileY <= grid.length - 1) {
+        	hoverSprite.setPos(tileX * 32f, tileY * 32f);
+        	hoverSprite.render(engine);
+        }
         components.forEach(comp -> comp.render(delta, engine));
     }
 

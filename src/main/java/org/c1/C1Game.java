@@ -10,6 +10,7 @@ import com.google.common.collect.*;
 
 import org.c1.client.*;
 import org.c1.client.gui.*;
+import org.c1.client.model.ModelCube;
 import org.c1.client.render.*;
 import org.c1.level.*;
 import org.c1.level.lights.*;
@@ -37,7 +38,7 @@ public class C1Game {
     private PlayerController player;
     private PointLight light;
     private TestModel model;
-    private TestCubicModel modelCube;
+    private ModelCube modelCube;
     private Gui newGui;
     private Gui currentGui;
 
@@ -134,7 +135,7 @@ public class C1Game {
 
             updateLoadingScreen("Loading texture");
             model = new TestModel();
-            modelCube = new TestCubicModel();
+            modelCube = new ModelCube();
             texture = new Texture("textures/logo.png");
             updateLoadingScreen();
         } catch (IOException e) {

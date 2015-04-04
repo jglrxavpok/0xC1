@@ -65,4 +65,12 @@ public class Sphere extends CollisionShape {
     public String toString() {
         return "Sphere(Position: " + position + ", Radius: " + radius + ")";
     }
+
+    /**
+     * UNUSED -yet-
+     */
+	@Override
+	public void setSize(Vec3f size) {
+		
+	}
 }
