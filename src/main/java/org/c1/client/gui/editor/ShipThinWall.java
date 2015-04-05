@@ -2,6 +2,7 @@ package org.c1.client.gui.editor;
 
 import java.io.IOException;
 
+import org.c1.client.OpenGLUtils;
 import org.c1.client.render.RenderEngine;
 import org.c1.client.render.Sprite;
 import org.c1.client.render.StaticRegion;
@@ -21,7 +22,7 @@ public class ShipThinWall extends ShipEditorComponent {
         this.size = new Vec2f(0.5f, 1f);
         
         try {
-            sprite = new Sprite(new Texture("textures/ship/editor_ship.png"), new StaticRegion(32f/256f, 1f - 32f / 256f, 64f / 256f, 1f));
+            sprite = new Sprite(new Texture("textures/ship/editor_ship.png"), OpenGLUtils.createRegion(32,0,32,32,256,256));
             sprite.setSize(32, 32);
         } catch (IOException e) {
             e.printStackTrace();
