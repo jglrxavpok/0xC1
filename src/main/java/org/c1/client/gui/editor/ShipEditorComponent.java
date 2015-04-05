@@ -6,6 +6,8 @@ import org.c1.maths.Vec2f;
 public abstract class ShipEditorComponent {
 
     private Vec2f pos;
+    
+    protected Vec2f size;
 
     public ShipEditorComponent(float x, float y) {
         pos = new Vec2f(x,y);
@@ -21,5 +23,9 @@ public abstract class ShipEditorComponent {
 
     public Vec2f getPos() {
         return pos;
+    }
+
+    public Vec2f getSize() {
+        return size;
     }
 }

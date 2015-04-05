@@ -18,13 +18,13 @@ import org.lwjgl.input.*;
 public class GuiShipEditor extends Gui {
 
     private enum ShipGridType {
-        WALL, VOID
+        WALL, THIN_WALL, VOID
     }
 
     private C1Game gameInstance;
     
     private List<ShipEditorComponent> components;
-    private ShipWall[][] grid;
+    private ShipEditorComponent[][] grid;
     private Vec2f firstSelector;
     private Vec2f secondSelector;
     private OrthographicCamera camera;
@@ -43,7 +43,7 @@ public class GuiShipEditor extends Gui {
     @Override
     public void init() {
         components = Lists.newArrayList();
-        grid = new ShipWall[10][10];
+        grid = new ShipEditorComponent[10][10];
 
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[0].length; y++) {
@@ -207,6 +207,9 @@ public class GuiShipEditor extends Gui {
                     case WALL:
                         grid[cellX][cellY] = new ShipWall(x, y);
                         break;
+                    case THIN_WALL:
+                        grid[cellX][cellY] = new ShipThinWall(x, y);
+                        break;
                     case VOID:
                         grid[cellX][cellY] = null;
                         break;
@@ -246,7 +249,7 @@ public class GuiShipEditor extends Gui {
                 int cellX = (int) Math.floor(tileX);
                 int cellY = (int) Math.floor(tileY);
                 if (inBound(cellX, cellY)) {
-                    grid[cellX][cellY] = new ShipWall(cellX, cellY);
+                    grid[cellX][cellY] = new ShipThinWall(cellX, cellY);
                     resetSelectors();
                 }
             } else {
@@ -275,9 +278,9 @@ public class GuiShipEditor extends Gui {
 
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[0].length; y++) {
-                ShipWall wall = grid[x][y];
-                if (wall != null) {
-                    wall.render(delta, engine);
+                ShipEditorComponent component = grid[x][y];
+                if (component != null) {
+                    component.render(delta, engine);
                 }
             }
         }
@@ -315,9 +318,9 @@ public class GuiShipEditor extends Gui {
             ModularShipObject ship = new ModularShipObject("ship_test");
             for (int x = 0; x < grid.length; x++) {
                 for (int y = 0; y < grid[0].length; y++) {
-                    ShipWall wall = grid[x][y];
-                    if (wall != null) {
-                        ship.addShipComponent(wall);
+                    ShipEditorComponent comp = grid[x][y];
+                    if (comp != null) {
+                        ship.addShipComponent(comp);
                     }
                 }
             }

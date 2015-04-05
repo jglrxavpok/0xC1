@@ -40,14 +40,14 @@ public class ModularShipObject extends GameObject {
     
     public void createShipModel() {
         for(ShipEditorComponent comp : components) {
-            model.addBox(new Vec3f(comp.getPos().x(), 0, comp.getPos().y()), new Vec3f(1, 2, 1));
+            model.addBox(new Vec3f(comp.getPos().x(), 0, comp.getPos().y()), new Vec3f(comp.getSize().x(), 1, comp.getSize().y()));
         }
     }
 
     @Override
     public void update(double delta) {
         // TODO Auto-generated method stub
-        System.out.println("isizjdmzqkjd");
+//        System.out.println("isizjdmzqkjd");
     }
 
     @Override
