@@ -12,17 +12,14 @@ public class BufferHelper {
         for (IBufferWritable w : list)
             size += w.getSize();
         FloatBuffer buffer = BufferUtils.createFloatBuffer(size);
-        for (IBufferWritable w : list) {
-            w.write(buffer);
-        }
+        list.forEach(w -> w.write(buffer));
         buffer.flip();
         return buffer;
     }
 
     public static IntBuffer intBuffer(List<Integer> indices) {
         IntBuffer buffer = BufferUtils.createIntBuffer(indices.size());
-        for (int i : indices)
-            buffer.put(i);
+        indices.forEach(buffer::put);
         buffer.flip();
         return buffer;
     }

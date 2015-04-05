@@ -48,7 +48,7 @@ public class GuiShipEditor extends Gui {
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[0].length; y++) {
                 if (x == 0 || x == grid.length - 1 || y == 0 || y == grid[0].length - 1)
-                    grid[x][y] = new ShipWall(x * 32f, y * 32f);
+                    grid[x][y] = new ShipWall(x, y);
             }
         }
 
@@ -205,7 +205,7 @@ public class GuiShipEditor extends Gui {
                 if (inBound(cellX, cellY)) {
                     switch (type) {
                     case WALL:
-                        grid[cellX][cellY] = new ShipWall(x * 32f, y * 32f);
+                        grid[cellX][cellY] = new ShipWall(x, y);
                         break;
                     case VOID:
                         grid[cellX][cellY] = null;
@@ -246,7 +246,7 @@ public class GuiShipEditor extends Gui {
                 int cellX = (int) Math.floor(tileX);
                 int cellY = (int) Math.floor(tileY);
                 if (inBound(cellX, cellY)) {
-                    grid[cellX][cellY] = new ShipWall(cellX * 32f, cellY * 32f);
+                    grid[cellX][cellY] = new ShipWall(cellX, cellY);
                     resetSelectors();
                 }
             } else {
@@ -313,6 +313,14 @@ public class GuiShipEditor extends Gui {
     public void onComponentClicked(GuiComponent component) {
         if(component.getID() == 1){
             ModularShipObject ship = new ModularShipObject("ship_test");
+            for (int x = 0; x < grid.length; x++) {
+                for (int y = 0; y < grid[0].length; y++) {
+                    ShipWall wall = grid[x][y];
+                    if (wall != null) {
+                        ship.addShipComponent(wall);
+                    }
+                }
+            }
             for(ShipEditorComponent c : components){
                 ship.addShipComponent(c);
             }

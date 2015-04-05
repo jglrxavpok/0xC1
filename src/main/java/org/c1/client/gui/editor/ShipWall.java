@@ -11,6 +11,7 @@ public class ShipWall extends ShipEditorComponent {
     private Sprite sprite;
 
     public ShipWall(float x, float y) {
+        super(x,y);
         this.x = x;
         this.y = y;
         try {
@@ -23,7 +24,7 @@ public class ShipWall extends ShipEditorComponent {
 
     @Override
     public void render(double delta, RenderEngine engine) {
-        sprite.render(x, y, engine);
+        sprite.render(x*32f, y*32f, engine);
     }
 
     @Override

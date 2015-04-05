@@ -5,7 +5,11 @@ import org.c1.maths.Vec2f;
 
 public abstract class ShipEditorComponent {
 
-    public Vec2f pos;
+    private Vec2f pos;
+
+    public ShipEditorComponent(float x, float y) {
+        pos = new Vec2f(x,y);
+    }
 
     public abstract void render(double delta, RenderEngine engine);
 

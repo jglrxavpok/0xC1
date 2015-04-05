@@ -23,6 +23,7 @@ public class ModularShipObject extends GameObject {
         this.components = Lists.newArrayList();
         try {
             this.texture = new Texture("textures/logo.png");
+            model.setTexture(texture);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -37,21 +38,20 @@ public class ModularShipObject extends GameObject {
         components.add(comp);
     }
     
-    public void createShipModel(){
-        for(ShipEditorComponent comp : components){
-            model.addBox(new Vec3f(0, 0, 0), new Vec3f(1, 1, 1));
+    public void createShipModel() {
+        for(ShipEditorComponent comp : components) {
+            model.addBox(new Vec3f(comp.getPos().x(), 0, comp.getPos().y()), new Vec3f(1, 2, 1));
         }
     }
 
     @Override
     public void update(double delta) {
         // TODO Auto-generated method stub
-        
+        System.out.println("isizjdmzqkjd");
     }
 
     @Override
     public void render(double delta) {
-        texture.bind(0);
         model.render();
     }
 
