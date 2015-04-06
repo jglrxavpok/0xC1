@@ -32,8 +32,8 @@ public class GuiButton extends GuiComponent {
         super(x, y, w, h, id);
         this.font = font;
         this.text = text;
-        textColor = 0xFFFFFFFF;
-        hoveredTextColor = 0xFFFF0000;
+        setTextColor(0xFFFFFFFF);
+        setHoveredTextColor(0xFFFF0000);
         drawBackground = true;
         drawText = true;
         try {
