@@ -6,6 +6,7 @@ import java.util.*;
 import com.google.common.collect.*;
 
 import org.c1.*;
+import org.c1.client.OpenGLUtils;
 import org.c1.client.gui.editor.*;
 import org.c1.client.gui.layout.*;
 import org.c1.client.gui.widgets.*;
@@ -18,7 +19,7 @@ import org.lwjgl.input.*;
 public class GuiShipEditor extends Gui {
 
     private enum ShipGridType {
-        WALL, THIN_WALL, VOID
+        WALL, THIN_WALL, COMPUTER, VOID
     }
 
     private C1Game gameInstance;
@@ -34,10 +35,12 @@ public class GuiShipEditor extends Gui {
     private float tileY;
     private boolean selecting;
     private boolean shiftPressed;
+    private ShipGridType currentType;
 
     public GuiShipEditor(C1Game gameInstance) {
         super(gameInstance);
         this.gameInstance = gameInstance;
+        currentType = ShipGridType.WALL;
     }
 
     @Override
@@ -72,12 +75,18 @@ public class GuiShipEditor extends Gui {
     private GuiComponent createToolList() {
         float w = game.getDisplayWidth() / 4f;
         GuiScrollPane pane = new GuiScrollPane(game.getDisplayWidth() - w, 0, w, game.getDisplayHeight());
+        pane.setGuiListener(this);
         pane.setLayout(new DirectionLayout(DirectionLayout.Directions.VERTICAL_UPWARDS));
-        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane1", game.getFont()));
-        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane2", game.getFont()));
-        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane3", game.getFont()));
-        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane4", game.getFont()));
-        pane.addComponent(new GuiLabel(0, 0, "Test of the scroll pane5", game.getFont()));
+        try {
+            pane.addComponent(new GuiLabel("Walls", game.getFont()));
+            pane.addComponent(new GuiIconButton(new Sprite(new Texture("textures/ship/editor_ship.png"), OpenGLUtils.createRegion(0,0,32,32,256,256)), 0));
+            pane.addComponent(new GuiIconButton(new Sprite(new Texture("textures/ship/editor_ship.png"), OpenGLUtils.createRegion(32,0,32,32,256,256)), 1));
+            pane.addComponent(new GuiSpacing(20));
+            pane.addComponent(new GuiLabel("Special", game.getFont()));
+            pane.addComponent(new GuiIconButton(new Sprite(new Texture("textures/ship/editor_ship.png"), OpenGLUtils.createRegion(64,0,32,32,256,256)), 2));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         pane.resetScrollToTop();
         return pane;
     }
@@ -179,7 +188,7 @@ public class GuiShipEditor extends Gui {
             return true;
         } else if (!isSelectionEmpty()) {
             if (keycode == Keyboard.KEY_RETURN) {
-                fillSelection(ShipGridType.WALL);
+                fillSelection(currentType);
                 return true;
             } else if (keycode == Keyboard.KEY_BACK || keycode == Keyboard.KEY_DELETE) {
                 fillSelection(ShipGridType.VOID);
@@ -190,11 +199,10 @@ public class GuiShipEditor extends Gui {
                 int cellX = (int) Math.floor(tileX);
                 int cellY = (int) Math.floor(tileY);
                 if (inBound(cellX, cellY)) {
-                    if(grid[cellX][cellY] instanceof ShipThinWall){
-                        ShipThinWall thinWall = (ShipThinWall)grid[cellX][cellY];
-                        thinWall.rotate();
-                    resetSelectors();
+                    if(grid[cellX][cellY] != null) {
+                        grid[cellX][cellY].rotate();
                     }
+                    resetSelectors();
                 }
             }
         }
@@ -215,17 +223,7 @@ public class GuiShipEditor extends Gui {
                 int cellX = (int) x;
                 int cellY = (int) y;
                 if (inBound(cellX, cellY)) {
-                    switch (type) {
-                    case WALL:
-                        grid[cellX][cellY] = new ShipWall(x, y);
-                        break;
-                    case THIN_WALL:
-                        grid[cellX][cellY] = new ShipThinWall(x, y);
-                        break;
-                    case VOID:
-                        grid[cellX][cellY] = null;
-                        break;
-                    }
+                    grid[cellX][cellY] = create(cellX,cellY, type);
                 }
             }
         }
@@ -261,7 +259,7 @@ public class GuiShipEditor extends Gui {
                 int cellX = (int) Math.floor(tileX);
                 int cellY = (int) Math.floor(tileY);
                 if (inBound(cellX, cellY)) {
-                    grid[cellX][cellY] = new ShipThinWall(cellX, cellY);
+                    grid[cellX][cellY] = create(cellX, cellY, currentType);
                     resetSelectors();
                 }
             } else {
@@ -270,6 +268,23 @@ public class GuiShipEditor extends Gui {
             return true;
         }
         return false;
+    }
+
+    private ShipEditorComponent create(int x, int y, ShipGridType type) {
+        switch(type) {
+            case WALL:
+                return new ShipWall(x, y);
+
+            case THIN_WALL:
+                return new ShipThinWall(x, y);
+
+            case COMPUTER:
+                return new ShipComputer(x, y);
+
+            case VOID:
+                return null;
+        }
+        return null;
     }
 
     public boolean onScroll(int x, int y, int direction) {
@@ -326,22 +341,41 @@ public class GuiShipEditor extends Gui {
 
     @Override
     public void onComponentClicked(GuiComponent component) {
-        if(component.getID() == 1){
-            ModularShipObject ship = new ModularShipObject("ship_test");
-            for (int x = 0; x < grid.length; x++) {
-                for (int y = 0; y < grid[0].length; y++) {
-                    ShipEditorComponent comp = grid[x][y];
-                    if (comp != null) {
-                        ship.addShipComponent(comp);
+        if(component.getOwner() == this) {
+            if (component.getID() == 1) {
+                ModularShipObject ship = new ModularShipObject("ship_test");
+                for (int x = 0; x < grid.length; x++) {
+                    for (int y = 0; y < grid[0].length; y++) {
+                        ShipEditorComponent comp = grid[x][y];
+                        if (comp != null) {
+                            ship.addShipComponent(comp);
+                        }
                     }
                 }
-            }
-            for(ShipEditorComponent c : components){
-                ship.addShipComponent(c);
-            }
+                for (ShipEditorComponent c : components) {
+                    ship.addShipComponent(c);
+                }
 
-            ship.createShipModel();
-            gameInstance.getLevel().addGameObject(ship);
+                ship.createShipModel();
+                gameInstance.getLevel().addGameObject(ship);
+            }
+        } else { // If we are here, that means the owner is the tools pane at the right side of the screen
+            switch(component.getID()) {
+                case -1:
+                default:
+                    break;
+                case 0:
+                    currentType = ShipGridType.WALL;
+                    break;
+
+                case 1:
+                    currentType = ShipGridType.THIN_WALL;
+                    break;
+
+                case 2:
+                    currentType = ShipGridType.COMPUTER;
+                    break;
+            }
         }
     }
 }

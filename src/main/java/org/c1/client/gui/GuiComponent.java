@@ -1,6 +1,7 @@
 package org.c1.client.gui;
 
 import org.c1.client.*;
+import org.c1.client.gui.widgets.GuiScrollPane;
 import org.c1.maths.*;
 import org.c1.physics.*;
 
@@ -9,6 +10,7 @@ public abstract class GuiComponent {
     private final int id;
     private Vec2f pos;
     private AABB boundingBox;
+    private GuiComponent owner;
 
     public GuiComponent(float w, float h, int id) {
         this(0, 0, w, h, id);
@@ -87,5 +89,24 @@ public abstract class GuiComponent {
 
     public boolean onMouseMoved(int x, int y, float dx, float dy) {
         return false;
+    }
+
+    public void setOwner(GuiComponent comp) {
+        if(comp == this) {
+            throw new IllegalArgumentException("A component can't be its own owner!");
+        }
+        this.owner = comp;
+    }
+
+    public GuiComponent getOwner() {
+        return owner;
+    }
+
+    public void setWidth(float width) {
+        boundingBox.getSize().x(width);
+    }
+
+    public void setHeight(float height) {
+        boundingBox.getSize().y(height);
     }
 }

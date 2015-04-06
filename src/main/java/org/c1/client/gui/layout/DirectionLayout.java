@@ -38,13 +38,13 @@ public class DirectionLayout implements GuiLayout {
         float h = component.getHeight();
         switch (dir) {
         case VERTICAL_DOWNWARDS:
-            component.setPos(new Vec2f(x, y + accumulator));
             accumulator += h + spacing;
+            component.setPos(new Vec2f(x, y + accumulator));
             break;
 
         case VERTICAL_UPWARDS:
-            component.setPos(new Vec2f(x, y + accumulator));
             accumulator -= h + spacing;
+            component.setPos(new Vec2f(x, y + accumulator));
             break;
 
         case HORIZONTAL:

@@ -14,6 +14,8 @@ public class GuiScrollPane extends GuiComponent {
     private float scroll;
     private List<GuiComponent> siblings;
     private GuiLayout layout;
+    private GuiComponent focused;
+    private GuiListener listener;
 
     public GuiScrollPane(float w, float h) {
         this(0, 0, w, h);
@@ -37,8 +39,7 @@ public class GuiScrollPane extends GuiComponent {
 
     public boolean onScroll(int x, int y, int dir) {
         if (isMouseOn(x, y, getWidth(), getHeight())) {
-            float scrollAmount = dir;
-            setScroll(scroll - scrollAmount);
+            setScroll(scroll - dir);
             return true;
         }
         return false;
@@ -46,6 +47,7 @@ public class GuiScrollPane extends GuiComponent {
 
     public void addComponent(GuiComponent component) {
         layout.onAdded(component, this);
+        component.setOwner(this);
         if (!siblings.contains(component)) {
             component.getPos().add(getPos());
         }
@@ -82,6 +84,67 @@ public class GuiScrollPane extends GuiComponent {
         float minY = topComponent.getPos().y();
         float dy = (getHeight() - topComponent.getHeight()) - minY;
         setScroll(dy);
+    }
+
+    public boolean onKeyPressed(int keycode, char eventchar) {
+        for(GuiComponent comp : siblings) {
+            if(comp.onKeyPressed(keycode, eventchar))
+                return true;
+        }
+        return false;
+
+    }
+
+    public boolean onKeyReleased(int keycode, char eventchar) {
+        for(GuiComponent comp : siblings) {
+            if(comp.onKeyReleased(keycode, eventchar))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean onMousePressed(int x, int y, int button) {
+        for(GuiComponent comp : siblings) {
+            if(comp.onMousePressed(x, y, button)) {
+                focused = comp;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean onMouseReleased(int x, int y, int button) {
+        for(GuiComponent comp : siblings) {
+            if(comp.onMouseReleased(x, y, button)) {
+                if(comp == focused) {
+                    onComponentClicked(comp);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setGuiListener(GuiListener listener) {
+        this.listener = listener;
+    }
+
+    public GuiListener getListener() {
+        return listener;
+    }
+
+    private void onComponentClicked(GuiComponent comp) {
+        if(listener != null) {
+            listener.onComponentClicked(comp);
+        }
+    }
+
+    public boolean onMouseMoved(int x, int y, float dx, float dy) {
+        for(GuiComponent comp : siblings) {
+            if(comp.onMouseMoved(x, y, dx, dy))
+                return true;
+        }
+        return false;
     }
 
 }

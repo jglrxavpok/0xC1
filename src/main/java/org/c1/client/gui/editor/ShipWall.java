@@ -5,6 +5,7 @@ import java.io.*;
 import org.c1.client.OpenGLUtils;
 import org.c1.client.render.*;
 import org.c1.maths.Vec2f;
+import org.c1.utils.CardinalDirection;
 
 public class ShipWall extends ShipEditorComponent {
 
@@ -45,5 +46,13 @@ public class ShipWall extends ShipEditorComponent {
     public int getHeight() {
         return 1;
     }
+
+    @Override
+    public CardinalDirection getDirection() {
+        return CardinalDirection.NORTH;
+    }
+
+    @Override
+    public void setDirection(CardinalDirection dir) {}
 
 }

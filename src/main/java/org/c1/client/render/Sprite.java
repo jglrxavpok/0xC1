@@ -21,8 +21,8 @@ public class Sprite {
         this.region = region;
         this.transform = new Transform();
 
-        width = 1f;
-        height = 1f;
+        width = (region.maxU()-region.minU()) * text.getWidth();
+        height = (region.maxV()-region.minV()) * text.getHeight();
         initVertices();
     }
 
@@ -55,7 +55,7 @@ public class Sprite {
     public void setSize(float w, float h) {
         setWidth(w);
         setHeight(h);
-        setCenter(w/2f,h/2f);
+        setCenter(w / 2f, h / 2f);
     }
 
     public void setHeight(float h) {
@@ -103,5 +103,13 @@ public class Sprite {
 
     public Vec2f getPos() {
         return transform.pos().xy();
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 }

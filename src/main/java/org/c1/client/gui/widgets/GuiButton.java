@@ -18,13 +18,14 @@ public class GuiButton extends GuiComponent {
     private boolean drawBackground;
     private TextureAtlas atlas;
     private boolean pressed;
+    private boolean drawText;
 
     public GuiButton(String text, FontRenderer font, int id) {
         this(0, 0, text, font, id);
     }
 
     public GuiButton(float x, float y, String text, FontRenderer font, int id) {
-        this(x, y, 200, 20, text, font, id);
+        this(x, y, 200, 32, text, font, id);
     }
 
     public GuiButton(float x, float y, float w, float h, String text, FontRenderer font, int id) {
@@ -34,7 +35,7 @@ public class GuiButton extends GuiComponent {
         textColor = 0xFFFFFFFF;
         hoveredTextColor = 0xFFFF0000;
         drawBackground = true;
-
+        drawText = true;
         try {
             atlas = new TextureAtlas("textures/gui/button.png", 32, 32);
         } catch (IOException e) {
@@ -69,7 +70,9 @@ public class GuiButton extends GuiComponent {
         if (mouseOn) {
             color = hoveredTextColor;
         }
-        renderCentered(font, text, getPos().x() + getWidth() / 2f, getPos().y() + getHeight() / 2f - font.getCharHeight('A') / 2f, color);
+        if(drawText) {
+            renderCentered(font, text, getPos().x() + getWidth() / 2f, getPos().y() + getHeight() / 2f - font.getCharHeight('A') / 2f, color);
+        }
     }
 
     private void renderBackground(double deltaTime, boolean mouseOn, boolean pressed) {
@@ -129,6 +132,14 @@ public class GuiButton extends GuiComponent {
     @Override
     public void update(double deltaTime) {
         // TODO Implement GuiButton.update
+    }
+
+    public void setDrawText(boolean b) {
+        this.drawText = b;
+    }
+
+    public boolean doesDrawText() {
+        return drawText;
     }
 
     public boolean onMousePressed(int x, int y, int button) {

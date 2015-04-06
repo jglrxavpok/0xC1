@@ -6,9 +6,10 @@ import com.google.common.collect.*;
 
 import org.c1.*;
 import org.c1.client.gui.layout.*;
+import org.c1.client.gui.widgets.GuiListener;
 import org.c1.utils.*;
 
-public abstract class Gui extends GuiComponent implements MouseConstants {
+public abstract class Gui extends GuiComponent implements MouseConstants, GuiListener {
 
     private List<GuiComponent> components;
     protected C1Game game;
@@ -34,6 +35,7 @@ public abstract class Gui extends GuiComponent implements MouseConstants {
 
     public void addComponent(GuiComponent comp) {
         components.add(comp);
+        comp.setOwner(this);
         layout.onAdded(comp, this);
     }
 
