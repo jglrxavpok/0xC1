@@ -11,6 +11,7 @@ public class Sprite {
     private float height;
     private float width;
     private VertexArray vertexArray;
+    private Vec2f center;
 
     public Sprite(Texture text) {
         this(text, new StaticRegion(0, 0, 1, 1));
@@ -55,6 +56,7 @@ public class Sprite {
     public void setSize(float w, float h) {
         setWidth(w);
         setHeight(h);
+        setCenter(w/2f,h/2f);
     }
 
     public void setHeight(float h) {
@@ -66,6 +68,7 @@ public class Sprite {
     }
 
     public void render(RenderEngine engine) {
+        transform.rotCenter(center.x(), center.y(), 0);
         transform.scale(width, height, 1);
         Mat4f oldModelview = engine.getModelview();
         engine.setModelview(transform.getTransformationMatrix());
@@ -82,6 +85,18 @@ public class Sprite {
 
     public float getAngle() {
         return angle;
+    }
+
+    public Vec2f getCenter() {
+        return center;
+    }
+
+    public void setCenter(Vec2f center) {
+        this.center = center;
+    }
+
+    public void setCenter(float x, float y) {
+        this.setCenter(new Vec2f(x,y));
     }
 
     public void setPos(float x, float y) {
