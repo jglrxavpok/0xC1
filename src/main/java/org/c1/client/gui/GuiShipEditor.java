@@ -185,6 +185,18 @@ public class GuiShipEditor extends Gui {
                 fillSelection(ShipGridType.VOID);
                 return true;
             }
+        } else if (keycode == Keyboard.KEY_R) {
+            if (!selecting) {
+                int cellX = (int) Math.floor(tileX);
+                int cellY = (int) Math.floor(tileY);
+                if (inBound(cellX, cellY)) {
+                    if(grid[cellX][cellY] instanceof ShipThinWall){
+                        ShipThinWall thinWall = (ShipThinWall)grid[cellX][cellY];
+                        thinWall.rotate();
+                    resetSelectors();
+                    }
+                }
+            }
         }
         return false;
     }
