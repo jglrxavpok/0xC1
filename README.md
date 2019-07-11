@@ -1,7 +1,7 @@
 # 0xC1
 
 0xC1 is a game that follows the idea behind Markus Person's ( Notch ) game : 0x10c
-We're making it because Notch never released 0x10c, and abandonned it.
+We're making it because Notch never released 0x10c, and abandoned it.
 
 
 "Done" :
